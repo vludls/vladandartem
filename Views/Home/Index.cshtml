@@ -5,4 +5,16 @@
 <div class="text-center">
     <h1 class="display-4">@a</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    @{
+        int a = 123;
+        string message = "<b>Hello World</b>";
+    }
+    <p>@a</p>
+    <p>@Html.Raw(message)</p>
+    @{
+        string[] items = {"item 1", "item 2", "item 3", "item 4"};
+    }
+    @foreach(string item in items){
+        <span>@item</span>
+    }
 </div>
