@@ -1,0 +1,97 @@
+header, main, footer {
+    padding: 0 70px;
+}
+header {
+    height: 100px;
+    background-color: orange;
+    display: flex;
+    justify-content: space-between;
+}
+    header input {
+        background: #fff;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        font-size: 16px;
+        font-weight: bold;
+        height: 50px;
+        width: 180px;
+        top: 50%;
+        margin: auto 0;
+        cursor: pointer;
+    }
+        header input:hover {
+            background: orangered;
+            color: #fff;
+        }
+    header p {
+        font-family: fantasy;
+        font-size: 50px;
+        line-height: 100px;
+    }
+main {
+    background: #ececec;
+}
+main ul {
+    padding-top: 70px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    min-height: 600px;
+}
+    li.product{
+        width: 270px;
+        height: 400px;
+        margin-bottom: 70px;
+        padding-top: 20px;
+        transition: all 0.3s;
+        text-align: center;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        cursor: pointer;
+    }
+    li.product:hover {
+        box-shadow: 0 0 10px 1px;
+        transition: all 0.3s;
+    }
+    li.product > img { 
+        margin: auto;
+        height: 200px;
+        width: 200px;
+    }
+    li.product span, li.product > input {
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+    li.product span {
+        width: 200px;
+        margin: auto;
+    }
+    .quan {
+        margin-bottom: 20px;
+        line-height: 30px;
+    }
+        
+        .quan input {
+            height: 30px;
+            width: 30px;
+            background: #fff; 
+            cursor: pointer;
+        }
+        .quan input:hover {
+            background: #ececec;
+        }
+    li.product > input {
+        background: orange;
+        color: #fff;
+        font-size: 16px;
+        font-weight: bold;
+        height: 50px;
+        cursor: pointer;
+    }
+    li.product > input:hover {
+        background: orangered;
+    }
+footer {
+    height: 100px;
+    background: orange;
+}
