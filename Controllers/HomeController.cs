@@ -15,7 +15,12 @@ namespace vladandartem.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Privac()
+        {
+            return View();
+        }
+
+        public IActionResult Artem()
         {
             return View();
         }
