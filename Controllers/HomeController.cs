@@ -10,9 +10,16 @@ namespace vladandartem.Controllers
 {
     public class HomeController : Controller
     {
+        private ProductContext myDb;
+
+        public HomeController(ProductContext context)
+        {
+            myDb = context;
+        }
+
         public IActionResult Index()
         {
-            return View();
+            return View(myDb.Products.ToList());
         }
 
         public IActionResult Privac()
@@ -20,13 +27,25 @@ namespace vladandartem.Controllers
             return View();
         }
 
-        public IActionResult Artem()
+        [HttpGet]
+        public IActionResult add()
         {
             return View();
         }
 
-        public IActionResult add()
+        [HttpPost]
+        public IActionResult add(string name, int price)
         {
+            myDb.Products.AddRange(
+                new Product{
+                    Name = name,
+                    Price = price
+                }
+            );
+
+            myDb.SaveChanges();
+            //string someData = $"Название товара: {name} Цена товара: {price}";
+
             return View();
         }
 
