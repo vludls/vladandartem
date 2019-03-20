@@ -20,6 +20,11 @@ namespace vladandartem.Controllers
             return View();
         }
 
+        public IActionResult add()
+        {
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
