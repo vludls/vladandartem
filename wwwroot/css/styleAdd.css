@@ -1,16 +1,4 @@
 .addProduct {
-    margin-top: 70px;
-}
-.addProduct p > input {
-    border: 1px solid black;
-}
-.addProduct .cart input {
-    display: block;
-    height: 100%;
-    width: 100%;
-    border-radius: 40px;
-    background: transparent;
-    cursor: pointer;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    font-weight: bold;
+    display: inline-block;
+    width: 200px;
 }
