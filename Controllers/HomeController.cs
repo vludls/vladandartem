@@ -33,6 +33,12 @@ namespace vladandartem.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult redact()
+        {
+            return View();
+        }
+
         [HttpPost]
         public IActionResult add(string name, int price)
         {

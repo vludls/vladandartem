@@ -1,5 +1,5 @@
 @{
-    ViewData["Title"] = "Add product";
+    ViewData["Title"] = "Redact product";
 }
 
 <main>
@@ -8,18 +8,18 @@
             <div class="product">
                 <div class="img">
                     <label for="img">Изображение</label>
-                    <input type="file" name="img" id="img" value="~/images/">
+                    <input type="file" name="img" id="img" value="">
                 </div>
                 <p class="name">
                     <label for="name">Название товара</label>
-                    <input type="text" name="name" placeholder="Название" id="name">
+                    <input type="text" name="name" id="name" value="">
                 </p>
                 <p class="price">
                     <label for="price">Цена</label>
-                    <input type="number" name="price" placeholder="Цена" id="price">
+                    <input type="number" name="price" id="price" value="">
                 </p>
                 <p class="cart">
-                    <span><input type="submit" value="Добавить"></span>
+                    <span><input type="submit" value="Сохранить"></span>
                 </p>
             </div>
         </form>
