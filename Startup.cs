@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using vladandartem.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace vladandartem
 {
@@ -31,6 +33,8 @@ namespace vladandartem
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            string connection = Configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<ProductContext>(options => options.UseSqlServer(connection));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

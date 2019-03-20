@@ -1,3 +1,5 @@
+@model IEnumerable<vladandartem.Models.Product>
+
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -5,28 +7,31 @@
         
 <main>
     <ul class="container">
-        <li class="product">
-            <div class="img">
-                <img src="~/images/1.jpg" alt="">
-            </div>
-            <p class="name">
-                Home Theater Speaker System
-            </p>
-            <p class="price">
-                5450 р.
-            </p>
-            <p class="cart">
-                <span>В корзину</span>
-                <img src="~/images/basket.png" alt="">
-            </p>
-        </li>
+        @foreach (var SomeProduct in Model)
+        {
+            <li class="product">
+                <div class="img">
+                    <img src="~/images/1.jpg" alt="">
+                </div>
+                <p class="name">
+                    @SomeProduct.Name
+                </p>
+                <p class="price">
+                    @SomeProduct.Price р.
+                </p>
+                <p class="cart">
+                    <span>В корзину</span>
+                    <img src="~/images/basket.png" alt="">
+                </p>
+            </li>
+        }
+        <!--<li class="product"></li>
         <li class="product"></li>
         <li class="product"></li>
         <li class="product"></li>
         <li class="product"></li>
         <li class="product"></li>
-        <li class="product"></li>
-        
+        -->
     </ul>
 </main>
         
