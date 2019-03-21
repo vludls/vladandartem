@@ -99,7 +99,7 @@ nav {
             width: 820px;
         }
 #products {
-    padding: 70px 0 40px;
+    padding: 70px 0 20px;
 }
     #products li {
         width: 270px;
@@ -187,7 +187,24 @@ nav {
         font-family: Verdana, Geneva, Tahoma, sans-serif;
         font-variant: small-caps;
         font-weight: bold;
-    }    
+    }
+#pagin {
+    margin-bottom: 20px;
+}
+    #pagin a {
+        display: block;
+        width: 40px;
+        height: 40px;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        text-align: center;
+        line-height: 40px;
+        background: #F3F3F3;
+        text-decoration: none;
+        color: #000;
+    }
+    .active {
+        background: #d3d3d3;
+    }  
 footer{
     height: 200px;
     background: #4D4D4D;

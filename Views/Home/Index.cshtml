@@ -59,25 +59,27 @@ ViewData["Title"] = "Shop";
             <img src="~/images/plus.png" alt="">
         </li>
     </ul>
-    @{
-        int i = 0;
-        if(ViewBag.Page >= 4)
-        {
-            i = ViewBag.Page - 2;
+
+    <div class="container" id="pagin">
+        @{
+            int i = 0;
+            if(ViewBag.Page >= 4)
+            {
+                i = ViewBag.Page - 2;
+            }
         }
-    }
-        
-    @for (int j = 1; i < @ViewBag.PagesCount; i++, j++)
-    { 
-        if(j > 5)
-        {
-            break;
+            
+        @for (int j = 1; i < @ViewBag.PagesCount; i++, j++)
+        { 
+            if(j > 5)
+            {
+                break;
+            }
+
+            int pageNum = i + 1;
+
+            <a href="~/Home/Index?Page=@i">@pageNum</a>
         }
-
-        int pageNum = i + 1;
-
-        <a href="~/Home/Index?Page=@i">@pageNum</a>
-    }
-
-    ...@ViewBag.PagesCount
+    </div>
+    
 </main>
