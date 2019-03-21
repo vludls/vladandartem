@@ -19,7 +19,7 @@ namespace vladandartem.Controllers
         public HomeController(ProductContext context, IHostingEnvironment HostEnv)
         {
             myDb = context;
-            myDb.Products.
+            
             this.HostEnv = HostEnv;
         }
 

@@ -14,15 +14,38 @@
     <!--<link rel="stylesheet" href="~/css/site.css" />-->
     <link rel="stylesheet" href="~/css/reset.css" />
     <link rel="stylesheet" href="~/css/style.css" />
-    <link rel="stylesheet" href="~/css/styleAdd.css" />
+    <link rel="stylesheet" href="~/css/add.css" />
 </head>
 <body>
     <header>
-        <div class="container">
-            <div><p>EShop</p></div>
-            
-        </div>
-    </header>
+            <div id="top">
+                <div class="container">
+                    <p id="phone">8 (800) 456-78-90</p>
+                </div>
+            </div>
+            <div class="container" id="center">
+                
+                    <div id="logo">
+                        Logo
+                    </div>
+                    <div id="search">
+                        <input type="text">
+                    </div>
+                    <div id="cart"><a href="">Корзина (0)</a></div>
+                
+            </div>
+            <nav>
+                <ul class="container" id="menu">
+                    <li><a href="">Ноутбуки</a></li>
+                    <li><a href="">Мониторы</a></li>
+                    <li><a href="">Смартфоны</a></li>
+                    <li><a href="">Планшеты</a></li>
+                    <li><a href="">Телевизоры</a></li>                   
+                    <li><a href="">Моноблоки</a></li>
+                    <li><a href="">Видеокамеры</a></li> 
+                </ul>
+            </nav>
+        </header>
 
         @RenderBody()
     

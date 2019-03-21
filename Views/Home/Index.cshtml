@@ -1,49 +1,55 @@
-@model IEnumerable<vladandartem.Models.Product>
-
-@{
-    ViewData["Title"] = "Home Page";
-}
 
         
-<main>
-    <ul class="container">
-        <li class="product" id="plus" style="position: relative">
-            <img src="~/images/plus.png" alt="" style="width: 200px; text-align: center">
-            <a href="/home/add" style="position: absolute; display: block; height: 100%; width: 100%; left: 0; top: 0"></a>
-        </li>
-        @foreach (var SomeProduct in Model)
-        {
-            <li class="product">
-                <div class="img">
-                    <img src="@SomeProduct.ImgPath" alt="">
+
+        <div id="sliderAndBar">
+            <div class="container" id="inside">
+                <div id="leftBar">
+                    <ul id="navBar">
+                        <li id="inf">ИНФОРМАЦИЯ</li>
+                        <li><a href="">О нас</a></li>
+                        <li><a href="">Информация о доставке</a></li>
+                        <li><a href="">Акции</a></li>
+                        <li><a href="">Услуги</a></li>
+                        <li><a href="">Контакты</a></li>
+                        <li><a href="">Блог</a></li>
+                    </ul>
                 </div>
-                <p class="name">
-                    @SomeProduct.Name
-                </p>
-                <p class="price">
-                    @SomeProduct.Price р.
-                </p>
-                <p>
-                    <form action="" method="post">
-                        <input type="submit" value="Удалить">
-                        
-                    </form>
-                    <a href="/home/redact">Редактировать</a>
-                </p>
-                <p class="cart">
-                    <span>В корзину</span>
-                    <img src="~/images/basket.png" alt="">
-                </p>
-                
-            </li>
-        }
-        <!--<li class="product"></li>
-        <li class="product"></li>
-        <li class="product"></li>
-        <li class="product"></li>
-        <li class="product"></li>
-        <li class="product"></li>
-        -->
-    </ul>
-</main>
+
+                <div id="mainSlider">
+                    <img src="~/images/slide.jpg" alt="">
+                </div>
+            </div>
+        </div>
+
         
+        <main>
+            <ul class="container" id="products">
+                <li id="plus">
+                    <a href="/home/add"></a>
+                    <img src="~/images/plus.png" alt="">
+                </li>
+                @foreach (var SomeProduct in Model)
+                {
+                    <li>
+                        <div class="img">
+                            <img src="@SomeProduct.ImgPath" alt="">
+                        </div>
+                        <p class="name">
+                            @SomeProduct.Name
+                        </p>
+                        <p class="price">
+                            @SomeProduct.Price р.
+                        </p>
+                        <div class="links">
+                            <a href="" class="cart">
+                                в корзину
+                            </a>
+                            <a href="" class="icons"><img src="~/images/r.png" alt=""></a>
+                            <a href="" class="icons"><img src="~/images/d.png" alt=""></a>
+                        </div>
+                    </li>
+                }
+                
+            </ul>
+        </main>
+     
