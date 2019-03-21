@@ -86,6 +86,12 @@ namespace vladandartem.Controllers
 
             myDb.SaveChanges();
             
+
+            ViewBag.Id = id;
+            ViewBag.Name = name;
+            ViewBag.Price = price;
+            ViewBag.ImgPath = imgpath;
+            
             return View();
         }
 
