@@ -146,7 +146,7 @@ nav {
         display: flex;
         justify-content: space-between;
     }
-    .links a {
+    .links a, #del {
         display: block;
         text-decoration: none;
         border-radius: 20px;
@@ -154,9 +154,27 @@ nav {
         background: #62BFC4;
         text-align: center;
     }
-    .icons {
-        width: 40px; 
+    #del {
+        cursor: pointer;
+        
     }
+
+    .testclass
+    {
+        border-radius: 20px;
+        height: 40px;
+        width: 40px;
+        background: #62BFC4;
+        text-align: center;
+    }
+    .testclass > input {
+        margin-top: 6px;
+    }
+
+    .icons {
+        width: 40px;
+    }
+    
     .icons img {
         width: 20px;
         margin-top: 8px;
