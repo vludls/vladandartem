@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -23,12 +24,29 @@ namespace vladandartem.Controllers
             this.HostEnv = HostEnv;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public IActionResult Index(int page)
         {
-            return View(myDb.Products.ToList());
+            var ProductsArray = myDb.Products.ToList();
+            
+            List<Product> products = new List<Product>();
+
+            int PagesCount = (int)Math.Ceiling((decimal)((double)(myDb.Products.Count())/4));
+
+            for(int i = page * 4, j = 1; i < ProductsArray.Count(); i++, j++)
+            {
+                if(j > 4) break;
+
+                products.Add(ProductsArray[i]);
+            }
+
+            ViewBag.Page = page;
+            ViewBag.PagesCount = PagesCount;
+
+            return View(products);
         }
 
-        [HttpPost]
+        /*[HttpPost]
         public IActionResult Index(int id)
         {
             Product SomeProduct = myDb.Products.Find(id);
@@ -38,22 +56,17 @@ namespace vladandartem.Controllers
             myDb.SaveChanges();
 
             return View(myDb.Products.ToList());
-        }
-
-        public IActionResult Privac()
-        {
-            return View();
-        }
+        }*/
 
         [HttpGet]
-        public IActionResult add()
+        public IActionResult Add()
         {
             //ViewBag.Test = "Тест";
             return View();
         }
         
         [HttpGet]
-        public IActionResult redact(int id, string name, int price, string imgpath)
+        public IActionResult Edit(int id, string name, int price, string imgpath)
         {
             ViewBag.Id = id;
             ViewBag.Name = name;
@@ -63,7 +76,7 @@ namespace vladandartem.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult redact(int id, string name, int price, IFormFile fileimg, string imgpath)
+        public IActionResult Edit(int id, string name, int price, IFormFile fileimg, string imgpath)
         {
             Product SomeProduct = myDb.Products.Find(id);
 
@@ -91,12 +104,11 @@ namespace vladandartem.Controllers
             ViewBag.Name = name;
             ViewBag.Price = price;
             ViewBag.ImgPath = imgpath;
-            
+
             return View();
         }
-
         [HttpPost]
-        public IActionResult add(string name, int price, IFormFile fileimg)
+        public IActionResult AddProduct(string name, int price, IFormFile fileimg)
         {
             string fileName;
 
@@ -119,7 +131,19 @@ namespace vladandartem.Controllers
             //return Content(file.FileName);
             //ViewBag.Test = "Тест";
 
-            return View();
+            return Redirect("~/Home/Index");
+        }
+
+        [HttpPost]
+        public IActionResult RemoveProduct(int id)
+        {
+            Product SomeProduct = myDb.Products.Find(id);
+
+            myDb.Products.Remove(SomeProduct);
+
+            myDb.SaveChanges();
+
+            return Redirect("~/Home/Index");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
