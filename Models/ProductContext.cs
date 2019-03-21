@@ -8,6 +8,7 @@ namespace vladandartem.Models
 
         public ProductContext(DbContextOptions<ProductContext> options) : base(options)
         {
+            //Database.EnsureDeleted();
             Database.EnsureCreated();
         }
     }
