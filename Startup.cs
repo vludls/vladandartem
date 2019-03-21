@@ -35,7 +35,7 @@ namespace vladandartem
 
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<ProductContext>(options => options.UseSqlServer(connection));
-
+            
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 

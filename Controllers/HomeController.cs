@@ -28,6 +28,18 @@ namespace vladandartem.Controllers
             return View(myDb.Products.ToList());
         }
 
+        [HttpPost]
+        public IActionResult Index(int id)
+        {
+            Product SomeProduct = myDb.Products.Find(id);
+
+            myDb.Products.Remove(SomeProduct);
+
+            myDb.SaveChanges();
+
+            return View(myDb.Products.ToList());
+        }
+
         public IActionResult Privac()
         {
             return View();
@@ -40,8 +52,40 @@ namespace vladandartem.Controllers
             return View();
         }
         
-        public IActionResult redact()
+        [HttpGet]
+        public IActionResult redact(int id, string name, int price, string imgpath)
         {
+            ViewBag.Id = id;
+            ViewBag.Name = name;
+            ViewBag.Price = price;
+            ViewBag.ImgPath = imgpath;
+
+            return View();
+        }
+        [HttpPost]
+        public IActionResult redact(int id, string name, int price, IFormFile fileimg, string imgpath)
+        {
+            Product SomeProduct = myDb.Products.Find(id);
+
+            if(fileimg != null)
+            {
+                string fileName;
+
+                fileName = HostEnv.WebRootPath + "/images/Products/" + fileimg.FileName;
+
+                fileimg.CopyTo(new FileStream(fileName, FileMode.Create));
+
+                imgpath = "/images/Products/" + fileimg.FileName;
+            }
+
+            SomeProduct.Name = name;
+            SomeProduct.Price = price;
+            SomeProduct.ImgPath = imgpath;
+
+            myDb.Products.Update(SomeProduct);
+
+            myDb.SaveChanges();
+            
             return View();
         }
 

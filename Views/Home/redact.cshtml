@@ -3,13 +3,16 @@
 }
 
         <main class="container">
+            <img src="@ViewBag.ImgPath" alt="">
             <form action="" id="add" method="post" enctype="multipart/form-data">
                 <p>Изображение:</p>
+                <input type="hidden" name="id" value="@ViewBag.Id">
+                <input type="hidden" name="imgpath" value="@ViewBag.ImgPath">
                 <input type="file" name="fileimg" id="file">
                 <p>Название:</p>
-                <input type="text" name="name">
+                <input type="text" name="name" value="@ViewBag.Name">
                 <p>Цена:</p>
-                <input type="text" name="price">
+                <input type="text" name="price" value="@ViewBag.Price">
                 <input type="submit" value="Изменить" id="addProduct">
 
                 <!--<h2>Операционная система</h2>
