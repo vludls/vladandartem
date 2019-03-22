@@ -82,6 +82,13 @@ namespace vladandartem.Controllers
         }
         
         [HttpGet]
+        public IActionResult Cart()
+        {
+            //ViewBag.Test = "Тест";
+            return View();
+        }
+
+        [HttpGet]
         public IActionResult Edit(int id, string name, int price, string imgpath, string manufacturer, string category)
         {
             ViewBag.Id = id;

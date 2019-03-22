@@ -1,0 +1,31 @@
+@{
+    ViewData["Title"] = "Shop";
+}
+
+<main class="container lop">
+    <div class="list">
+        <ul>
+            <li>
+                <div class="imincart">
+                    <img src="~/images/1.jpg" alt="">
+                </div>
+                <p class="nameincart">
+                    Название товара
+                </p>
+                <div class="quantity">
+                    <span>Количество:</span>
+                    <input type="number" min="1" max="10" name="quantity" id="quantity">
+                </div>
+                <p class="priceincart">
+                    3567 р.
+                </p>
+                <input type="submit" name="delfromcart" id="delfromcart" value="X">
+            </li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+    <div class="continue">
+        <a href="">Продолжить</a>
+    </div>
+</main>
