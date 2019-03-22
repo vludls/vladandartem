@@ -14,6 +14,7 @@ namespace vladandartem.Controllers
 {
     public class HomeController : Controller
     {
+        public Product sProduct;
         private ProductContext myDb;
         private readonly IHostingEnvironment HostEnv;
 
@@ -25,17 +26,32 @@ namespace vladandartem.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index(int page)
+        public IActionResult Index(bool isSearch = false, string arg = "", int page = 0)
         {
             var ProductsArray = myDb.Products.ToList();
             
             List<Product> products = new List<Product>();
+  
+            int PagesCount = 1;
 
-            int PagesCount = (int)Math.Ceiling((decimal)((double)(myDb.Products.Count())/4));
+            arg = Request.Query.FirstOrDefault(p => p.Key == "arg").Value;
+
+            PagesCount = (int)Math.Ceiling((decimal)((double)(myDb.Products.Count())/4));
 
             for(int i = page * 4, j = 1; i < ProductsArray.Count(); i++, j++)
             {
                 if(j > 4) break;
+
+                if(isSearch && !String.IsNullOrEmpty(arg))
+                {
+                    if(CompareTwoString(arg, ProductsArray[i].Name) < 50.0 &&
+                    CompareTwoString(arg, ProductsArray[i].Manufacturer) < 50.0
+                    )
+                    {
+                        j--;
+                        continue;
+                    }
+                }
 
                 products.Add(ProductsArray[i]);
             }
@@ -66,19 +82,21 @@ namespace vladandartem.Controllers
         }
         
         [HttpGet]
-        public IActionResult Edit(int id, string name, int price, string imgpath)
+        public IActionResult Edit(int id, string name, int price, string imgpath, string manufacturer, string category)
         {
             ViewBag.Id = id;
             ViewBag.Name = name;
             ViewBag.Price = price;
             ViewBag.ImgPath = imgpath;
+            ViewBag.Manufacturer = manufacturer;
+            ViewBag.Category = category;
 
             return View();
         }
         [HttpPost]
-        public IActionResult Edit(int id, string name, int price, IFormFile fileimg, string imgpath)
+        public IActionResult Edit(int id, string name, int price, IFormFile fileimg, string imgpath, string manufacturer, string category)
         {
-            Product SomeProduct = myDb.Products.Find(id);
+            sProduct = myDb.Products.Find(id);
 
             if(fileimg != null)
             {
@@ -91,24 +109,30 @@ namespace vladandartem.Controllers
                 imgpath = "/images/Products/" + fileimg.FileName;
             }
 
-            SomeProduct.Name = name;
-            SomeProduct.Price = price;
-            SomeProduct.ImgPath = imgpath;
-
-            myDb.Products.Update(SomeProduct);
-
-            myDb.SaveChanges();
-            
-
-            ViewBag.Id = id;
+            sProduct.Name = name;
+            sProduct.Price = price;
+            sProduct.ImgPath = imgpath;
+            sProduct.Manufacturer = manufacturer;
+            sProduct.Category = category;
+        
+            /*ViewBag.Id = id;
             ViewBag.Name = name;
             ViewBag.Price = price;
             ViewBag.ImgPath = imgpath;
+            ViewBag.Manufacturer = manufacturer;
+            ViewBag.Category = category;
+            */
+            ViewBag.SomeProduct = sProduct;
+            //ViewBag.SomeProduct = SomeProduct;
 
-            return View();
+            myDb.Products.Update(sProduct);
+
+            myDb.SaveChanges();
+
+            return View(sProduct);
         }
         [HttpPost]
-        public IActionResult AddProduct(string name, int price, IFormFile fileimg)
+        public IActionResult AddProduct(string name, int price, IFormFile fileimg, string manufacturer, string category)
         {
             string fileName;
 
@@ -120,7 +144,9 @@ namespace vladandartem.Controllers
                 new Product{
                     Name = name,
                     Price = price,
-                    ImgPath = "/images/Products/" + fileimg.FileName
+                    ImgPath = "/images/Products/" + fileimg.FileName,
+                    Manufacturer = manufacturer,
+                    Category = category
                 }
             );
 
@@ -144,6 +170,55 @@ namespace vladandartem.Controllers
             myDb.SaveChanges();
 
             return Redirect("~/Home/Index");
+        }
+
+        private double CompareTwoString(string strFirst, string strSecond)
+        {
+            string[] strFirstWordsArray = strFirst.Split(' ');
+            string[] strSecondWordsArray = strSecond.Split(' ');
+
+            int firstArrayWordsCount = strFirstWordsArray.Count();
+            int secondsArrayWordsCount = strSecondWordsArray.Count();
+
+            string[] MaxWordsArray; // = firstArrayWordsCount > secondsArrayWordsCount ? strFirstWordsArray : strSecondWordsArray;
+            string[] MinWordsArray; // = firstArrayWordsCount < secondsArrayWordsCount ? strFirstWordsArray : strSecondWordsArray;
+            
+            if(firstArrayWordsCount > secondsArrayWordsCount)
+            {
+                MaxWordsArray = strFirstWordsArray;
+                MinWordsArray = strSecondWordsArray;
+            }
+            else
+            {
+                MaxWordsArray = strSecondWordsArray;
+                MinWordsArray = strFirstWordsArray;
+            }
+
+            int maxWordsCount = MaxWordsArray.Count();
+            int minWordsCount = MinWordsArray.Count();
+
+            int similar = 0;
+
+            bool[] minWordsArrayChecked = new bool[minWordsCount];
+
+            for(int i = 0; i < maxWordsCount; i++)
+            {
+                for(int j = 0; j < minWordsCount; j++)
+                {
+                    if(minWordsArrayChecked[j]) continue;
+
+                    if(String.Equals(MaxWordsArray[i].ToLower(), MinWordsArray[j].ToLower()))
+                    {
+                        minWordsArrayChecked[j] = true;
+                        similar++;
+                        break;
+                    }
+                }
+            }
+
+            double percent = (double)(similar) / maxWordsCount * 100.0;
+
+            return percent;
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

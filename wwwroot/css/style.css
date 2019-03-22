@@ -202,7 +202,7 @@ nav {
         text-decoration: none;
         color: #000;
     }
-    .active {
+    #pagin a.active {
         background: #d3d3d3;
     }  
 footer{

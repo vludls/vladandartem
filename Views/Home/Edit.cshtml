@@ -1,22 +1,23 @@
+@model vladandartem.Models.Product
 @{
     ViewData["Title"] = "Redact Product";
 }
 
         <main class="container" id="redact">
-            <img src="@ViewBag.ImgPath" alt="" id="imgProd">
+            <img src="@Model?.ImgPath" alt="" id="imgProd">
             <form action="" id="add" method="post" enctype="multipart/form-data">
                 <p>Изображение:</p>
-                <input type="hidden" name="id" value="@ViewBag.Id">
-                <input type="hidden" name="imgpath" value="@ViewBag.ImgPath">
+                <input type="hidden" name="id" value="@Model?.Id">
+                <input type="hidden" name="imgpath" value="@Model?.ImgPath">
                 <input type="file" name="fileimg" id="file">
                 <p>Название:</p>
-                <input type="text" name="name" value="@ViewBag.Name">
+                <input type="text" name="name" value="@Model?.Name">
                 <p>Цена:</p>
-                <input type="text" name="price" value="@ViewBag.Price">
+                <input type="text" name="price" value="@Model?.Price">
                 <p>Производитель:</p>
-                <input type="text" name="manuf">
+                <input type="text" name="manufacturer" value="@Model?.Manufacturer">
                 <p>Категория:</p>
-                <input type="text" name="cat">
+                <input type="text" name="category" value="@Model?.Category">
                 <input type="submit" value="Изменить" id="addProduct">
 
                 <!--<h2>Операционная система</h2>

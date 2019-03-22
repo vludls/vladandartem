@@ -44,7 +44,7 @@ ViewData["Title"] = "Shop";
                     <a href="" class="cart">
                         в корзину
                     </a>
-                    <a href="/home/redact?id=@SomeProduct.Id&name=@SomeProduct.Name&price=@SomeProduct.Price&imgpath=@SomeProduct.ImgPath" class="icons"><img src="~/images/r.png" alt=""></a>
+                    <a href="/home/Edit?id=@SomeProduct.Id&name=@SomeProduct.Name&price=@SomeProduct.Price&imgpath=@SomeProduct.ImgPath&manufacturer=@SomeProduct.Manufacturer&category=@SomeProduct.Category" class="icons"><img src="~/images/r.png" alt=""></a>
                     
 
                     <form action="~/Home/RemoveProduct" method="post">
@@ -78,7 +78,7 @@ ViewData["Title"] = "Shop";
 
             int pageNum = i + 1;
 
-            <a href="~/Home/Index?Page=@i">@pageNum</a>
+            <a class="@(i == ViewBag.Page ? "active" : "")" href="~/Home/Index?Page=@i">@pageNum</a>
         }
     </div>
     
