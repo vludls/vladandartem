@@ -1,3 +1,4 @@
+@model List<vladandartem.Models.Product>
 @{
     ViewData["Title"] = "Shop";
 }
@@ -5,24 +6,28 @@
 <main class="container lop">
     <div class="list">
         <ul>
-            <li>
-                <div class="imincart">
-                    <img src="~/images/1.jpg" alt="">
-                </div>
-                <p class="nameincart">
-                    Название товара
-                </p>
-                <div class="quantity">
-                    <span>Количество:</span>
-                    <input type="number" min="1" max="10" name="quantity" id="quantity">
-                </div>
-                <p class="priceincart">
-                    3567 р.
-                </p>
-                <input type="submit" name="delfromcart" id="delfromcart" value="X">
-            </li>
-            <li></li>
-            <li></li>
+            @foreach (Product product in Model)
+            {
+                <li>
+                    <form action="~/Home/RemoveProductCart" method="post">
+                        <input type="hidden" name="id" value="@product.Id">
+                        <div class="imincart">
+                            <img src="@product.ImgPath" alt="">
+                        </div>
+                        <p class="nameincart">
+                            @product.Name
+                        </p>
+                        <div class="quantity">
+                            <span>Количество:</span>
+                            <input type="number" value="1" min="1" max="10" name="quantity" id="quantity">
+                        </div>
+                        <p class="priceincart">
+                            @product.Price р.
+                        </p>
+                        <input type="submit" name="delfromcart" id="delfromcart" value="X">
+                    </form>
+                </li>
+            }
         </ul>
     </div>
     <div class="continue">

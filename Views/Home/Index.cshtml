@@ -41,10 +41,14 @@ ViewData["Title"] = "Shop";
                     @SomeProduct.Price р.
                 </p>
                 <div class="links">
-                    <a href="" class="cart">
+                    <form action="~/Home/AddCookie" method="post">
+                        <input type="hidden" name="id" value="@SomeProduct.Id">
+                    <!--<a href="" class="cart">
                         в корзину
-                    </a>
-                    <a href="/home/Edit?id=@SomeProduct.Id&name=@SomeProduct.Name&price=@SomeProduct.Price&imgpath=@SomeProduct.ImgPath&manufacturer=@SomeProduct.Manufacturer&category=@SomeProduct.Category" class="icons"><img src="~/images/r.png" alt=""></a>
+                    </a>-->
+                        <input type="submit" value="в корзину">
+                    </form>
+                    <a href="/home/Edit?id=@SomeProduct.Id" class="icons"><img src="~/images/r.png" alt=""></a>
                     
 
                     <form action="~/Home/RemoveProduct" method="post">

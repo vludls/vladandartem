@@ -7,14 +7,69 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System.IO;
+using System.Text.RegularExpressions;
 using vladandartem.Models;
+using Newtonsoft.Json;
 
 namespace vladandartem.Controllers
 {
+    public class Errors
+    {
+        public List<string> ErrorMessages;
+
+        public Errors()
+        {
+            ErrorMessages = new List<string>();
+        }
+    }
+    public class Cart
+    {
+        private List<int> data;
+
+        private ISession session;
+        public Cart(ISession session)
+        {
+            data = new List<int>();
+            this.session = session;
+        }
+
+        public void Add(int id)
+        {
+            if(!data.Contains(id))
+                data.Add(id);
+        }
+
+        public List<int> Decode()
+        {
+            var SerializedString = session.GetString("cart");
+
+            if(SerializedString != null)
+                data = JsonConvert.DeserializeObject<List<int>>(SerializedString);
+
+            return data;
+        }
+
+        public void Save()
+        {
+            session.SetString("cart", JsonConvert.SerializeObject(data));
+        }
+
+        public void Delete(int id)
+        {
+            if(data.Contains(id))
+                data.Remove(id);
+        }
+
+        public int Count()
+        {
+            return data.Count();
+        }
+    }
+
     public class HomeController : Controller
     {
-        public Product sProduct;
         private ProductContext myDb;
         private readonly IHostingEnvironment HostEnv;
 
@@ -28,21 +83,19 @@ namespace vladandartem.Controllers
         [HttpGet]
         public IActionResult Index(bool isSearch = false, string arg = "", int page = 0)
         {
+            if(String.IsNullOrEmpty(arg)) isSearch = false;
+
             var ProductsArray = myDb.Products.ToList();
             
             List<Product> products = new List<Product>();
-  
-            int PagesCount = 1;
 
             arg = Request.Query.FirstOrDefault(p => p.Key == "arg").Value;
 
-            PagesCount = (int)Math.Ceiling((decimal)((double)(myDb.Products.Count())/4));
+            int ProductCounted = 0;
 
             for(int i = page * 4, j = 1; i < ProductsArray.Count(); i++, j++)
             {
-                if(j > 4) break;
-
-                if(isSearch && !String.IsNullOrEmpty(arg))
+                if(isSearch)
                 {
                     if(CompareTwoString(arg, ProductsArray[i].Name) < 50.0 &&
                     CompareTwoString(arg, ProductsArray[i].Manufacturer) < 50.0
@@ -51,13 +104,21 @@ namespace vladandartem.Controllers
                         j--;
                         continue;
                     }
+                    else
+                    {
+                        ProductCounted++;
+                    }
                 }
+
+                if(j > 4) continue;
 
                 products.Add(ProductsArray[i]);
             }
 
+            ProductCounted = isSearch ? ProductCounted : ProductsArray.Count();
+
             ViewBag.Page = page;
-            ViewBag.PagesCount = PagesCount;
+            ViewBag.PagesCount = (int)Math.Ceiling((decimal)((double)(ProductCounted)/4));
 
             return View(products);
         }
@@ -84,26 +145,56 @@ namespace vladandartem.Controllers
         [HttpGet]
         public IActionResult Cart()
         {
-            //ViewBag.Test = "Тест";
-            return View();
+            List<Product> Products = new List<Product>();
+
+            Cart cart = new Cart(HttpContext.Session);
+
+            foreach(var id in cart.Decode())
+            {
+                Product product = myDb.Products.Find(id);
+
+                if(product != null)
+                    Products.Add(product);
+            }
+
+            return View(Products);
+        }
+
+        [HttpPost]
+        public IActionResult AddCookie(int id)
+        {
+            //Response.Cookies.Append("cart", Convert.ToString(id));
+            //HttpContext.Session.SetInt32("cart", );
+
+            Cart cart = new Cart(HttpContext.Session);
+
+            cart.Decode();
+            cart.Add(id);
+            cart.Save();
+
+            return Redirect("~/Home/Cart");
+        }
+        [HttpPost]
+        public IActionResult RemoveProductCart(int id)
+        {
+            Cart cart = new Cart(HttpContext.Session);
+
+            cart.Decode();
+            cart.Delete(id);
+            cart.Save();
+
+            return Redirect("~/Home/Cart");
         }
 
         [HttpGet]
-        public IActionResult Edit(int id, string name, int price, string imgpath, string manufacturer, string category)
+        public IActionResult Edit(int id)
         {
-            ViewBag.Id = id;
-            ViewBag.Name = name;
-            ViewBag.Price = price;
-            ViewBag.ImgPath = imgpath;
-            ViewBag.Manufacturer = manufacturer;
-            ViewBag.Category = category;
-
-            return View();
+            return View(myDb.Products.Find(id));
         }
         [HttpPost]
-        public IActionResult Edit(int id, string name, int price, IFormFile fileimg, string imgpath, string manufacturer, string category)
+        public IActionResult EditProduct(int id, string name, int price, IFormFile fileimg, string imgpath, string manufacturer, string category)
         {
-            sProduct = myDb.Products.Find(id);
+            Product somePoduct = myDb.Products.Find(id);
 
             if(fileimg != null)
             {
@@ -116,31 +207,53 @@ namespace vladandartem.Controllers
                 imgpath = "/images/Products/" + fileimg.FileName;
             }
 
-            sProduct.Name = name;
-            sProduct.Price = price;
-            sProduct.ImgPath = imgpath;
-            sProduct.Manufacturer = manufacturer;
-            sProduct.Category = category;
-        
-            /*ViewBag.Id = id;
-            ViewBag.Name = name;
-            ViewBag.Price = price;
-            ViewBag.ImgPath = imgpath;
-            ViewBag.Manufacturer = manufacturer;
-            ViewBag.Category = category;
-            */
-            ViewBag.SomeProduct = sProduct;
-            //ViewBag.SomeProduct = SomeProduct;
+            somePoduct.Name = name;
+            somePoduct.Price = price;
+            somePoduct.ImgPath = imgpath;
+            somePoduct.Manufacturer = manufacturer;
+            somePoduct.Category = category;
 
-            myDb.Products.Update(sProduct);
+            myDb.Products.Update(somePoduct);
 
             myDb.SaveChanges();
 
-            return View(sProduct);
+            return Redirect("~/Home/Edit");
         }
         [HttpPost]
-        public IActionResult AddProduct(string name, int price, IFormFile fileimg, string manufacturer, string category)
+        public IActionResult Add(string name, string price, IFormFile fileimg, string manufacturer, string category)
         {
+            Errors errors = new Errors();
+
+            if(fileimg == null)
+                errors.ErrorMessages.Add("Добавьте изображение товара!");
+
+            if(String.IsNullOrEmpty(name)) 
+                errors.ErrorMessages.Add("Заполните поле названия товара!");
+
+            Regex regex = new Regex(@"\d+");
+
+            if(String.IsNullOrEmpty(price))
+                errors.ErrorMessages.Add("Заполните поле цены товара!");
+            else
+                if(!regex.IsMatch(price))
+                    errors.ErrorMessages.Add("Цена может содержать только цифры!");
+
+            if(String.IsNullOrEmpty(manufacturer))
+                errors.ErrorMessages.Add("Заполните поле названия Производителя!");
+
+            if(String.IsNullOrEmpty(category))
+                errors.ErrorMessages.Add("Заполните поле названия Категории!");
+
+            if(errors.ErrorMessages.Count() > 0)
+            {
+                ViewBag.Name = name;
+                ViewBag.Price = price;
+                ViewBag.Manufacturer = manufacturer;
+                ViewBag.Category = category;
+
+                return View(errors);
+            }
+
             string fileName;
 
             fileName = HostEnv.WebRootPath + "/images/Products/" + fileimg.FileName;
@@ -150,7 +263,7 @@ namespace vladandartem.Controllers
             myDb.Products.AddRange(
                 new Product{
                     Name = name,
-                    Price = price,
+                    Price = Convert.ToInt32(price),
                     ImgPath = "/images/Products/" + fileimg.FileName,
                     Manufacturer = manufacturer,
                     Category = category
@@ -164,7 +277,7 @@ namespace vladandartem.Controllers
             //return Content(file.FileName);
             //ViewBag.Test = "Тест";
 
-            return Redirect("~/Home/Index");
+            return View();
         }
 
         [HttpPost]

@@ -1,4 +1,12 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http;
+@using vladandartem.Controllers;
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    Cart cart = new Cart(HttpContextAccessor.HttpContext.Session);
+
+    cart.Decode();
+}
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -30,13 +38,13 @@
                         Logo
                     </div>
                     <div id="search">
-                        <form action="" method="get">
+                        <form action="~/Home/Index" method="get">
                             <input type="hidden" name="isSearch" value="true">
                             <input type="text" name="arg" placeholder="Поиск">
                             <input type="submit" value="Найти" style="width: 70px; cursor: pointer">
                         </form>
                     </div>
-                    <div id="cart"><a href="">Корзина (0)</a></div>
+                    <div id="cart"><a href="">Корзина (@(cart.Count()))</a></div>
                 
             </div>
             <nav>

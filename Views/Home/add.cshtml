@@ -1,19 +1,30 @@
+@model vladandartem.Controllers.Errors;
 @{
     ViewData["Title"] = "Add Product";
 }
 
         <main class="container">
-            <form action="~/Home/AddProduct" id="add" method="post" enctype="multipart/form-data">
+            @if(Model != null)
+            {
+                <ul>
+                    @foreach (var error in Model.ErrorMessages)
+                    {
+                        <li>@error</li>
+                    }
+                </ul>
+            }
+
+            <form action="~/Home/Add" id="add" method="post" enctype="multipart/form-data">
                 <p>Изображение:</p>
                 <input type="file" name="fileimg" id="file">
                 <p>Название:</p>
-                <input type="text" name="name">
+                <input type="text" name="name" value="@ViewBag?.Name">
                 <p>Цена:</p>
-                <input type="text" name="price">
+                <input type="text" name="price" value="@ViewBag?.Price">
                 <p>Производитель:</p>
-                <input type="text" name="manufacturer">
+                <input type="text" name="manufacturer" value="@ViewBag?.Manufacturer">
                 <p>Категория:</p>
-                <input type="text" name="category">
+                <input type="text" name="category" value="@ViewBag?.Category">
                 <input type="submit" value="Добавить" id="addProduct">
                 
 
