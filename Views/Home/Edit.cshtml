@@ -5,7 +5,16 @@
 
         <main class="container" id="redact">
             <img src="@Model?.ImgPath" alt="" id="imgProd">
-            <form action="~/Home/EditProduct" id="add" method="post" enctype="multipart/form-data">
+            @if(ViewBag.Errors != null)
+            {
+                <ul>
+                    @foreach (var error in ViewBag.Errors.ErrorMessages)
+                    {
+                        <li>@error</li>
+                    }
+                </ul>
+            }
+            <form action="~/Home/Edit" id="add" method="post" enctype="multipart/form-data">
                 <p>Изображение:</p>
                 <input type="hidden" name="id" value="@Model?.Id">
                 <input type="hidden" name="imgpath" value="@Model?.ImgPath">

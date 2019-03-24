@@ -123,18 +123,6 @@ namespace vladandartem.Controllers
             return View(products);
         }
 
-        /*[HttpPost]
-        public IActionResult Index(int id)
-        {
-            Product SomeProduct = myDb.Products.Find(id);
-
-            myDb.Products.Remove(SomeProduct);
-
-            myDb.SaveChanges();
-
-            return View(myDb.Products.ToList());
-        }*/
-
         [HttpGet]
         public IActionResult Add()
         {
@@ -163,9 +151,6 @@ namespace vladandartem.Controllers
         [HttpPost]
         public IActionResult AddCookie(int id)
         {
-            //Response.Cookies.Append("cart", Convert.ToString(id));
-            //HttpContext.Session.SetInt32("cart", );
-
             Cart cart = new Cart(HttpContext.Session);
 
             cart.Decode();
@@ -190,6 +175,50 @@ namespace vladandartem.Controllers
         public IActionResult Edit(int id)
         {
             return View(myDb.Products.Find(id));
+        }
+        [HttpPost]
+        public IActionResult Edit(int id, string name, string price, IFormFile fileimg, string imgpath, string manufacturer, string category)
+        {
+            Product someProduct = myDb.Products.Find(id);
+
+            Errors errors = CheckDataValidation(
+                name,
+                price,
+                fileimg,
+                manufacturer,
+                category,
+                imgpath
+            );
+
+            if(errors.ErrorMessages.Count() > 0)
+            {
+                ViewBag.Errors = errors;
+
+                return View(someProduct);
+            }
+
+            if(fileimg != null)
+            {
+                string fileName;
+
+                fileName = HostEnv.WebRootPath + "/images/Products/" + fileimg.FileName;
+
+                fileimg.CopyTo(new FileStream(fileName, FileMode.Create));
+
+                imgpath = "/images/Products/" + fileimg.FileName;
+            }
+
+            someProduct.Name = name;
+            someProduct.Price = Convert.ToInt32(price);
+            someProduct.ImgPath = imgpath;
+            someProduct.Manufacturer = manufacturer;
+            someProduct.Category = category;
+
+            myDb.Products.Update(someProduct);
+
+            myDb.SaveChanges();
+
+            return View(someProduct);
         }
         [HttpPost]
         public IActionResult EditProduct(int id, string name, int price, IFormFile fileimg, string imgpath, string manufacturer, string category)
@@ -217,32 +246,18 @@ namespace vladandartem.Controllers
 
             myDb.SaveChanges();
 
-            return Redirect("~/Home/Edit");
+            return Redirect($"~/Home/Edit?id={id}");
         }
         [HttpPost]
         public IActionResult Add(string name, string price, IFormFile fileimg, string manufacturer, string category)
         {
-            Errors errors = new Errors();
-
-            if(fileimg == null)
-                errors.ErrorMessages.Add("Добавьте изображение товара!");
-
-            if(String.IsNullOrEmpty(name)) 
-                errors.ErrorMessages.Add("Заполните поле названия товара!");
-
-            Regex regex = new Regex(@"\d+");
-
-            if(String.IsNullOrEmpty(price))
-                errors.ErrorMessages.Add("Заполните поле цены товара!");
-            else
-                if(!regex.IsMatch(price))
-                    errors.ErrorMessages.Add("Цена может содержать только цифры!");
-
-            if(String.IsNullOrEmpty(manufacturer))
-                errors.ErrorMessages.Add("Заполните поле названия Производителя!");
-
-            if(String.IsNullOrEmpty(category))
-                errors.ErrorMessages.Add("Заполните поле названия Категории!");
+            Errors errors = CheckDataValidation(
+                name,
+                price,
+                fileimg,
+                manufacturer,
+                category
+            );
 
             if(errors.ErrorMessages.Count() > 0)
             {
@@ -339,6 +354,33 @@ namespace vladandartem.Controllers
             double percent = (double)(similar) / maxWordsCount * 100.0;
 
             return percent;
+        }
+
+        private Errors CheckDataValidation(string name, string price, IFormFile fileimg, string manufacturer, string category, string imgpath = "")
+        {
+            Errors errors = new Errors();
+
+            if(fileimg == null && imgpath == "")
+                errors.ErrorMessages.Add("Добавьте изображение товара!");
+
+            if(String.IsNullOrEmpty(name)) 
+                errors.ErrorMessages.Add("Заполните поле названия товара!");
+
+            Regex regex = new Regex(@"\d+");
+
+            if(String.IsNullOrEmpty(price))
+                errors.ErrorMessages.Add("Заполните поле цены товара!");
+            else
+                if(!regex.IsMatch(price))
+                    errors.ErrorMessages.Add("Цена может содержать только цифры!");
+
+            if(String.IsNullOrEmpty(manufacturer))
+                errors.ErrorMessages.Add("Заполните поле названия Производителя!");
+
+            if(String.IsNullOrEmpty(category))
+                errors.ErrorMessages.Add("Заполните поле названия Категории!");
+
+            return errors;
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
