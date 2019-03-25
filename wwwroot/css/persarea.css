@@ -1,0 +1,42 @@
+.pa {
+    justify-content: space-between;
+    padding: 70px 0;
+}
+    .pincart, .paid {
+        width: 535px;
+        
+        border: 2px solid #e1e1d1;
+    }
+        .title {
+            height: 50px;
+            text-align: center;
+            line-height: 50px;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            background: #62BFC4;
+            color: #fff;
+            font-weight: bold;
+        }
+        .listinpers {
+            padding: 10px 10px 0;
+        }
+            .listinpers li {
+                padding: 5px;
+                height: 70px;
+                margin-bottom: 10px;
+                outline: 2px solid #e1e1d1;
+                display: flex;
+                justify-content: space-between;
+            }
+                .listinpers li > div:first-child {
+                    width: 70px;
+                    height: 100%;
+                    
+                }
+                .name-and-quan {
+                    width: 300px;
+                    
+                }
+                    .listinpers li > div > img {
+                        max-width: 70px;
+                        max-height: 60px;
+                    }

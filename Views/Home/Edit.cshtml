@@ -19,7 +19,7 @@
                 <p>Изображение:</p>
                 <input type="hidden" name="id" value="@Model?.Id">
                 <input type="hidden" name="imgpath" value="@Model?.ImgPath">
-                <input type="file" name="fileimg" id="file">
+                <input type="file" name="fileimg" class="file">
                 <p>Название:</p>
                 <input type="text" name="name" value="@Model?.Name">
                 <p>Цена:</p>
@@ -27,7 +27,18 @@
                 <p>Производитель:</p>
                 <input type="text" name="manufacturer" value="@Model?.Manufacturer">
                 <p>Категория:</p>
-                <input type="text" name="category" value="@Model?.Category">
+                <select name="category" class="category">
+                    <option value="@ViewBag?.Category">Ноутбуки</option>
+                    <option value="@ViewBag?.Category">Мониторы</option>
+                    <option value="@ViewBag?.Category">Смартфоны</option>
+                    <option value="@ViewBag?.Category">Планшеты</option>
+                    <option value="@ViewBag?.Category">Телевизоры</option>
+                    <option value="@ViewBag?.Category">Моноблоки</option>
+                    <option value="@ViewBag?.Category">Видеокамеры</option>
+                </select>
+                <p>Количество на складе:</p>
+                <input type="number" min="0" name="q" >
+                <!--<input type="text" name="category" value="@Model?.Category">-->
                 <input type="submit" value="Изменить" id="addProduct">
 
                 <!--<h2>Операционная система</h2>

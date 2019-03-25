@@ -4,7 +4,7 @@
 }
 
         <main class="container redact">
-            <div class="imgProd"><img src="~/images/img.jpg" alt="" id="addimg"></div>
+            <div class="imgProd"><img src="~/images/img.jpg" alt="" class="addimg"></div>
             
 
             <form action="~/Home/Add" id="add" method="post" enctype="multipart/form-data">
@@ -18,7 +18,7 @@
                         </ul>
                     }
                 <p>Изображение:</p>
-                <input type="file" name="fileimg" id="file">
+                <input type="file" name="fileimg" class="file">
                 <p>Название:</p>
                 <input type="text" name="name" value="@ViewBag?.Name">
                 <p>Цена:</p>
@@ -26,7 +26,18 @@
                 <p>Производитель:</p>
                 <input type="text" name="manufacturer" value="@ViewBag?.Manufacturer">
                 <p>Категория:</p>
-                <input type="text" name="category" value="@ViewBag?.Category">
+                <select name="category" class="category">
+                    <option value="@ViewBag?.Category">Ноутбуки</option>
+                    <option value="@ViewBag?.Category">Мониторы</option>
+                    <option value="@ViewBag?.Category">Смартфоны</option>
+                    <option value="@ViewBag?.Category">Планшеты</option>
+                    <option value="@ViewBag?.Category">Телевизоры</option>
+                    <option value="@ViewBag?.Category">Моноблоки</option>
+                    <option value="@ViewBag?.Category">Видеокамеры</option>
+                </select>
+                <p>Количество на складе:</p>
+                <input type="number" min="0" name="q" >
+                <!--<input type="text" name="category" value="@ViewBag?.Category">-->
                 <input type="submit" value="Добавить" id="addProduct">
                 
 

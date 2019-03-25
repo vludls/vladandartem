@@ -130,6 +130,13 @@ namespace vladandartem.Controllers
             //ViewBag.Test = "Тест";
             return View();
         }
+
+        [HttpGet]
+        public IActionResult PersArea()
+        {
+            //ViewBag.Test = "Тест";
+            return View();
+        }
         
         [HttpGet]
         public IActionResult Cart()

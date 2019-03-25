@@ -43,14 +43,14 @@ function readURL(input) {
         var reader = new FileReader();
 
         reader.onload = function (e) {
-            $('#addimg').attr('src', e.target.result);
+            $('.addimg').attr('src', e.target.result);
         }
 
         reader.readAsDataURL(input.files[0]);
     }
 }
 
-$("#file").change(function () {
+$(".file").change(function () {
     readURL(this);
 });
 

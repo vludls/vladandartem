@@ -6,6 +6,13 @@
         margin-top: 15px;
         font-family: Verdana, Geneva, Tahoma, sans-serif;
     }
+    .category {
+        width: 252px;
+        height: 28px;
+        border: 1px solid #a1a1a1;
+        outline: none;
+        padding: 0 5px;
+    }
     #add input {
         width: 230px;
         height: 25px;
@@ -16,7 +23,7 @@
         margin-top: 50px;
 
     }
-    #add #file {
+    #add .file {
         height: 21px;
         padding: 0;
         width: 250px;

@@ -62,7 +62,7 @@ header {
             padding: 10px;
             background: #fff;
         }
-        #cart a {
+        #cart a, .persarea a {
             font-family: Verdana, Geneva, Tahoma, sans-serif;
             text-decoration: none;
             color: #000;
