@@ -119,6 +119,7 @@ namespace vladandartem.Controllers
 
             ViewBag.Page = page;
             ViewBag.PagesCount = (int)Math.Ceiling((decimal)((double)(ProductCounted)/4));
+            ViewBag.Argument = arg;
 
             return View(products);
         }

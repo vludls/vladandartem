@@ -31,7 +31,7 @@ function scr() {
 }
 if (a.length > 19) {
     scr();
-    $('#sear').val(a.substr(19));
+    //$('#sear').val(a.substr(19));
 }
 if (a.substr(1, 5) == 'Page=') {
     scr();
