@@ -5,16 +5,17 @@
 
         <main class="container redact">
             <div class="imgProd"><img src="@Model?.ImgPath" alt=""></div>
-            @if(ViewBag.Errors != null)
-            {
-                <ul>
-                    @foreach (var error in ViewBag.Errors.ErrorMessages)
-                    {
-                        <li>@error</li>
-                    }
-                </ul>
-            }
+            
             <form action="~/Home/Edit" id="add" method="post" enctype="multipart/form-data">
+                @if(ViewBag.Errors != null)
+                    {
+                        <ul class="error">
+                            @foreach (var error in ViewBag.Errors.ErrorMessages)
+                            {
+                                <li>@error</li>
+                            }
+                        </ul>
+                    }
                 <p>Изображение:</p>
                 <input type="hidden" name="id" value="@Model?.Id">
                 <input type="hidden" name="imgpath" value="@Model?.ImgPath">

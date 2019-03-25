@@ -13,11 +13,10 @@
 var price = $('.priceincart>span').html();
 var p = [];
 for (var i = 0; i < $('.list ul').children('li').length; i++) {
-    //p[i] = $('.priceincart>span').html();
-    //alert($('.list ul').children('li').length);
+
     p[i] = $('.list ul li:nth-child(' + (i + 1) + ') .priceincart span').html();
 
-    alert(p[i]);
+
 }
 $('.q').each(
     $('.q').on('input', function () {
