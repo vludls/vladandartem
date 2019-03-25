@@ -1,4 +1,64 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿$(window).scroll(function () {
 
-// Write your JavaScript code.
+    if (document.documentElement.scrollTop > 35) {
+        $('.fix').removeClass('begin');
+        $('.fix').addClass('end');
+    } else {
+
+        $('.fix').addClass('begin');
+        $('.fix').removeClass('end');
+    }
+});
+
+var price = $('.priceincart>span').html();
+var p = [];
+for (var i = 0; i < $('.list ul').children('li').length; i++) {
+    //p[i] = $('.priceincart>span').html();
+    //alert($('.list ul').children('li').length);
+    p[i] = $('.list ul li:nth-child(' + (i + 1) + ') .priceincart span').html();
+
+    alert(p[i]);
+}
+$('.q').each(
+    $('.q').on('input', function () {
+
+        $(this).parent().next().children().html($(this).val() * p[$(this).closest('li').index()]);
+    })
+);
+var a = window.location.search;
+function scr() {
+
+    document.documentElement.scrollTop = '580';
+}
+if (a.length > 19) {
+    scr();
+    $('#sear').val(a.substr(19));
+}
+if (a.substr(1, 5) == 'Page=') {
+    scr();
+};
+
+function readURL(input) {
+
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $('#addimg').attr('src', e.target.result);
+        }
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+$("#file").change(function () {
+    readURL(this);
+});
+
+
+
+
+
+
+
+

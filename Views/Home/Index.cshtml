@@ -46,7 +46,7 @@ ViewData["Title"] = "Shop";
                     <!--<a href="" class="cart">
                         в корзину
                     </a>-->
-                        <input type="submit" value="в корзину">
+                        <input type="submit" value="в корзину" class="cart">
                     </form>
                     <a href="/home/Edit?id=@SomeProduct.Id" class="icons"><img src="~/images/r.png" alt=""></a>
                     
@@ -64,7 +64,7 @@ ViewData["Title"] = "Shop";
         </li>
     </ul>
 
-    <div class="container" id="pagin">
+    <div class="container pagin">
         @{
             int i = 0;
             if(ViewBag.Page >= 4)

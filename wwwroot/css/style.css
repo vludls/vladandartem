@@ -1,8 +1,12 @@
+input {
+    outline: none;
+}
 .container {
     width: 1140px;
     display: flex;
     flex-wrap: wrap;
     margin: 0 auto;
+    
 }
 header {
     background: #F3F3F3;
@@ -15,15 +19,42 @@ header {
     color: #fff;
     background: #4D4D4D;
 }
-
-    #center {
+    .fix {
+        height: 70px;
+        position: relative;
+        width: 100%;
+        
+    }
+    .fix .center {
+        margin: auto;
         justify-content: space-between;
         height: 70px;
         line-height: 70px;
+        width: 1140px;
     }
-        #logo {
+    
+    .begin {
+        position: absolute;
+        background: #F3F3F3;
+        z-index: 1;
+        left: 0;
+        right: 0;
+        width: 100%;
+    }
+    .end {
+        z-index: 1;
+        position: fixed;
+        top: 0;
+        background: #F3F3F3;
+        left: 0;
+        right: 0;
+        width: 100%;
+    }
+        #logo a {
             font-family: fantasy;
             font-size: 45px;
+            color: #000;
+            text-decoration: none;
         }
         #search input {
             margin-top: 16px;
@@ -38,6 +69,7 @@ header {
         }
 nav {
     background: #FAFAFA;
+    margin-top: 70px;
 }
     #menu {
         justify-content: center;
@@ -130,9 +162,14 @@ nav {
             left: 0;
             top: 0;
         }
-    .img img {
+    .img {
         width: 230px;
+        height: 230px;
     }
+        .img img {
+            max-width: 230px;
+            max-height: 230px;
+        }
     .name {
         font-size: 18px;
     }
@@ -179,19 +216,22 @@ nav {
         width: 20px;
         margin-top: 8px;
     }
-    .cart {        
+    .cart {
+        border-radius: 20px;        
         height: 40px;
         width: 140px;       
-        line-height: 40px;       
+        background: #62BFC4;       
         color: #fff;        
         font-family: Verdana, Geneva, Tahoma, sans-serif;
         font-variant: small-caps;
         font-weight: bold;
+        font-size: 16px;
+        cursor: pointer;
     }
-#pagin {
+.pagin {
     margin-bottom: 20px;
 }
-    #pagin a {
+    .pagin a {
         display: block;
         width: 40px;
         height: 40px;
@@ -202,7 +242,7 @@ nav {
         text-decoration: none;
         color: #000;
     }
-    #pagin a.active {
+    .pagin a.active {
         background: #d3d3d3;
     }  
 footer{

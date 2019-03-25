@@ -32,20 +32,22 @@
                     <p id="phone">8 (800) 456-78-90</p>
                 </div>
             </div>
-            <div class="container" id="center">
-                
-                    <div id="logo">
-                        Logo
+            <div class="fix begin">
+                <div>
+                    <div class="container center">
+                        <div id="logo">
+                            <a href="~/Home/Index">Logo</a>
+                        </div>
+                        <div id="search">
+                            <form action="~/Home/Index" method="get">
+                                <input type="hidden" name="isSearch" value="true">
+                                <input type="text" name="arg" placeholder="Поиск" id="sear">
+                                <input type="submit" value="Найти" style="width: 70px; cursor: pointer" id="find">
+                            </form>
+                        </div>
+                        <div id="cart"><a href="~/Home/Cart">Корзина (@(cart.Count()))</a></div>
                     </div>
-                    <div id="search">
-                        <form action="~/Home/Index" method="get">
-                            <input type="hidden" name="isSearch" value="true">
-                            <input type="text" name="arg" placeholder="Поиск">
-                            <input type="submit" value="Найти" style="width: 70px; cursor: pointer">
-                        </form>
-                    </div>
-                    <div id="cart"><a href="">Корзина (@(cart.Count()))</a></div>
-                
+                 </div> 
             </div>
             <nav>
                 <ul class="container" id="menu">

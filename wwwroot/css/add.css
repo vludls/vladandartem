@@ -1,5 +1,5 @@
 #add {
-    padding: 40px 0;
+    
     width: 300px;
 }
     #add p {
@@ -27,13 +27,22 @@
         margin-top: 20px;
         background: #62BFC4;
     }
-#imgProd {
-    display: block;
+.imgProd {
     height: 500px;
     width: 500px;
 }
-#redact {
+    .imgProd img {
+        max-width: 500px;
+        max-height: 500px;
+        outline: 1px solid #a1a1a1;
+    }
+.redact {
     justify-content: space-around;
     padding: 50px 0;
 }
-    
+
+    .error li {
+        border: 1px solid red; 
+        margin-bottom: 15px;
+        padding: 5px 10px;
+    }

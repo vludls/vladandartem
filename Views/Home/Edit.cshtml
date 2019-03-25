@@ -3,8 +3,8 @@
     ViewData["Title"] = "Redact Product";
 }
 
-        <main class="container" id="redact">
-            <img src="@Model?.ImgPath" alt="" id="imgProd">
+        <main class="container redact">
+            <div class="imgProd"><img src="@Model?.ImgPath" alt=""></div>
             @if(ViewBag.Errors != null)
             {
                 <ul>

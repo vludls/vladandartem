@@ -3,18 +3,20 @@
     ViewData["Title"] = "Add Product";
 }
 
-        <main class="container">
-            @if(Model != null)
-            {
-                <ul>
-                    @foreach (var error in Model.ErrorMessages)
-                    {
-                        <li>@error</li>
-                    }
-                </ul>
-            }
+        <main class="container redact">
+            <div class="imgProd"><img src="~/images/img.jpg" alt="" id="addimg"></div>
+            
 
             <form action="~/Home/Add" id="add" method="post" enctype="multipart/form-data">
+                @if(Model != null)
+                    {
+                        <ul class="error">
+                            @foreach (var error in Model.ErrorMessages)
+                            {
+                                <li>@error</li>
+                            }
+                        </ul>
+                    }
                 <p>Изображение:</p>
                 <input type="file" name="fileimg" id="file">
                 <p>Название:</p>
