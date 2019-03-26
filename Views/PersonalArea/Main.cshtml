@@ -6,28 +6,33 @@
     <div class="pincart">
         <p class="title">Корзина</p>
         <ul class="listinpers">
-            <li>
-                <div><img src="~/images/1.jpg" alt=""></div>
-                <div class="name-and-quan">
-                    <p>Название</p>
-                    <p>Количество: <span>5</span></p>
-                </div>
-                <p><span>3567</span> р.</p>
-            </li>
-            
+            @foreach(var product in ViewBag.CartProducts)
+            {
+                <li>
+                    <div><img src="@product.ImgPath" alt=""></div>
+                    <div class="name-and-quan">
+                        <p>@product.Name</p>
+                        <p>Количество: <span>1</span></p>
+                    </div>
+                    <p><span>@product.Price</span> р.</p>
+                </li>
+            }            
         </ul>
     </div>
     <div class="paid">
         <p class="title">Оплаченные</p>
         <ul class="listinpers">
-            <li>
-                <div><img src="~/images/1.jpg" alt=""></div>
-                <div class="name-and-quan">
-                    <p>Название</p>
-                    <p>Количество: <span>5</span></p>
-                </div>
-                <p><span>3567</span> р.</p>
-            </li>
+            @foreach(var product in ViewBag.PaidProducts)
+            {
+                <li>
+                    <div><img src="@product.ImgPath" alt=""></div>
+                    <div class="name-and-quan">
+                        <p>@product.Name</p>
+                        <p>Количество: <span>1</span></p>
+                    </div>
+                    <p><span>@product.Price</span> р.</p>
+                </li>
+            }
         </ul>
     </div>
 </main>

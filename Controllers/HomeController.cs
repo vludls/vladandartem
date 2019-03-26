@@ -27,12 +27,14 @@ namespace vladandartem.Controllers
     public class Cart
     {
         private List<int> data;
+        private readonly string FieldName;
 
         private ISession session;
-        public Cart(ISession session)
+        public Cart(ISession session, string FieldName)
         {
             data = new List<int>();
             this.session = session;
+            this.FieldName = FieldName;
         }
 
         public void Add(int id)
@@ -43,7 +45,7 @@ namespace vladandartem.Controllers
 
         public List<int> Decode()
         {
-            var SerializedString = session.GetString("cart");
+            var SerializedString = session.GetString(FieldName);
 
             if(SerializedString != null)
                 data = JsonConvert.DeserializeObject<List<int>>(SerializedString);
@@ -53,7 +55,7 @@ namespace vladandartem.Controllers
 
         public void Save()
         {
-            session.SetString("cart", JsonConvert.SerializeObject(data));
+            session.SetString(FieldName, JsonConvert.SerializeObject(data));
         }
 
         public void Delete(int id)
@@ -144,7 +146,7 @@ namespace vladandartem.Controllers
         {
             List<Product> Products = new List<Product>();
 
-            Cart cart = new Cart(HttpContext.Session);
+            Cart cart = new Cart(HttpContext.Session, "cart");
 
             foreach(var id in cart.Decode())
             {
@@ -160,7 +162,7 @@ namespace vladandartem.Controllers
         [HttpPost]
         public IActionResult AddCookie(int id)
         {
-            Cart cart = new Cart(HttpContext.Session);
+            Cart cart = new Cart(HttpContext.Session, "cart");
 
             cart.Decode();
             cart.Add(id);
@@ -171,7 +173,7 @@ namespace vladandartem.Controllers
         [HttpPost]
         public IActionResult RemoveProductCart(int id)
         {
-            Cart cart = new Cart(HttpContext.Session);
+            Cart cart = new Cart(HttpContext.Session, "cart");
 
             cart.Decode();
             cart.Delete(id);
@@ -374,6 +376,30 @@ namespace vladandartem.Controllers
             return percent;
         }
 
+        [HttpPost]
+        public IActionResult CartBuy()
+        {
+            Cart cart = new Cart(HttpContext.Session, "cart");
+            Cart cartPaid = new Cart(HttpContext.Session, "paid");
+
+            List<int> cartData = cart.Decode(); 
+            cartPaid.Decode();
+
+
+            if(cart.Decode() != null)
+            {
+                foreach(var id in cartData)
+                {
+                    cartPaid.Add(id);
+                    cart.Delete(id);
+                }
+            }
+
+            cart.Save();
+            cartPaid.Save();
+
+            return Redirect("~/PersonalArea/Main");
+        }
         private Errors CheckDataValidation(string name, string price, IFormFile fileimg, string manufacturer, int categoryId, string imgpath = "")
         {
             Errors errors = new Errors();
