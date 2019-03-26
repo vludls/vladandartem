@@ -4,7 +4,7 @@
 }
 
         <main class="container redact">
-            <div class="imgProd"><img src="@Model?.ImgPath" alt=""></div>
+            <div class="imgProd"><img src="@Model?.ImgPath" class="addimg" alt=""></div>
             
             <form action="~/Home/Edit" id="add" method="post" enctype="multipart/form-data">
                 @if(ViewBag.Errors != null)
@@ -27,18 +27,28 @@
                 <p>Производитель:</p>
                 <input type="text" name="manufacturer" value="@Model?.Manufacturer">
                 <p>Категория:</p>
-                <select name="category" class="category">
-                    <option value="@ViewBag?.Category">Ноутбуки</option>
+                <select name="categoryId" class="category">
+                    @foreach (var category in ViewBag.CategoriesList)
+                    {
+                        if(Model?.CategoryId == category.Id)
+                        {
+                            <option value="@category.Id" selected>@category.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@category.Id">@category.Name</option>
+                        }
+                    }
+                    <!--<option value="@ViewBag?.Category">Ноутбуки</option>
                     <option value="@ViewBag?.Category">Мониторы</option>
                     <option value="@ViewBag?.Category">Смартфоны</option>
                     <option value="@ViewBag?.Category">Планшеты</option>
                     <option value="@ViewBag?.Category">Телевизоры</option>
                     <option value="@ViewBag?.Category">Моноблоки</option>
-                    <option value="@ViewBag?.Category">Видеокамеры</option>
+                    <option value="@ViewBag?.Category">Видеокамеры</option>-->
                 </select>
                 <p>Количество на складе:</p>
-                <input type="number" min="0" name="q" >
-                <!--<input type="text" name="category" value="@Model?.Category">-->
+                <input type="number" min="0" name="count" value="@Model?.Count">
                 <input type="submit" value="Изменить" id="addProduct">
 
                 <!--<h2>Операционная система</h2>

@@ -127,6 +127,7 @@ namespace vladandartem.Controllers
         [HttpGet]
         public IActionResult Add()
         {
+            ViewBag.CategoriesList = myDb.Categories.ToList();
             //ViewBag.Test = "Тест";
             return View();
         }
@@ -182,10 +183,12 @@ namespace vladandartem.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
+            ViewBag.CategoriesList = myDb.Categories.ToList();
+
             return View(myDb.Products.Find(id));
         }
         [HttpPost]
-        public IActionResult Edit(int id, string name, string price, IFormFile fileimg, string imgpath, string manufacturer, string category)
+        public IActionResult Edit(int id, string name, string price, IFormFile fileimg, string imgpath, string manufacturer, int categoryId, int count)
         {
             Product someProduct = myDb.Products.Find(id);
 
@@ -194,7 +197,7 @@ namespace vladandartem.Controllers
                 price,
                 fileimg,
                 manufacturer,
-                category,
+                categoryId,
                 imgpath
             );
 
@@ -220,16 +223,19 @@ namespace vladandartem.Controllers
             someProduct.Price = Convert.ToInt32(price);
             someProduct.ImgPath = imgpath;
             someProduct.Manufacturer = manufacturer;
-            someProduct.Category = category;
+            someProduct.CategoryId = categoryId;
+            someProduct.Count = count;
 
             myDb.Products.Update(someProduct);
 
             myDb.SaveChanges();
 
+            ViewBag.CategoriesList = myDb.Categories.ToList();
+
             return View(someProduct);
         }
-        [HttpPost]
-        public IActionResult EditProduct(int id, string name, int price, IFormFile fileimg, string imgpath, string manufacturer, string category)
+        /*[HttpPost]
+        public IActionResult EditProduct(int id, string name, int price, IFormFile fileimg, string imgpath, string manufacturer, int categoryId)
         {
             Product somePoduct = myDb.Products.Find(id);
 
@@ -248,23 +254,23 @@ namespace vladandartem.Controllers
             somePoduct.Price = price;
             somePoduct.ImgPath = imgpath;
             somePoduct.Manufacturer = manufacturer;
-            somePoduct.Category = category;
+            somePoduct.CategoryId = categoryId;
 
             myDb.Products.Update(somePoduct);
 
             myDb.SaveChanges();
 
             return Redirect($"~/Home/Edit?id={id}");
-        }
+        }*/
         [HttpPost]
-        public IActionResult Add(string name, string price, IFormFile fileimg, string manufacturer, string category)
+        public IActionResult Add(string name, string price, IFormFile fileimg, string manufacturer, int categoryId, int count)
         {
             Errors errors = CheckDataValidation(
                 name,
                 price,
                 fileimg,
                 manufacturer,
-                category
+                categoryId
             );
 
             if(errors.ErrorMessages.Count() > 0)
@@ -272,7 +278,7 @@ namespace vladandartem.Controllers
                 ViewBag.Name = name;
                 ViewBag.Price = price;
                 ViewBag.Manufacturer = manufacturer;
-                ViewBag.Category = category;
+                ViewBag.CategoryId = categoryId;
 
                 return View(errors);
             }
@@ -289,7 +295,8 @@ namespace vladandartem.Controllers
                     Price = Convert.ToInt32(price),
                     ImgPath = "/images/Products/" + fileimg.FileName,
                     Manufacturer = manufacturer,
-                    Category = category
+                    CategoryId = categoryId,
+                    Count = count
                 }
             );
 
@@ -300,6 +307,9 @@ namespace vladandartem.Controllers
             //return Content(file.FileName);
             //ViewBag.Test = "Тест";
 
+            
+            ViewBag.CategoriesList = myDb.Categories.ToList();
+            
             return View();
         }
 
@@ -364,7 +374,7 @@ namespace vladandartem.Controllers
             return percent;
         }
 
-        private Errors CheckDataValidation(string name, string price, IFormFile fileimg, string manufacturer, string category, string imgpath = "")
+        private Errors CheckDataValidation(string name, string price, IFormFile fileimg, string manufacturer, int categoryId, string imgpath = "")
         {
             Errors errors = new Errors();
 
@@ -385,8 +395,8 @@ namespace vladandartem.Controllers
             if(String.IsNullOrEmpty(manufacturer))
                 errors.ErrorMessages.Add("Заполните поле названия Производителя!");
 
-            if(String.IsNullOrEmpty(category))
-                errors.ErrorMessages.Add("Заполните поле названия Категории!");
+            /*if(String.IsNullOrEmpty(categoryId))
+                errors.ErrorMessages.Add("Заполните поле названия Категории!");*/
 
             return errors;
         }

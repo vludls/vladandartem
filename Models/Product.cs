@@ -7,6 +7,7 @@ namespace vladandartem.Models
         public int Price { get; set; }
         public string ImgPath { get; set; }
         public string Manufacturer { get; set; }
-        public string Category { get; set; }
+        public int CategoryId { get; set; }
+        public int Count { get; set; }
     }
 }

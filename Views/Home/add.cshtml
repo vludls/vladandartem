@@ -4,7 +4,7 @@
 }
 
         <main class="container redact">
-            <div class="imgProd"><img src="~/images/img.jpg" alt="" class="addimg"></div>
+            <<div class="imgProd"><img src="~/images/img.jpg" alt="" class="addimg"></div>
             
 
             <form action="~/Home/Add" id="add" method="post" enctype="multipart/form-data">
@@ -26,18 +26,20 @@
                 <p>Производитель:</p>
                 <input type="text" name="manufacturer" value="@ViewBag?.Manufacturer">
                 <p>Категория:</p>
-                <select name="category" class="category">
-                    <option value="@ViewBag?.Category">Ноутбуки</option>
-                    <option value="@ViewBag?.Category">Мониторы</option>
+                <select name="categoryId" class="category">
+                    @foreach (var category in ViewBag.CategoriesList)
+                    {
+                        <option value="@category.Id">@category.Name</option>
+                    }
+                    <!--<option value="@ViewBag?.Category">Мониторы</option>
                     <option value="@ViewBag?.Category">Смартфоны</option>
                     <option value="@ViewBag?.Category">Планшеты</option>
                     <option value="@ViewBag?.Category">Телевизоры</option>
                     <option value="@ViewBag?.Category">Моноблоки</option>
-                    <option value="@ViewBag?.Category">Видеокамеры</option>
+                    <option value="@ViewBag?.Category">Видеокамеры</option>-->
                 </select>
                 <p>Количество на складе:</p>
-                <input type="number" min="0" name="q" >
-                <!--<input type="text" name="category" value="@ViewBag?.Category">-->
+                <input type="number" min="0" name="count">
                 <input type="submit" value="Добавить" id="addProduct">
                 
 
