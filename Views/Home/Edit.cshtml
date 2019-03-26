@@ -19,7 +19,8 @@
                 <p>Изображение:</p>
                 <input type="hidden" name="id" value="@Model?.Id">
                 <input type="hidden" name="imgpath" value="@Model?.ImgPath">
-                <input type="file" name="fileimg" class="file">
+                <label for="eimg" class="label">Выбрать</label>
+                <input type="file" name="fileimg" class="file" id="eimg">
                 <p>Название:</p>
                 <input type="text" name="name" value="@Model?.Name">
                 <p>Цена:</p>
@@ -49,7 +50,7 @@
                 </select>
                 <p>Количество на складе:</p>
                 <input type="number" min="0" name="count" value="@Model?.Count">
-                <input type="submit" value="Изменить" id="addProduct">
+                <input type="submit" value="Изменить" class="addProduct">
 
                 <!--<h2>Операционная система</h2>
                 <p>Операционная система:</p>

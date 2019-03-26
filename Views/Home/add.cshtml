@@ -18,7 +18,8 @@
                         </ul>
                     }
                 <p>Изображение:</p>
-                <input type="file" name="fileimg" class="file">
+                <label for="aimg" class="label">выбрать</label>
+                <input type="file" name="fileimg" class="file" id="aimg">
                 <p>Название:</p>
                 <input type="text" name="name" value="@ViewBag?.Name">
                 <p>Цена:</p>
@@ -40,7 +41,7 @@
                 </select>
                 <p>Количество на складе:</p>
                 <input type="number" min="0" name="count">
-                <input type="submit" value="Добавить" id="addProduct">
+                <input type="submit" value="Добавить" class="addProduct">
                 
 
 

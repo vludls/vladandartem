@@ -124,7 +124,7 @@ nav {
     #mainSlider {
         width: 820px;
         height: 420px;
-        background: #fff;
+        position: relative;
         overflow: hidden;
     }
         #mainSlider img {

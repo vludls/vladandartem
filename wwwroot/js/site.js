@@ -54,6 +54,36 @@ $(".file").change(function () {
     readURL(this);
 });
 
+//slider
+$(document).ready(function () {
+
+
+    var width = $('#mainSlider').width();
+
+    $('.slides>li:last-child').prependTo('.slides');
+    function nextslide() {
+        $('.slides').animate({
+            'margin-left': -width
+        }, 500, function () {
+            $('.slides>li:first-child').appendTo('.slides');
+            $('.slides').css('margin-left', 0)
+        })
+    }
+
+    function prevslide() {
+        $('.slides').animate({
+            'margin-left': width
+        }, 500, function () {
+            $('.slides>li:last-child').prependTo('.slides');
+            $('.slides').css('margin-left', 0)
+        })
+    }
+
+    $('.right').click(nextslide);
+    $('.left').click(prevslide);
+})
+//slider
+
 
 
 
