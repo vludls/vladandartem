@@ -3,3 +3,14 @@
     <input type="text" name="CategoryName" placeholder="Название категории">
     <input type="submit" value="Добавить">
 </form>
+
+Удалить категорию:
+<form action="~/AdminMenu/DeleteCategory" method="post">
+    <select name="CategoryId">
+        @foreach(var category in ViewBag.Categories)
+        {
+            <option value="@category.Id">@category.Name</option>
+        }
+    </select>
+    <input type="submit" value="Удалить">
+</form>
