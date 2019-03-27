@@ -84,7 +84,9 @@ $(document).ready(function () {
 })
 //slider
 
-
+$(document).ready(function () {
+    alert('!');
+})
 
 
 
