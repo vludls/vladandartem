@@ -32,24 +32,24 @@ namespace vladandartem.Controllers
 
             Cart cart = new Cart(HttpContext.Session, "cart");
 
-            foreach(var id in cart.Decode())
+            foreach(var product in cart.Decode())
             {
-                Product product = myDb.Products.Find(id);
+                Product productBuff = myDb.Products.Find(product.ProductId);
 
-                if(product != null)
-                    CartProducts.Add(product);
+                if(productBuff != null)
+                    CartProducts.Add(productBuff);
             }
 
             List<Product> PaidProducts = new List<Product>();
 
             Cart cartPaid = new Cart(HttpContext.Session, "paid");
 
-            foreach(var id in cartPaid.Decode())
+            foreach(var product in cartPaid.Decode())
             {
-                Product product = myDb.Products.Find(id);
+                Product productBuff = myDb.Products.Find(product.ProductId);
 
-                if(product != null)
-                    PaidProducts.Add(product);
+                if(productBuff != null)
+                    PaidProducts.Add(productBuff);
             }
 
             ViewBag.CartProducts = CartProducts;

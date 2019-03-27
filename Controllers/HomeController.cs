@@ -24,49 +24,68 @@ namespace vladandartem.Controllers
             ErrorMessages = new List<string>();
         }
     }
+    public struct CartProduct
+    {
+        public int ProductId;
+        public int ProductCount;
+    }
     public class Cart
     {
-        private List<int> data;
+        List<CartProduct> cartProduct = new List<CartProduct>();
+
         private readonly string FieldName;
 
         private ISession session;
+
         public Cart(ISession session, string FieldName)
         {
-            data = new List<int>();
             this.session = session;
             this.FieldName = FieldName;
         }
 
-        public void Add(int id)
+        public void Add(int id, int count = 1)
         {
-            if(!data.Contains(id))
-                data.Add(id);
+            if(!cartProduct.Any(product => product.ProductId == id))
+            {
+                cartProduct.Add(new CartProduct{ ProductId = id, ProductCount = count });
+            }
         }
-
-        public List<int> Decode()
+        public List<CartProduct> Decode()
         {
             var SerializedString = session.GetString(FieldName);
 
             if(SerializedString != null)
-                data = JsonConvert.DeserializeObject<List<int>>(SerializedString);
+                cartProduct = JsonConvert.DeserializeObject<List<CartProduct>>(SerializedString);
 
-            return data;
+            return cartProduct;
         }
 
         public void Save()
         {
-            session.SetString(FieldName, JsonConvert.SerializeObject(data));
+            session.SetString(FieldName, JsonConvert.SerializeObject(cartProduct));
         }
 
         public void Delete(int id)
+        {   
+            if(cartProduct.Any(product => product.ProductId == id))
+            {
+                CartProduct productBuff = cartProduct.Find(product => product.ProductId == id);
+
+                cartProduct.Remove(productBuff);
+            }
+        }
+
+        public void Edit(int id, int count)
         {
-            if(data.Contains(id))
-                data.Remove(id);
+            var product = cartProduct.FirstOrDefault(productBuff => productBuff.ProductId == id);
+
+            product.ProductCount = count;
+            //cartProduct.Ele.ProductCount = count;
         }
 
         public int Count()
         {
-            return data.Count();
+            return cartProduct.Count();
         }
     }
 
@@ -148,12 +167,12 @@ namespace vladandartem.Controllers
 
             Cart cart = new Cart(HttpContext.Session, "cart");
 
-            foreach(var id in cart.Decode())
+            foreach(var product in cart.Decode())
             {
-                Product product = myDb.Products.Find(id);
+                Product productBuff = myDb.Products.Find(product.ProductId);
 
-                if(product != null)
-                    Products.Add(product);
+                if(productBuff != null)
+                    Products.Add(productBuff);
             }
 
             return View(Products);
@@ -382,16 +401,16 @@ namespace vladandartem.Controllers
             Cart cart = new Cart(HttpContext.Session, "cart");
             Cart cartPaid = new Cart(HttpContext.Session, "paid");
 
-            List<int> cartData = cart.Decode(); 
+            List<CartProduct> cartData = cart.Decode(); 
             cartPaid.Decode();
 
 
             if(cart.Decode() != null)
             {
-                foreach(var id in cartData)
+                foreach(var product in cartData)
                 {
-                    cartPaid.Add(id);
-                    cart.Delete(id);
+                    cartPaid.Add(product.ProductId, product.ProductCount);
+                    cart.Delete(product.ProductId);
                 }
             }
 
@@ -399,6 +418,17 @@ namespace vladandartem.Controllers
             cartPaid.Save();
 
             return Redirect("~/PersonalArea/Main");
+        }
+        [HttpPost]
+        public IActionResult CartChangeProductNum(int id, int count)
+        {
+            Cart cart = new Cart(HttpContext.Session, "cart");
+
+            cart.Decode();
+            cart.Edit(id, count);
+            cart.Save();
+
+            return new EmptyResult();
         }
         private Errors CheckDataValidation(string name, string price, IFormFile fileimg, string manufacturer, int categoryId, string imgpath = "")
         {
