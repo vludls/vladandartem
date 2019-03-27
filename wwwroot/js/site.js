@@ -84,9 +84,22 @@ $(document).ready(function () {
 })
 //slider
 
-$(document).ready(function () {
-    alert('!');
-})
+document.ready(function() {
+    $("#quantity").bind("change", function() {
+        alert("123");
+
+        /*$.ajax({
+            url: "/Home/CartChangeProductNum",
+            method: "POST",
+            data: {
+                id: $("input[name=id]").value,
+                count: $("#quantity").value
+            },
+        });*/
+    });
+});
+
+
 
 
 
