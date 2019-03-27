@@ -44,6 +44,6 @@ embed {
 	vertical-align:top;
 }
 * { border:none}
-div, li{
+div, li, form{
 	box-sizing: border-box;
 }

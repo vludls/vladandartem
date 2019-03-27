@@ -1,6 +1,6 @@
 ﻿$(window).scroll(function () {
 
-    if (document.documentElement.scrollTop > 35) {
+    if (document.documentElement.scrollTop > 105) {
         $('.fix').removeClass('begin');
         $('.fix').addClass('end');
     } else {
@@ -27,7 +27,7 @@ $('.q').each(
 var a = window.location.search;
 function scr() {
 
-    document.documentElement.scrollTop = '580';
+    document.documentElement.scrollTop = '600';
 }
 if (a.length > 19) {
     scr();

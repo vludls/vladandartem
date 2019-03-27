@@ -24,7 +24,10 @@
                         <p class="priceincart">
                             <span>@product.Price</span> р.
                         </p>
-                        <input type="submit" name="delfromcart" id="delfromcart" value="X">
+                        <div>
+                            <input type="submit" name="delfromcart" id="delfromcart" value="X"><br>
+                            <input type="image" name="save" id="save" value="S" src="~/images/save.png">
+                        </div>
                     </form>
                 </li>
             }
@@ -33,7 +36,7 @@
     <!--<div class="continue">
         <a href="">Продолжить</a>
     </div>-->
-    <form action="~/Home/CartBuy" method="post">
+    <form action="~/Home/CartBuy" method="post" class="continue">
         <input type="submit" value="Оплатить">
     </form>
 </main>
