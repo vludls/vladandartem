@@ -27,6 +27,7 @@ namespace vladandartem.Controllers
     public struct CartProduct
     {
         public int ProductId;
+        public Product product;
         public int ProductCount;
     }
     public class Cart
@@ -77,10 +78,10 @@ namespace vladandartem.Controllers
 
         public void Edit(int id, int count)
         {
-            var product = cartProduct.FirstOrDefault(productBuff => productBuff.ProductId == id);
-
+            int index = cartProduct.FindIndex(x => x.ProductId == id);
+            var product = cartProduct[index];
             product.ProductCount = count;
-            //cartProduct.Ele.ProductCount = count;
+            cartProduct[index] = product;
         }
 
         public int Count()
@@ -163,16 +164,20 @@ namespace vladandartem.Controllers
         [HttpGet]
         public IActionResult Cart()
         {
-            List<Product> Products = new List<Product>();
+            List<CartProduct> Products = new List<CartProduct>();
 
             Cart cart = new Cart(HttpContext.Session, "cart");
 
-            foreach(var product in cart.Decode())
+            foreach(var sessionProduct in cart.Decode())
             {
-                Product productBuff = myDb.Products.Find(product.ProductId);
+                Product productBuff = myDb.Products.Find(sessionProduct.ProductId);
+                CartProduct cartProduct = sessionProduct;
 
                 if(productBuff != null)
-                    Products.Add(productBuff);
+                {
+                    cartProduct.product = productBuff;
+                    Products.Add(cartProduct);
+                }
             }
 
             return View(Products);
@@ -419,6 +424,11 @@ namespace vladandartem.Controllers
 
             return Redirect("~/PersonalArea/Main");
         }
+        [HttpGet]
+        public IActionResult CartChangeProductNum()
+        {
+            return View();
+        }
         [HttpPost]
         public IActionResult CartChangeProductNum(int id, int count)
         {
@@ -428,7 +438,7 @@ namespace vladandartem.Controllers
             cart.Edit(id, count);
             cart.Save();
 
-            return new EmptyResult();
+            return View();
         }
         private Errors CheckDataValidation(string name, string price, IFormFile fileimg, string manufacturer, int categoryId, string imgpath = "")
         {
