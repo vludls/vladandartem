@@ -128,7 +128,7 @@ nav {
         height: 420px;
         position: relative;
         overflow: hidden;
-        box-shadow: 0 0 25px;
+        box-shadow: 0 0 20px;
     }
         #mainSlider img {
             width: 820px;
@@ -219,17 +219,25 @@ nav {
         width: 20px;
         margin-top: 8px;
     }
-    .cart {
+    .cart, .nocart {
         border-radius: 20px;        
         height: 40px;
         width: 140px;       
-        background: #62BFC4;       
+               
         color: #fff;        
         font-family: Verdana, Geneva, Tahoma, sans-serif;
         font-variant: small-caps;
         font-weight: bold;
+        
+    }
+    .cart {
+        background: #62BFC4;
         font-size: 16px;
         cursor: pointer;
+    }
+    .nocart {
+        background: #FF5656;
+        font-size: 14px;
     }
 .pagin {
     margin-bottom: 20px;
