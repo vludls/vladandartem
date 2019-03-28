@@ -219,25 +219,24 @@ nav {
         width: 20px;
         margin-top: 8px;
     }
-    .cart, .nocart {
+    .cart {
         border-radius: 20px;        
         height: 40px;
         width: 140px;       
-               
+        background: #62BFC4;
+        font-size: 16px;
+        cursor: pointer;       
         color: #fff;        
         font-family: Verdana, Geneva, Tahoma, sans-serif;
         font-variant: small-caps;
         font-weight: bold;
         
     }
-    .cart {
-        background: #62BFC4;
-        font-size: 16px;
-        cursor: pointer;
-    }
-    .nocart {
+    
+    .cart:disabled {
         background: #FF5656;
         font-size: 14px;
+        cursor: inherit;
     }
 .pagin {
     margin-bottom: 20px;

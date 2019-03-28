@@ -69,9 +69,7 @@ ViewData["Title"] = "Shop";
                     <!--<a href="" class="cart">
                         в корзину
                     </a>-->
-                    @{
-                        string disabled = "disabled";
-                    }
+                    
                         <input type="submit" value="@(@SomeProduct.Count <= 0 ? "нет в наличии" : "в корзину")" class="cart" @(@SomeProduct.Count <= 0 ? " disabled=\"disabled\"" : "")>
                     </form>
                     <a href="/home/Edit?id=@SomeProduct.Id" class="icons"><img src="~/images/r.png" alt=""></a>
