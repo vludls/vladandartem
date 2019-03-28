@@ -1,36 +1,43 @@
-@model List<vladandartem.Controllers.CartProduct>
+@model List<vladandartem.ClassHelpers.CartProduct>
 @{
     ViewData["Title"] = "Shop";
 }
 <main class="container lop">
     <div class="list">
-        <ul>
-            @foreach (var element in Model)
-            {
-                <li>
-                    <form action="~/Home/RemoveProductCart" method="post">
-                        <input type="hidden" name="id" value="@element.product.Id">
-                        <div class="imincart">
-                            <img src="@element.product.ImgPath" alt="">
-                        </div>
-                        <p class="nameincart">
-                            @element.product.Name
-                        </p>
-                        <div class="quantity">
-                            <span>Количество:</span>
-                            <input type="number" value="@element.ProductCount" min="1" max="10" name="count" class="q" id="quantity">
-                        </div>
-                        <p class="priceincart">
-                            <span>@element.product.Price</span> р.
-                        </p>
-                        <div>
-                            <input type="submit" name="delfromcart" id="delfromcart" value="X"><br>
-                            <!--<input type="image" name="save" id="save" value="S" src="~/images/save.png">-->
-                        </div>
-                    </form>
-                </li>
-            }
-        </ul>
+        @if(Model.Count() > 0)
+        {
+            <ul>
+                @foreach (var element in Model)
+                {
+                    <li>
+                        <form action="~/Home/RemoveProductCart" method="post">
+                            <input type="hidden" name="id" value="@element.product.Id">
+                            <div class="imincart">
+                                <img src="@element.product.ImgPath" alt="">
+                            </div>
+                            <p class="nameincart">
+                                @element.product.Name
+                            </p>
+                            <div class="quantity">
+                                <span>Количество:</span>
+                                <input type="number" value="@element.ProductCount" min="1" max="10" name="count" class="q" id="quantity">
+                            </div>
+                            <p class="priceincart">
+                                <span>@element.product.Price</span> р.
+                            </p>
+                            <div>
+                                <input type="submit" name="delfromcart" id="delfromcart" value="X"><br>
+                                <!--<input type="image" name="save" id="save" value="S" src="~/images/save.png">-->
+                            </div>
+                        </form>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <h1>Корзина пуста</h1>
+        }
     </div>
     <!--<div class="continue">
         <a href="">Продолжить</a>

@@ -1,5 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Http;
-@using vladandartem.Controllers;
+@using vladandartem.ClassHelpers;
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @{
     Cart cart = new Cart(HttpContextAccessor.HttpContext.Session, "cart");
@@ -43,7 +43,7 @@
                         <div id="search">
                             <form action="~/Home/Index" method="get">
                                 <input type="hidden" name="isSearch" value="true">
-                                <input type="text" name="arg" placeholder="Поиск" id="sear" value="@ViewBag?.Argument">
+                                <input type="text" name="searchArgument" placeholder="Поиск" id="sear" value="@Model?.searchArgument">
                                 <input type="submit" value="Найти" style="width: 70px; cursor: pointer" id="find">
                             </form>
                         </div>

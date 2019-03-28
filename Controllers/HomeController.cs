@@ -11,7 +11,8 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System.IO;
 using System.Text.RegularExpressions;
 using vladandartem.Models;
-using Newtonsoft.Json;
+using vladandartem.ClassHelpers;
+using vladandartem.ViewModels;
 
 namespace vladandartem.Controllers
 {
@@ -22,71 +23,6 @@ namespace vladandartem.Controllers
         public Errors()
         {
             ErrorMessages = new List<string>();
-        }
-    }
-    public struct CartProduct
-    {
-        public int ProductId;
-        public Product product;
-        public int ProductCount;
-    }
-    public class Cart
-    {
-        List<CartProduct> cartProduct = new List<CartProduct>();
-
-        private readonly string FieldName;
-
-        private ISession session;
-
-        public Cart(ISession session, string FieldName)
-        {
-            this.session = session;
-            this.FieldName = FieldName;
-        }
-
-        public void Add(int id, int count = 1)
-        {
-            if(!cartProduct.Any(product => product.ProductId == id))
-            {
-                cartProduct.Add(new CartProduct{ ProductId = id, ProductCount = count });
-            }
-        }
-        public List<CartProduct> Decode()
-        {
-            var SerializedString = session.GetString(FieldName);
-
-            if(SerializedString != null)
-                cartProduct = JsonConvert.DeserializeObject<List<CartProduct>>(SerializedString);
-
-            return cartProduct;
-        }
-
-        public void Save()
-        {
-            session.SetString(FieldName, JsonConvert.SerializeObject(cartProduct));
-        }
-
-        public void Delete(int id)
-        {   
-            if(cartProduct.Any(product => product.ProductId == id))
-            {
-                CartProduct productBuff = cartProduct.Find(product => product.ProductId == id);
-
-                cartProduct.Remove(productBuff);
-            }
-        }
-
-        public void Edit(int id, int count)
-        {
-            int index = cartProduct.FindIndex(x => x.ProductId == id);
-            var product = cartProduct[index];
-            product.ProductCount = count;
-            cartProduct[index] = product;
-        }
-
-        public int Count()
-        {
-            return cartProduct.Count();
         }
     }
 
@@ -103,47 +39,43 @@ namespace vladandartem.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index(bool isSearch = false, string arg = "", int page = 0)
+        public IActionResult Index(bool isSearch = false, string searchArgument = "", int page = 0)
         {
-            if(String.IsNullOrEmpty(arg)) isSearch = false;
+            // Если в поиск ничего не введено, то помечаем что пользователь не хочет искать
+            if(String.IsNullOrEmpty(searchArgument)) isSearch = false;
 
-            var ProductsArray = myDb.Products.ToList();
-            
-            List<Product> products = new List<Product>();
+            IEnumerable<Product> products;
+            int productCounted = 0;
 
-            arg = Request.Query.FirstOrDefault(p => p.Key == "arg").Value;
-
-            int ProductCounted = 0;
-
-            for(int i = page * 4, j = 1; i < ProductsArray.Count(); i++, j++)
+            // Если в поиск введено значение
+            if(isSearch)
             {
-                if(isSearch)
-                {
-                    if(CompareTwoString(arg, ProductsArray[i].Name) < 50.0 &&
-                    CompareTwoString(arg, ProductsArray[i].Manufacturer) < 50.0
-                    )
-                    {
-                        j--;
-                        continue;
-                    }
-                    else
-                    {
-                        ProductCounted++;
-                    }
-                }
-
-                if(j > 4) continue;
-
-                products.Add(ProductsArray[i]);
+                // Заносит продукт в массив, если строка в поиске совпадает на 50%
+                // и более с названием товара
+                products = myDb.Products.Where(n => 
+                    CompareTwoString(searchArgument, n.Name) >= 50.0 ||
+                    CompareTwoString(searchArgument, n.Manufacturer) >= 50.0
+                );
+            }
+            // иначе
+            else
+            {
+                // Берем элементов на 5 страниц
+                products = myDb.Products.Take(4*5);
             }
 
-            ProductCounted = isSearch ? ProductCounted : ProductsArray.Count();
+            productCounted = products.Count();
+            products = products.Skip(page * 4);
+            products = products.Take(4);
 
-            ViewBag.Page = page;
-            ViewBag.PagesCount = (int)Math.Ceiling((decimal)((double)(ProductCounted)/4));
-            ViewBag.Argument = arg;
+            IndexViewModel ivm = new IndexViewModel {
+                products = products,
+                page = page,
+                pagesCount = (int)Math.Ceiling((decimal)((double)(productCounted)/4)),
+                searchArgument = searchArgument
+            };
 
-            return View(products);
+            return View(ivm);
         }
 
         [HttpGet]
@@ -157,7 +89,6 @@ namespace vladandartem.Controllers
         [HttpGet]
         public IActionResult PersArea()
         {
-            //ViewBag.Test = "Тест";
             return View();
         }
         
@@ -260,34 +191,6 @@ namespace vladandartem.Controllers
 
             return View(someProduct);
         }
-        /*[HttpPost]
-        public IActionResult EditProduct(int id, string name, int price, IFormFile fileimg, string imgpath, string manufacturer, int categoryId)
-        {
-            Product somePoduct = myDb.Products.Find(id);
-
-            if(fileimg != null)
-            {
-                string fileName;
-
-                fileName = HostEnv.WebRootPath + "/images/Products/" + fileimg.FileName;
-
-                fileimg.CopyTo(new FileStream(fileName, FileMode.Create));
-
-                imgpath = "/images/Products/" + fileimg.FileName;
-            }
-
-            somePoduct.Name = name;
-            somePoduct.Price = price;
-            somePoduct.ImgPath = imgpath;
-            somePoduct.Manufacturer = manufacturer;
-            somePoduct.CategoryId = categoryId;
-
-            myDb.Products.Update(somePoduct);
-
-            myDb.SaveChanges();
-
-            return Redirect($"~/Home/Edit?id={id}");
-        }*/
         [HttpPost]
         public IActionResult Add(string name, string price, IFormFile fileimg, string manufacturer, int categoryId, int count)
         {

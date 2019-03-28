@@ -1,4 +1,4 @@
-@model List<vladandartem.Models.Product>
+@model vladandartem.ViewModels.IndexViewModel
 @{
 ViewData["Title"] = "Shop";
 }
@@ -51,33 +51,33 @@ ViewData["Title"] = "Shop";
 
 <main>
     <ul class="container" id="products">
-        @foreach (var SomeProduct in Model)
+        @foreach (var product in Model.products)
         {
             <li>
                 <div class="img">
-                    <img src="@SomeProduct.ImgPath" alt="">
+                    <img src="@product.ImgPath" alt="">
                 </div>
                 <p class="name">
-                    @SomeProduct.Name
+                    @product.Name
                 </p>
                 <p class="price">
-                    @SomeProduct.Price р.
+                    @product.Price р.
                 </p>
                 <div class="links">
                     <form action="~/Home/AddCookie" method="post">
-                        <input type="hidden" name="id" value="@SomeProduct.Id">
+                        <input type="hidden" name="id" value="@product.Id">
                     <!--<a href="" class="cart">
                         в корзину
                     </a>-->
                     @{
                         string disabled = "disabled";
                     }
-                        <input type="submit" value="@(@SomeProduct.Count <= 0 ? "нет в наличии" : "в корзину")" class="cart" @(@SomeProduct.Count <= 0 ? " disabled=\"disabled\"" : "")>
+                        <input type="submit" value="@(@product.Count <= 0 ? "нет в наличии" : "в корзину")" class="cart" @(@product.Count <= 0 ? " disabled=\"disabled\"" : "")>
                     </form>
-                    <a href="/home/Edit?id=@SomeProduct.Id" class="icons"><img src="~/images/r.png" alt=""></a>
+                    <a href="/home/Edit?id=@product.Id" class="icons"><img src="~/images/r.png" alt=""></a>
 
                     <form action="~/Home/RemoveProduct" method="post">
-                        <input type="hidden" name="id" value="@SomeProduct.Id">
+                        <input type="hidden" name="id" value="@product.Id">
                         <div class="testclass"><input type="image" value="" src="~/images/d.png" width="25" height="25"></div>
                     </form>
                 </div>
@@ -90,24 +90,15 @@ ViewData["Title"] = "Shop";
     </ul>
 
     <div class="container pagin">
-        @{
+        @{  
             int i = 0;
-            if(ViewBag.Page >= 4)
-            {
-                i = ViewBag.Page - 2;
-            }
+            i = (Model.page >= 4 ? i - 2 : i);
         }
-            
-        @for (int j = 1; i < @ViewBag.PagesCount; i++, j++)
+        @for (int j = 1; i < Model.pagesCount; i++, j++)
         { 
-            if(j > 5)
-            {
-                break;
-            }
+            if(j > 5) { break; }
 
-            int pageNum = i + 1;
-
-            <a class="@(i == ViewBag.Page ? "active" : "")" href="~/Home/Index?Page=@i">@pageNum</a>
+            <a class="@(i == Model.page ? "active" : "")" href="~/Home/Index?Page=@i">@(i + 1)</a>
         }
     </div>
     
