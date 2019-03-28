@@ -18,12 +18,12 @@ for (var i = 0; i < $('.list ul').children('li').length; i++) {
 
 
 }
-$('.q').each(function() {
-        $('.q').on('input', function () {
+$('.q').each(function () {
+    $('.q').on('input', function () {
 
-            $(this).parent().next().children().html($(this).val() * p[$(this).closest('li').index()]);
-        });
-    }
+        $(this).parent().next().children().html($(this).val() * p[$(this).closest('li').index()]);
+    });
+}
 );
 var a = window.location.search;
 function scr() {
@@ -85,9 +85,9 @@ $(document).ready(function () {
 });
 //slider
 
-$(document).ready(function() {
-    $('.q').each(function() {
-        $(this).on('change', function() {
+$(document).ready(function () {
+    $('.q').each(function () {
+        $(this).on('change', function () {
             $.ajax({
                 url: "/Home/CartChangeProductNum",
                 type: "POST",
@@ -99,6 +99,7 @@ $(document).ready(function() {
         });
     });
 });
+
 
 
 
