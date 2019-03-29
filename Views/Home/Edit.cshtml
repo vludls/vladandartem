@@ -48,8 +48,8 @@
 
 
                 <!--<div class="custom-file label">
-                    <input type="file" name="fileimg" class="custom-file-input file" id="inputGroupFile03" aria-describedby="inputGroupFileAddon03">
-                    <label class="custom-file-label" for="inputGroupFile03">Выберите фотографию</label>
+                    <input type="file" name="fileimg" class="custom-file-input file" id="eimg">
+                    <label class="custom-file-label" for="eimg">Выберите фотографию</label>
                 </div>
                 <div class="form-group">
                     <label for="name-id">Название товара</label>
@@ -57,7 +57,7 @@
                 </div>
                 <div class="form-group">
                     <label for="price-id">Цена</label>
-                    <input type="number" class="form-control" id="price-id" value="@Model?.Price">
+                    <input type="text" class="form-control" id="price-id" value="@Model?.Price">
                 </div>
                 <div class="form-group">
                     <label for="m-id">Производитель</label>
@@ -65,7 +65,7 @@
                 </div>
                 <label for="select">Категория</label>
                 <select name="categoryId" class="form-control select">
-                    @foreach (var category in ViewBag.CategoriesList)
+                    @*@foreach (var category in ViewBag.CategoriesList)
                     {
                         if(Model?.CategoryId == category.Id)
                         {
@@ -75,7 +75,7 @@
                         {
                             <option value="@category.Id">@category.Name</option>
                         }
-                    }
+                    }*@
                 </select>
                 <div class="form-group">
                     <label for="q-id">Количество на складе</label>
