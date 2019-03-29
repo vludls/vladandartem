@@ -97,7 +97,7 @@ $(document).ready(function () {
                     count: $(this).val()
                 }),
                 success: function (data) {
-                    $(q).next().next().html(data);
+                    $(q).next().next().next().html(data);
 
                 }
             });
@@ -105,7 +105,27 @@ $(document).ready(function () {
     });
 });
 
+$(document).ready(function () {
+    var s = 0;
 
+    $('.priceincart > span').each(function () {
+        $(this).html($(this).html() * $(this).parent().prev().children('input').val())
+    });
+    $('.priceincart > span').each(function () {
+        s += (+$(this).html());
+    });
+    $('.total-price').html(s);
+    $('.q').each(function () {
+        s = 0;
+        $(this).on('input', function () {
+            s = 0;
+            $('.priceincart > span').each(function () {
+                s += (+$(this).html());
+            });
+            $('.total-price').html(s)
+        })
+    })
+})
 
 
 

@@ -7,6 +7,9 @@
         width: 535px;
         border: 2px solid #e1e1d1;
     }
+    .pincart {
+        margin-bottom: 20px;
+    }
         .title {
             height: 50px;
             text-align: center;

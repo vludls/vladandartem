@@ -20,8 +20,8 @@
                             </p>
                             <div class="quantity">
                                 <span>Количество:</span>
-                                <input type="number" value="@element.ProductCount" min="1" name="count" class="q" id="quantity">
-                                <span>На складе:</span><span>@element.product.Count</span>
+                                <input type="number" value="@element.ProductCount" min="1" name="count" class="q" id="quantity"><br>
+                                <span>На складе: </span><span>@element.product.Count</span>
 
                             </div>
                             <p class="priceincart">
@@ -45,6 +45,7 @@
         <a href="">Продолжить</a>
     </div>-->
     <form action="~/Home/CartBuy" method="post" class="continue">
-        <input type="submit" value="Оплатить">
+        <p class="total">Итоговая сумма: <span class="total-price">3456 </span><span>р.</span></p>
+        <input type="submit" value="Оплатить" class="btn btn-primary btn-lg btn-block">
     </form>
 </main>
