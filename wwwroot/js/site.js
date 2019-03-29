@@ -94,7 +94,10 @@ $(document).ready(function () {
                 data: ({
                     id: $(this).parent().parent().children().first().val(),
                     count: $(this).val()
-                })
+                }),
+                success: function(data) {
+                    alert($('.q').next().next().html());
+                }
             });
         });
     });

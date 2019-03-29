@@ -341,7 +341,9 @@ namespace vladandartem.Controllers
             cart.Edit(id, count);
             cart.Save();
 
-            return View();
+            Product product = myDb.Products.Find(id);
+
+            return new JsonResult(Convert.ToString(product.Count));
         }
         private Errors CheckDataValidation(string name, string price, IFormFile fileimg, string manufacturer, int categoryId, string imgpath = "")
         {

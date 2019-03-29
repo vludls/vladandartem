@@ -20,7 +20,9 @@
                             </p>
                             <div class="quantity">
                                 <span>Количество:</span>
-                                <input type="number" value="@element.ProductCount" min="1" max="10" name="count" class="q" id="quantity">
+                                <input type="number" value="@element.ProductCount" min="1" max="@element.product.Count" name="count" class="q" id="quantity">
+                                <span>На складе:</span><span>@element.product.Count</span>
+
                             </div>
                             <p class="priceincart">
                                 <span>@element.product.Price</span> р.
