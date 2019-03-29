@@ -97,7 +97,7 @@ $(document).ready(function () {
                     count: $(this).val()
                 }),
                 success: function (data) {
-                    alert($(q).next().next().html(data));
+                    $(q).next().next().html(data);
 
                 }
             });
