@@ -7,7 +7,7 @@
 Удалить категорию:
 <form action="~/AdminMenu/DeleteCategory" method="post">
     <select name="CategoryId">
-        @foreach(var category in ViewBag.Categories)
+        @foreach(var category in Model)
         {
             <option value="@category.Id">@category.Name</option>
         }

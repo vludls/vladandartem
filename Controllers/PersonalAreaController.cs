@@ -29,34 +29,23 @@ namespace vladandartem.Controllers
         [HttpGet]
         public IActionResult Main()
         {
-            List<Product> CartProducts = new List<Product>();
-
             Cart cart = new Cart(HttpContext.Session, "cart");
 
-            foreach(var product in cart.Decode())
-            {
-                Product productBuff = myDb.Products.Find(product.ProductId);
-
-                if(productBuff != null)
-                    CartProducts.Add(productBuff);
-            }
-
-            List<Product> PaidProducts = new List<Product>();
+            var cartProducts = from product in cart.Decode()
+                    let buff = myDb.Products.Find(product.ProductId)
+                    where buff != null
+                    select buff;
 
             Cart cartPaid = new Cart(HttpContext.Session, "paid");
 
-            foreach(var product in cartPaid.Decode())
-            {
-                Product productBuff = myDb.Products.Find(product.ProductId);
+            var paidProducts = from product in cartPaid.Decode()
+                    let buff = myDb.Products.Find(product.ProductId)
+                    where buff != null
+                    select buff;
 
-                if(productBuff != null)
-                    PaidProducts.Add(productBuff);
-            }
-
-            ViewBag.CartProducts = CartProducts;
-            ViewBag.PaidProducts = PaidProducts;
-
-            return View();
+            MainViewModel mvm = new MainViewModel{ cartProducts = cartProducts, paidProducts = paidProducts };
+            
+            return View(mvm);
         }
     }
 }
