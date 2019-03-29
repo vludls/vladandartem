@@ -87,6 +87,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
     $('.q').each(function () {
+        var q = this;
         $(this).on('change', function () {
             $.ajax({
                 url: "/Home/CartChangeProductNum",
@@ -95,8 +96,9 @@ $(document).ready(function () {
                     id: $(this).parent().parent().children().first().val(),
                     count: $(this).val()
                 }),
-                success: function(data) {
-                    alert($('.q').next().next().html());
+                success: function (data) {
+                    alert($(q).next().next().html(data));
+
                 }
             });
         });

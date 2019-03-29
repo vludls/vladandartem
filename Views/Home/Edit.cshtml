@@ -28,7 +28,7 @@
                 <p>Производитель:</p>
                 <input type="text" name="manufacturer" value="@Model?.Manufacturer">
                 <p>Категория:</p>
-                <select name="categoryId" class="category">
+                <select name="categoryId" class="form-control select">
                     @foreach (var category in ViewBag.CategoriesList)
                     {
                         if(Model?.CategoryId == category.Id)
