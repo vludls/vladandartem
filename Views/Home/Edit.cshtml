@@ -6,7 +6,7 @@
         <main class="container redact">
             <div class="imgProd"><img src="@Model?.ImgPath" class="addimg" alt=""></div>
             
-            <form action="~/Home/Edit" id="add" method="post" enctype="multipart/form-data">
+            <form action="~/Home/Edit" class="addandedit" method="post" enctype="multipart/form-data">
                 @if(ViewBag.Errors != null)
                     {
                         <ul class="error">
@@ -16,10 +16,10 @@
                             }
                         </ul>
                     }
-                <p>Изображение:</p>
+                
                 <input type="hidden" name="id" value="@Model?.Id">
                 <input type="hidden" name="imgpath" value="@Model?.ImgPath">
-                <label for="eimg" class="label">Выбрать</label>
+                
                 <input type="file" name="fileimg" class="file" id="eimg">
                 <p>Название:</p>
                 <input type="text" name="name" value="@Model?.Name">
@@ -40,43 +40,48 @@
                             <option value="@category.Id">@category.Name</option>
                         }
                     }
-                    <!--<option value="@ViewBag?.Category">Ноутбуки</option>
-                    <option value="@ViewBag?.Category">Мониторы</option>
-                    <option value="@ViewBag?.Category">Смартфоны</option>
-                    <option value="@ViewBag?.Category">Планшеты</option>
-                    <option value="@ViewBag?.Category">Телевизоры</option>
-                    <option value="@ViewBag?.Category">Моноблоки</option>
-                    <option value="@ViewBag?.Category">Видеокамеры</option>-->
+                    
                 </select>
                 <p>Количество на складе:</p>
                 <input type="number" min="0" name="count" value="@Model?.Count">
                 <input type="submit" value="Изменить" class="addProduct">
 
-                <!--<h2>Операционная система</h2>
-                <p>Операционная система:</p>
-                <input type="text">
-                <p>Обновление операционной системы:</p>
-                <input type="text">
 
-                <h2>Процессор</h2>
-                <p>Производитель процессора</p>
-                <input type="text">
-                <p>Тип процессора</p>
-                <input type="text">
-                <p>Количество ядер процессора</p>
-                <input type="text">
-                <p>Макс. такт. частота</p>
-                <input type="text">
-                <p>Кэш-память</p>
-                <input type="text">
-
-                <h2>Оперативная память</h2>
-                <p>Оперативная память (RAM)</p>
-                <input type="text">
-                <p>Тип памяти</p>
-                <input type="text">
-                <p>Частота памяти</p>
-                <input type="text">-->
+                <!--<div class="custom-file label">
+                    <input type="file" name="fileimg" class="custom-file-input file" id="inputGroupFile03" aria-describedby="inputGroupFileAddon03">
+                    <label class="custom-file-label" for="inputGroupFile03">Выберите фотографию</label>
+                </div>
+                <div class="form-group">
+                    <label for="name-id">Название товара</label>
+                    <input type="text" class="form-control" id="name-id" name="name" value="@Model?.Name">
+                </div>
+                <div class="form-group">
+                    <label for="price-id">Цена</label>
+                    <input type="number" class="form-control" id="price-id" value="@Model?.Price">
+                </div>
+                <div class="form-group">
+                    <label for="m-id">Производитель</label>
+                    <input type="text" class="form-control" id="m-id" name="manufacturer" value="@Model?.Manufacturer">
+                </div>
+                <label for="select">Категория</label>
+                <select name="categoryId" class="form-control select">
+                    @foreach (var category in ViewBag.CategoriesList)
+                    {
+                        if(Model?.CategoryId == category.Id)
+                        {
+                            <option value="@category.Id" selected>@category.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@category.Id">@category.Name</option>
+                        }
+                    }
+                </select>
+                <div class="form-group">
+                    <label for="q-id">Количество на складе</label>
+                    <input type="number" class="form-control" id="q-id" min="0" name="count" value="@Model?.Count">
+                </div>
+                <button type="submit" class="btn btn-primary">Изменить</button>-->
                 
             </form>
         </main>

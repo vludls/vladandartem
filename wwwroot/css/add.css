@@ -1,63 +1,22 @@
-#add {
+form.addandedit {
     
     width: 300px;
-}
-    #add p {
-        margin-top: 15px;
-        font-family: Verdana, Geneva, Tahoma, sans-serif;
-    }
-    .category {
-        width: 252px;
-        padding: 9px 10px;
-        border-radius: 15px;
-        border: 1px solid #a1a1a1;
-        outline: none;
-        
-    }
-    .label {
-        display: block;
-        border: 1px solid #a1a1a1;
-        border-radius: 15px;
-        width: 230px;
-        padding: 8.5px 10px;
-    }
-    
-    #add input {
-        width: 230px;
-        border: 1px solid #a1a1a1;
-        border-radius: 15px;
-        padding: 10px;
-    }
-    #add h2 {
-        margin-top: 50px;
-
-    }
-    .file {
-        display: none;
-    }
-    #add .addProduct {
-        cursor: pointer;
-        width: 252px;
-        margin-top: 20px;
-        background: #62BFC4;
-    }
+} 
 .imgProd {
     height: 500px;
     width: 500px;
 }
     .imgProd img {
         max-width: 500px;
-        max-height: 500px;
-        
+        max-height: 500px;   
     }
 .redact {
     justify-content: space-around;
     padding: 50px 0;
 }
-
-    .error li {
-        border: 1px solid red; 
-        margin-bottom: 15px;
-        padding: 10px;
-        border-radius: 15px;
-    }
+.label {
+    z-index: 0;
+}
+.select, .label {
+    margin-bottom: 16px;
+}

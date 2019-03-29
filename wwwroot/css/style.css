@@ -1,6 +1,4 @@
-input {
-    outline: none;
-}
+
 .container {
     width: 1140px;
     display: flex;
@@ -19,6 +17,10 @@ header {
     color: #fff;
     background: #4D4D4D;
 }
+    .search-form {
+        width: 300px;
+        margin-top: 17px;
+    }
     .fix {
         height: 70px;
         position: relative;
@@ -56,12 +58,7 @@ header {
             color: #000;
             text-decoration: none;
         }
-        #search input {
-            margin-top: 16px;
-            width: 250px;
-            padding: 10px;
-            background: #fff;
-        }
+        
         #cart a, .persarea a {
             font-family: Verdana, Geneva, Tahoma, sans-serif;
             text-decoration: none;
@@ -177,7 +174,7 @@ nav {
         font-size: 18px;
     }
     .price {
-        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        
         font-size: 20px;
         font-weight: bold;
         color: #FF5656;
@@ -186,18 +183,7 @@ nav {
         display: flex;
         justify-content: space-between;
     }
-    .links a, #del {
-        display: block;
-        text-decoration: none;
-        border-radius: 20px;
-        height: 40px;
-        background: #62BFC4;
-        text-align: center;
-    }
-    #del {
-        cursor: pointer;
-        
-    }
+    
 
     .testclass
     {
