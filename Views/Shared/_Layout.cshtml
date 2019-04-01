@@ -34,6 +34,15 @@
             <div id="top">
                 <div class="container">
                     <p id="phone">8 (800) 456-78-90</p>
+                    <div class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            Example@mail.ru
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="#">Выйти</a>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="fix begin">
@@ -52,14 +61,34 @@
                                 </div>
                             </div>
                         </form>
-                        <!--<form action="~/Home/Index" method="get">
-                            <input type="hidden" name="isSearch" value="true">
-                            <input type="text" name="searchArgument" placeholder="Поиск" id="sear" value="@(Model is vladandartem.ViewModels.IndexViewModel ? Model?.searchArgument : "")">
-                            <input type="submit" value="Найти" style="width: 70px; cursor: pointer" id="find">
-                        </form>-->
                         
-                        <div class="persarea"><a href="~/PersonalArea/Main">Личный кабинет</a></div>
-                        <div id="cart"><a href="~/Home/Cart">Корзина (@(cart.Count()))</a></div>
+                        <!--<div class="top-buttons">
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Example@mail.ru
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href="~/PersonalArea/Main">Личный кабинет</a>
+                                    <a class="dropdown-item" href="#">Админка</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#">Выйти</a>
+                                </div>
+                            </div>
+                        </div>-->
+                        <div class="nav-item dropdown top-buttons">
+                            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                                Личный кабинет
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="dropdown-item" href="#">Профиль</a>
+                                <a class="dropdown-item" href="#">Админка</a>
+                                <a class="dropdown-item" href="~/Home/Cart">Корзина</a>
+                                <a class="dropdown-item" href="~/PersonalArea/Main">Оплаченные товары</a>
+                            </div>
+                        </div>
+
+                        <div id="cart" class="top-buttons"><a href="~/Home/Cart" class="nav-link">Корзина (@(cart.Count()))</a></div>
                     </div>
                  </div> 
             </div>

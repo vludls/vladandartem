@@ -1,5 +1,8 @@
+.nav-in-pers {
+    margin-top: 30px;
+}
 .lop {
-    padding: 70px 0 60px;
+    padding: 30px 0 60px;
     justify-content: space-between;
 }
 .list {
@@ -28,9 +31,10 @@
                 max-height: 80px;
             }
             #quantity {
-                width: 70px;
+                width: 65px;
                 padding: 10px;
                 background: #F3F3F3;
+                display: inline-block;
             }
         .nameincart {
             width: 360px;
