@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
 using vladandartem.Models;
 
-namespace vladandartem.ViewModels
+namespace vladandartem.ViewModels.Home
 {
     public class AddViewModel
     {

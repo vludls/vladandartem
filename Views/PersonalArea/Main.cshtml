@@ -3,36 +3,13 @@
 }
 <ul class="nav nav-pills container nav-in-pers">
     <li class="nav-item">
-        <a class="nav-link active" href="#">Профиль</a>
+        <a class="nav-link active" href="~/PersonalArea/Main">Профиль</a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="~/Home/Cart">Корзина</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="~/PersonalArea/Main">Оплаченные товары</a>
+        <a class="nav-link" href="~/PersonalArea/PaidProducts">Оплаченные товары</a>
     </li>
 
 </ul>
-
-<main class="container pa">
-
-    
-    <div class="over">
-        <ul class="list">
-            @foreach(var element in Model.paidProducts)
-            {
-                <li>
-                    <div><img src="@element.product.ImgPath" alt=""></div>
-                    <div class="name-and-quan">
-                        <p>@element.product.Name</p>
-                        <!--<p><span>@element.ProductCount</span> шт.</p>-->
-                        <h3><span class="badge badge-primary">@element.ProductCount</span></h3><span> шт.</span>
-                    </div>
-                    <p><span>@element.product.Price</span> р.</p>
-                </li>
-            }
-        </ul>
-    </div>
-    
-</main>
-
