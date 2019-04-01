@@ -16,16 +16,6 @@ using vladandartem.ViewModels;
 
 namespace vladandartem.Controllers
 {
-    public class Errors
-    {
-        public List<string> ErrorMessages;
-
-        public Errors()
-        {
-            ErrorMessages = new List<string>();
-        }
-    }
-
     public class HomeController : Controller
     {
         private ProductContext myDb;
@@ -79,14 +69,6 @@ namespace vladandartem.Controllers
         }
 
         [HttpGet]
-        public IActionResult Add()
-        {
-            ViewBag.CategoriesList = myDb.Categories.ToList();
-            //ViewBag.Test = "Тест";
-            return View();
-        }
-
-        [HttpGet]
         public IActionResult PersArea()
         {
             return View();
@@ -95,23 +77,18 @@ namespace vladandartem.Controllers
         [HttpGet]
         public IActionResult Cart()
         {
-            List<CartProduct> Products = new List<CartProduct>();
-
             Cart cart = new Cart(HttpContext.Session, "cart");
 
-            foreach(var sessionProduct in cart.Decode())
-            {
-                Product productBuff = myDb.Products.Find(sessionProduct.ProductId);
-                CartProduct cartProduct = sessionProduct;
+            var products = from element in cart.Decode()
+                        let buff = myDb.Products.Find(element.ProductId)
+                        where buff != null
+                        select new CartProduct {
+                            ProductId = element.ProductId,
+                            product = buff,
+                            ProductCount = element.ProductCount
+                        };
 
-                if(productBuff != null)
-                {
-                    cartProduct.product = productBuff;
-                    Products.Add(cartProduct);
-                }
-            }
-
-            return View(Products);
+            return View(products);
         }
 
         [HttpPost]
@@ -147,53 +124,7 @@ namespace vladandartem.Controllers
 
             return View(evm);
         }
-        /*[HttpPost]
-        public IActionResult Edit(int id, string name, string price, IFormFile fileimg, string imgpath, string manufacturer, int categoryId, int count)
-        {
-            Product someProduct = myDb.Products.Find(id);
 
-            Errors errors = CheckDataValidation(
-                name,
-                price,
-                fileimg,
-                manufacturer,
-                categoryId,
-                imgpath
-            );
-
-            if(errors.ErrorMessages.Count() > 0)
-            {
-                ViewBag.Errors = errors;
-
-                return View(someProduct);
-            }
-
-            if(fileimg != null)
-            {
-                string fileName;
-
-                fileName = HostEnv.WebRootPath + "/images/Products/" + fileimg.FileName;
-
-                fileimg.CopyTo(new FileStream(fileName, FileMode.Create));
-
-                imgpath = "/images/Products/" + fileimg.FileName;
-            }
-
-            someProduct.Name = name;
-            someProduct.Price = Convert.ToInt32(price);
-            someProduct.ImgPath = imgpath;
-            someProduct.Manufacturer = manufacturer;
-            someProduct.CategoryId = categoryId;
-            someProduct.Count = count;
-
-            myDb.Products.Update(someProduct);
-
-            myDb.SaveChanges();
-
-            ViewBag.CategoriesList = myDb.Categories.ToList();
-
-            return View(someProduct);
-        }*/
         [HttpPost]
         public IActionResult Edit(EditViewModel evm, IFormFile fileImg)
         {
@@ -218,55 +149,39 @@ namespace vladandartem.Controllers
             
             return View(evm);
         }
-        [HttpPost]
-        public IActionResult Add(string name, string price, IFormFile fileimg, string manufacturer, int categoryId, int count)
+
+        [HttpGet]
+        public IActionResult Add()
         {
-            /*Errors errors = CheckDataValidation(
-                name,
-                price,
-                fileimg,
-                manufacturer,
-                categoryId
-            );
-
-            if(errors.ErrorMessages.Count() > 0)
+            return View(new AddViewModel { product = null, fileImg = null, categories = myDb.Categories.ToList() });
+        }
+        [HttpPost]
+        public IActionResult Add(AddViewModel avm)
+        {
+            if(ModelState.IsValid)
             {
-                ViewBag.Name = name;
-                ViewBag.Price = price;
-                ViewBag.Manufacturer = manufacturer;
-                ViewBag.CategoryId = categoryId;
+                string fileName;
 
-                return View(errors);
-            }*/
+                fileName = $"{HostEnv.WebRootPath}/images/Products/{avm.fileImg.FileName}";
 
-            string fileName;
+                avm.fileImg.CopyTo(new FileStream(
+                    $"{HostEnv.WebRootPath}/images/Products/{avm.fileImg.FileName}", 
+                    FileMode.Create
+                    )
+                );
 
-            fileName = HostEnv.WebRootPath + "/images/Products/" + fileimg.FileName;
+                avm.product.ImgPath = $"/images/Products/{avm.fileImg.FileName}";
 
-            fileimg.CopyTo(new FileStream(fileName, FileMode.Create));
+                myDb.Products.Add(avm.product);
 
-            myDb.Products.AddRange(
-                new Product{
-                    Name = name,
-                    Price = Convert.ToInt32(price),
-                    ImgPath = "/images/Products/" + fileimg.FileName,
-                    Manufacturer = manufacturer,
-                    CategoryId = categoryId,
-                    Count = count
-                }
-            );
+                myDb.SaveChanges();
 
-            myDb.SaveChanges();
-            //string someData = $"Название товара: {name} Цена товара: {price}";
+                return Redirect("~/Home/Index");
+            }
 
-            //return Content(Path.GetFileName(fileimg.FileName));
-            //return Content(file.FileName);
-            //ViewBag.Test = "Тест";
-
+            avm.categories = myDb.Categories.ToList();
             
-            ViewBag.CategoriesList = myDb.Categories.ToList();
-            
-            return View();
+            return View(avm);
         }
 
         [HttpPost]
@@ -287,8 +202,8 @@ namespace vladandartem.Controllers
             int firstArrayWordsCount = strFirstWordsArray.Count();
             int secondsArrayWordsCount = strSecondWordsArray.Count();
 
-            string[] MaxWordsArray; // = firstArrayWordsCount > secondsArrayWordsCount ? strFirstWordsArray : strSecondWordsArray;
-            string[] MinWordsArray; // = firstArrayWordsCount < secondsArrayWordsCount ? strFirstWordsArray : strSecondWordsArray;
+            string[] MaxWordsArray;
+            string[] MinWordsArray;
             
             if(firstArrayWordsCount > secondsArrayWordsCount)
             {
@@ -387,32 +302,6 @@ namespace vladandartem.Controllers
 
             return new JsonResult(Convert.ToString(product.Count));
         }
-        /*private Errors CheckDataValidation(string name, string price, IFormFile fileimg, string manufacturer, int categoryId, string imgpath = "")
-        {
-            Errors errors = new Errors();
-
-            if(fileimg == null && imgpath == "")
-                errors.ErrorMessages.Add("Добавьте изображение товара!");
-
-            if(String.IsNullOrEmpty(name)) 
-                errors.ErrorMessages.Add("Заполните поле названия товара!");
-
-            Regex regex = new Regex(@"\d+");
-
-            if(String.IsNullOrEmpty(price))
-                errors.ErrorMessages.Add("Заполните поле цены товара!");
-            else
-                if(!regex.IsMatch(price))
-                    errors.ErrorMessages.Add("Цена может содержать только цифры!");
-
-            if(String.IsNullOrEmpty(manufacturer))
-                errors.ErrorMessages.Add("Заполните поле названия Производителя!");
-
-            if(String.IsNullOrEmpty(categoryId))
-                errors.ErrorMessages.Add("Заполните поле названия Категории!");
-
-            return errors;
-        }*/
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

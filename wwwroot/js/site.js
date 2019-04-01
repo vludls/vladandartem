@@ -144,6 +144,12 @@ $(document).ready(function () {
 });
 //Цена в корзине
 
+$(document).ready(function () {
+    $('#aimg').on('change', function() {
+        $('#add-img-path').val($('#aimg').val());
+    });
+});
+
 //Цена в оплаченных
 $(document).ready(function () {
     $('.list > li > p > span').each(function () {
