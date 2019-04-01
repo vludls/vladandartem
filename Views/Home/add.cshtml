@@ -8,30 +8,84 @@
             
 
             <form action="~/Home/Add" class="addandedit" method="post" enctype="multipart/form-data">
-                <p>Изображение:</p>
-                <label for="aimg" class="label">выбрать</label>
-                <input type="file" name="fileImg" class="file" id="aimg">
+                <div class="custom-file label">
+                    <input type="file" name="fileImg" class="custom-file-input file" id="aimg">
+                    <label class="custom-file-label" for="aimg">Выберите фотографию</label>
+                </div>
                 <span asp-validation-for="fileImg"></span>
                 <input type="hidden" name="product.ImgPath" id="add-img-path">
-                <p>Название:</p>
-                <input type="text" name="product.Name" value="@Model?.product?.Name">
+                <div class="form-group">
+                    <label for="name-add">Название товара</label>
+                    <input type="text" class="form-control" id="name-add" name="product.Name" value="@Model?.product?.Name">
+                    <span asp-validation-for="product.Name"></span>
+                </div>
                 <span asp-validation-for="product.Name"></span>
-                <p>Цена:</p>
-                <input type="text" name="product.price" value="@Model?.product?.Price">
-                <p>Производитель:</p>
-                <input type="text" name="product.Manufacturer" value="@Model?.product?.Manufacturer">
-                <span asp-validation-for="product.Manufacturer"></span>
-                <p>Категория:</p>
-                <select name="product.CategoryId" class="category">
-                    @foreach (var category in Model?.categories)
+                <div class="form-group">
+                    <label for="Price-add">Цена</label>
+                    <input type="number" min="1" name="product.price" class="form-control" id="Price-add" value="@Model?.product?.Price">
+                </div>
+                <div class="form-group">
+                    <label for="Manufacturer-add">Производитель</label>
+                    <input type="text" class="form-control" id="Manufacturer-add" name="product.Manufacturer" value="@Model?.product?.Manufacturer">
+                    <span asp-validation-for="product.Manufacturer"></span>
+                </div>
+                
+                <label for="select-add">Категория</label>
+                <select name="product.CategoryId" class="form-control select" id="select-add">
+                   @foreach (var category in Model?.categories)
                     {
                         <option value="@category.Id">@category.Name</option>
                     }
-                    
                 </select>
-                <p>Количество на складе:</p>
-                <input type="number" min="0" name="product.count" value="@Model?.product?.Count">
-                <input type="submit" value="Добавить" class="addProduct">
+                
+                <div class="form-group">
+                    <label for="q-add">Количество на складе</label>
+                    <input type="number" class="form-control" id="q-add" min="0" name="product.count" value="@Model?.product?.Count">
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Добавить</button>
+
+                <!--new
+
+                
+                <div class="custom-file label">
+                    <input type="file" name="fileimg" class="custom-file-input file" id="eimg">
+                    <label class="custom-file-label" for="eimg">Выберите фотографию</label>
+                </div>
+                <div class="form-group">
+                    <label for="name-id">Название товара</label>
+                    <input type="text" class="form-control" id="name-id" name="product.name" value="@Model?.product?.Name">
+                    <span asp-validation-for="product.Name"></span>
+                </div>
+                <div class="form-group">
+                    <label for="Price">Цена</label>
+                    <input type="number" min="1" name="product.price" class="form-control" id="Price" value="@Model?.product?.Price">
+                </div>
+                <div class="form-group">
+                    <label for="Manufacturer">Производитель</label>
+                    <input type="text" class="form-control" id="Manufacturer" name="product.Manufacturer" value="@Model?.product?.Manufacturer">
+                    <span asp-validation-for="product.Manufacturer"></span>
+                </div>
+                <label for="select">Категория</label>
+                <select name="product.categoryId" class="form-control select" id="select">
+                <span asp-validation-for="product.CategoryId"></span>
+                    @*@foreach (var category in Model?.categories)
+                    {
+                        if(Model?.product?.CategoryId == category.Id)
+                        {
+                            <option value="@category.Id" selected>@category.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@category.Id">@category.Name</option>
+                        }
+                    }*@
+                </select>
+                <div class="form-group">
+                    <label for="q-id">Количество на складе</label>
+                    <input type="number" class="form-control" id="q-id" min="0" name="product.count" value="@Model?.product?.Count">
+                </div>
+                <button type="submit" class="btn btn-primary">Изменить</button>-->
             </form>
         </main>
 
