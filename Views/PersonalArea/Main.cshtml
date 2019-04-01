@@ -15,39 +15,24 @@
 </ul>
 
 <main class="container pa">
-    <div class="allcart">
-        <div class="pincart">
-            <p class="title">Корзина</p>
-            <ul class="listinpers">
-                @*@foreach(var product in Model.cartProducts)
-                {
-                    <li>
-                        <div><img src="@product.ImgPath" alt=""></div>
-                        <div class="name-and-quan">
-                            <p>@product.Name</p>
-                            <p><span>1</span> шт.</p>
-                        </div>
-                        <p><span>@product.Price</span> р.</p>
-                    </li>
-                }*@       
-            </ul>
-        </div>
-    </div>
 
-    <div class="paid">
-        <p class="title">Оплаченные</p>
-        <ul class="listinpers">
+    
+    <div class="over">
+        <ul class="list">
             @foreach(var element in Model.paidProducts)
             {
                 <li>
                     <div><img src="@element.product.ImgPath" alt=""></div>
                     <div class="name-and-quan">
                         <p>@element.product.Name</p>
-                        <p><span>@element.ProductCount</span> шт.</p>
+                        <!--<p><span>@element.ProductCount</span> шт.</p>-->
+                        <h3><span class="badge badge-primary">@element.ProductCount</span></h3><span> шт.</span>
                     </div>
                     <p><span>@element.product.Price</span> р.</p>
                 </li>
             }
         </ul>
     </div>
+    
 </main>
+

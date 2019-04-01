@@ -3,56 +3,39 @@
     padding: 30px 0;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
-    .pincart, .paid {
-        width: 535px;
+    .over {
+        max-height: 600px;
+        overflow: auto;
         border: 2px solid #e1e1d1;
     }
-    .pincart {
-        margin-bottom: 20px;
-    }
-        .title {
-            height: 50px;
-            text-align: center;
-            line-height: 50px;
-            background: #62BFC4;
-            color: #fff;
-            font-weight: bold;
-        }
-        .listinpers {
+        .pa .list {
             padding: 10px 10px 0;
-            min-height: 92px;
-            max-height: 238px;
-            overflow: auto;
+            width: 700px;
         }
-            .listinpers li {
+            .pa .list li {
                 padding: 5px;
-                height: 70px;
+                height: 100px;
                 margin-bottom: 10px;
-                outline: 2px solid #e1e1d1;
                 display: flex;
-                justify-content: space-between;
             }
-                .listinpers li > div:first-child {
-                    width: 70px;
+            .pa .list li > div {
+                margin-right: 20px;
+            }
+                .pa .list li > div:first-child {
+                    width: 90px;
                     height: 100%;  
                 }
-                .listinpers li > p {
+                .pa .list li > p {
+                    width: 95px;
                     color: #FF5656;
                     font-weight: bold;
+                    text-align: right;
                 }
                 .name-and-quan {
-                    width: 300px; 
+                    width: 500px; 
                 }
-                    .name-and-quan p:last-child{
-                        width: 70px;
-                        padding: 5px;
-                        background: #62BFC4;
-                        color: #fff;
-                        font-weight: bold;
-                        text-align: center;
-                        border-radius: 15px;
-                    }
-                    .listinpers li > div > img {
-                        max-width: 70px;
-                        max-height: 60px;
+                    
+                    .pa .list li > div > img {
+                        max-width: 90px;
+                        max-height: 90px;
                     }

@@ -144,7 +144,14 @@ $(document).ready(function () {
 });
 //Цена в корзине
 
+//Цена в оплаченных
+$(document).ready(function () {
+    $('.list > li > p > span').each(function () {
+        $(this).html($(this).html() * $(this).parent().prev().children('h3').children().html());
 
+    })
+})
+//Цена в оплаченных
 
 
 
