@@ -10,11 +10,11 @@
     }
 });
 
-var price = $('.priceincart>span').html();
+var price = $('.price-in-cart>span').html();
 var p = [];
 for (var i = 0; i < $('.list ul').children('li').length; i++) {
 
-    p[i] = $('.list ul li:nth-child(' + (i + 1) + ') .priceincart span').html();
+    p[i] = $('.list ul li:nth-child(' + (i + 1) + ') .price-in-cart span').html();
 
 
 }
@@ -124,10 +124,10 @@ $(document).ready(function () {
 $(document).ready(function () {
     var s = 0;
 
-    $('.priceincart > span').each(function () {
+    $('.price-in-cart > span').each(function () {
         $(this).html($(this).html() * $(this).parent().prev().children('input').val())
     });
-    $('.priceincart > span').each(function () {
+    $('.price-in-cart > span').each(function () {
         s += (+$(this).html());
     });
     $('.total-price').html(s);
@@ -135,7 +135,7 @@ $(document).ready(function () {
         s = 0;
         $(this).on('input', function () {
             s = 0;
-            $('.priceincart > span').each(function () {
+            $('.price-in-cart > span').each(function () {
                 s += (+$(this).html());
             });
             $('.total-price').html(s)
@@ -145,7 +145,7 @@ $(document).ready(function () {
 //Цена в корзине
 
 $(document).ready(function () {
-    $('#aimg').on('change', function() {
+    $('#aimg').on('change', function () {
         $('#add-img-path').val($('#aimg').val());
     });
 });
@@ -159,7 +159,11 @@ $(document).ready(function () {
 })
 //Цена в оплаченных
 
+//убрать оплачено в корзине
 
+$(document).ready(function () {
+
+})
 
 
 

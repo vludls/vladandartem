@@ -64,19 +64,13 @@ ViewData["Title"] = "Shop";
                 <div class="links">
                     <form action="~/Home/AddCookie" method="post">
                         <input type="hidden" name="id" value="@product.Id">
-                    <!--<a href="" class="cart">
-                        в корзину
-                    </a>-->
                         <input value="@(@product.Count <= 0 ? "нет в наличии" : "в корзину")" class="btn btn-primary" type="submit" @(@product.Count <= 0 ? " disabled=\"disabled\"" : "")>
-                        <!--<input type="submit" value="@(@product.Count <= 0 ? "нет в наличии" : "в корзину")" class="cart" @(@product.Count <= 0 ? " disabled=\"disabled\"" : "")>-->
                     </form>
-                    <!--<a href="/home/Edit?id=@product.Id" class="icons"><img src="~/images/r.png" alt=""></a>-->
-                    <a href="/home/Edit?id=@product.Id" class="btn btn-primary">edit</a>
+                    <a href="/home/Edit?id=@product.Id" class="btn btn-primary newicon"><i class="fas fa-pen"></i></a>
 
                     <form action="~/Home/RemoveProduct" method="post">
                         <input type="hidden" name="id" value="@product.Id">
-                        <!--<div class="testclass"><input type="image" value="" src="~/images/d.png" width="25" height="25"></div>-->
-                        <button type="submit" class="btn btn-primary">x</button>
+                        <button type="submit" class="btn btn-primary newicon"><i class="far fa-trash-alt"></i></button>
                     </form>
                 </div>
             </li>

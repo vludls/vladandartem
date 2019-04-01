@@ -188,9 +188,10 @@ nav {
     }
     .links {
         display: flex;
-        justify-content: space-between;
     }
-    
+    .links > form, .links > a {
+        margin-right: 10px;
+    }
 
     .testclass
     {
@@ -229,21 +230,11 @@ nav {
 .pagin {
     margin-bottom: 20px;
 }
-    /*.pagin a {
-        display: block;
-        width: 40px;
-        height: 40px;
-        font-family: Verdana, Geneva, Tahoma, sans-serif;
-        text-align: center;
-        line-height: 40px;
-        background: #F3F3F3;
-        text-decoration: none;
-        color: #000;
-    }
-    .pagin a.active {
-        background: #d3d3d3;
-    }*/
+    
 footer{
     height: 200px;
     background: #4D4D4D;
-}            
+}
+.newicon i {
+    padding-top: 4px;
+}         
