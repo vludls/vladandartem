@@ -195,8 +195,7 @@ namespace vladandartem.Controllers
             return View(someProduct);
         }*/
         [HttpPost]
-        // Где то тут ошибка с картинкой
-        public IActionResult Edit(Product product, IFormFile fileImg)
+        public IActionResult Edit(EditViewModel evm, IFormFile fileImg)
         {
             if(ModelState.IsValid)
             {
@@ -207,22 +206,22 @@ namespace vladandartem.Controllers
                         FileMode.Create)
                     );
 
-                    product.ImgPath = $"/images/Products/{fileImg.FileName}";
+                    evm.product.ImgPath = $"/images/Products/{fileImg.FileName}";
                 }
 
-                myDb.Products.Update(product);
+                myDb.Products.Update(evm.product);
 
                 myDb.SaveChanges();
             }
 
-            EditViewModel evm = new EditViewModel{ product = product, categories = myDb.Categories.ToList()};
+            evm.categories = myDb.Categories.ToList(); 
             
             return View(evm);
         }
         [HttpPost]
         public IActionResult Add(string name, string price, IFormFile fileimg, string manufacturer, int categoryId, int count)
         {
-            Errors errors = CheckDataValidation(
+            /*Errors errors = CheckDataValidation(
                 name,
                 price,
                 fileimg,
@@ -238,7 +237,7 @@ namespace vladandartem.Controllers
                 ViewBag.CategoryId = categoryId;
 
                 return View(errors);
-            }
+            }*/
 
             string fileName;
 
@@ -273,9 +272,7 @@ namespace vladandartem.Controllers
         [HttpPost]
         public IActionResult RemoveProduct(int id)
         {
-            Product SomeProduct = myDb.Products.Find(id);
-
-            myDb.Products.Remove(SomeProduct);
+            myDb.Products.Remove(myDb.Products.Find(id));
 
             myDb.SaveChanges();
 
@@ -338,30 +335,18 @@ namespace vladandartem.Controllers
 
             List<CartProduct> cartData = cart.Decode();
 
-            Errors error = new Errors();
+            var errors = from element in cartData
+                        let product = myDb.Products.Find(element.ProductId)
+                        where element.ProductCount > product.Count
+                        select $"Недопустимое количество товара: {product.Name}";
 
-            foreach(var element in cartData)
-            {
-                Product product = myDb.Products.Find(element.ProductId);
-
-                if(element.ProductCount > product.Count)
-                {
-                    error.ErrorMessages.Add($"Недопустимое количество товара: {product.Name}");
-                }
-                // Тут дальше делать
-            }
-
-            if(error.ErrorMessages.Count() > 0)
-            {
-                return View(error);
-            }
+            if(errors.Any()) return View(errors);
 
             Cart cartPaid = new Cart(HttpContext.Session, "paid");
 
             cartPaid.Decode();
-
-
-            if(cart.Decode() != null)
+            
+            if(cartData != null)
             {
                 foreach(var element in cartData)
                 {
@@ -374,9 +359,9 @@ namespace vladandartem.Controllers
                     myDb.Products.Update(product);
 
                     myDb.SaveChanges();
-
-                    cart.Delete(element.ProductId);
                 }
+
+                cartData.Clear();
             }
 
             cart.Save();
@@ -402,7 +387,7 @@ namespace vladandartem.Controllers
 
             return new JsonResult(Convert.ToString(product.Count));
         }
-        private Errors CheckDataValidation(string name, string price, IFormFile fileimg, string manufacturer, int categoryId, string imgpath = "")
+        /*private Errors CheckDataValidation(string name, string price, IFormFile fileimg, string manufacturer, int categoryId, string imgpath = "")
         {
             Errors errors = new Errors();
 
@@ -423,11 +408,11 @@ namespace vladandartem.Controllers
             if(String.IsNullOrEmpty(manufacturer))
                 errors.ErrorMessages.Add("Заполните поле названия Производителя!");
 
-            /*if(String.IsNullOrEmpty(categoryId))
-                errors.ErrorMessages.Add("Заполните поле названия Категории!");*/
+            if(String.IsNullOrEmpty(categoryId))
+                errors.ErrorMessages.Add("Заполните поле названия Категории!");
 
             return errors;
-        }
+        }*/
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

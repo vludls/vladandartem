@@ -1,6 +1,6 @@
-@model vladandartem.Controllers.Errors
+@model IEnumerable<string>
 
-@foreach(var errorString in Model.ErrorMessages)
+@foreach(var error in Model)
 {
-    @errorString
+    @error
 }
