@@ -26,9 +26,7 @@ namespace vladandartem.Controllers
         }
         public IActionResult Main()
         {
-            ViewBag.Categories = myDb.Categories.ToList();
-
-            return View();
+            return View(myDb.Categories.ToList());
         }
 
         [HttpPost]

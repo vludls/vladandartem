@@ -144,7 +144,7 @@ namespace vladandartem.Controllers
 
             return View(myDb.Products.Find(id));
         }
-        [HttpPost]
+        /*[HttpPost]
         public IActionResult Edit(int id, string name, string price, IFormFile fileimg, string imgpath, string manufacturer, int categoryId, int count)
         {
             Product someProduct = myDb.Products.Find(id);
@@ -190,6 +190,57 @@ namespace vladandartem.Controllers
             ViewBag.CategoriesList = myDb.Categories.ToList();
 
             return View(someProduct);
+        }*/
+        [HttpPost]
+        public IActionResult Edit(Product product, string imgpath)
+        {
+            if(!ModelState.IsValid)
+            {
+                return Content("Работает");
+            }
+            Product someProduct = myDb.Products.Find(product.Id);
+
+            /*Errors errors = CheckDataValidation(
+                name,
+                price,
+                fileimg,
+                manufacturer,
+                categoryId,
+                imgpath
+            );
+
+            if(errors.ErrorMessages.Count() > 0)
+            {
+                ViewBag.Errors = errors;
+
+                return View(someProduct);
+            }
+            */
+            /*if(fileimg != null)
+            {
+                string fileName;
+
+                fileName = HostEnv.WebRootPath + "/images/Products/" + fileimg.FileName;
+
+                fileimg.CopyTo(new FileStream(fileName, FileMode.Create));
+
+                imgpath = "/images/Products/" + fileimg.FileName;
+            }
+
+            someProduct.Name = name;
+            someProduct.Price = Convert.ToInt32(price);
+            someProduct.ImgPath = imgpath;
+            someProduct.Manufacturer = manufacturer;
+            someProduct.CategoryId = categoryId;
+            someProduct.Count = count;
+
+            myDb.Products.Update(someProduct);
+
+            myDb.SaveChanges();
+
+            ViewBag.CategoriesList = myDb.Categories.ToList();
+            */
+            return View(product);
         }
         [HttpPost]
         public IActionResult Add(string name, string price, IFormFile fileimg, string manufacturer, int categoryId, int count)
@@ -307,18 +358,47 @@ namespace vladandartem.Controllers
         public IActionResult CartBuy()
         {
             Cart cart = new Cart(HttpContext.Session, "cart");
+
+            List<CartProduct> cartData = cart.Decode();
+
+            Errors error = new Errors();
+
+            foreach(var element in cartData)
+            {
+                Product product = myDb.Products.Find(element.ProductId);
+
+                if(element.ProductCount > product.Count)
+                {
+                    error.ErrorMessages.Add($"Недопустимое количество товара: {product.Name}");
+                }
+                // Тут дальше делать
+            }
+
+            if(error.ErrorMessages.Count() > 0)
+            {
+                return View(error);
+            }
+
             Cart cartPaid = new Cart(HttpContext.Session, "paid");
 
-            List<CartProduct> cartData = cart.Decode(); 
             cartPaid.Decode();
 
 
             if(cart.Decode() != null)
             {
-                foreach(var product in cartData)
+                foreach(var element in cartData)
                 {
-                    cartPaid.Add(product.ProductId, product.ProductCount);
-                    cart.Delete(product.ProductId);
+                    cartPaid.Add(element.ProductId, element.ProductCount);
+
+                    Product product = myDb.Products.Find(element.ProductId);
+
+                    product.Count -= element.ProductCount;
+
+                    myDb.Products.Update(product);
+
+                    myDb.SaveChanges();
+
+                    cart.Delete(element.ProductId);
                 }
             }
 
