@@ -1,9 +1,7 @@
-@model vladandartem.ViewModels.IndexViewModel
+@model vladandartem.ViewModels.Home.IndexViewModel
 @{
 ViewData["Title"] = "Shop";
 }
-
-
 
 <div id="sliderAndBar">
     <div class="container" id="inside">
@@ -69,9 +67,6 @@ ViewData["Title"] = "Shop";
                     <!--<a href="" class="cart">
                         в корзину
                     </a>-->
-                    @{
-                        string disabled = "disabled";
-                    }
                         <input value="@(@product.Count <= 0 ? "нет в наличии" : "в корзину")" class="btn btn-primary" type="submit" @(@product.Count <= 0 ? " disabled=\"disabled\"" : "")>
                         <!--<input type="submit" value="@(@product.Count <= 0 ? "нет в наличии" : "в корзину")" class="cart" @(@product.Count <= 0 ? " disabled=\"disabled\"" : "")>-->
                     </form>

@@ -12,6 +12,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using vladandartem.Models;
 using vladandartem.ClassHelpers;
+using vladandartem.ViewModels.PersonalArea;
 using Newtonsoft.Json;
 
 namespace vladandartem.Controllers
@@ -28,6 +29,12 @@ namespace vladandartem.Controllers
 
         [HttpGet]
         public IActionResult Main()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult PaidProducts()
         {
             Cart cart = new Cart(HttpContext.Session, "cart");
 

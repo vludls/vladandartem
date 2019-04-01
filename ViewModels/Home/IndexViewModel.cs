@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using vladandartem.Models;
 
-namespace vladandartem.ViewModels
+namespace vladandartem.ViewModels.Home
 {
     public class IndexViewModel
     {
