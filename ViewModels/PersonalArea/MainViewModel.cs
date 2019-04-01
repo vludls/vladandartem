@@ -1,8 +1,13 @@
 using System.Collections.Generic;
+using vladandartem.ClassHelpers;
 using vladandartem.Models;
 
-public class MainViewModel
+public class PaidProduct
 {
-    public IEnumerable<Product> cartProducts { get; set; }
-    public IEnumerable<Product> paidProducts { get; set; }
+    public Product product { get; set; }
+    public int count { get; set; }
+}
+public class MainViewModel
+{    
+    public IEnumerable<CartProduct> paidProducts { get; set; }
 }

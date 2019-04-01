@@ -62,6 +62,11 @@ namespace vladandartem.ClassHelpers
             cartProduct[index] = product;
         }
 
+        public void Clear()
+        {
+            cartProduct.Clear();
+        }
+
         public int Count()
         {
             return cartProduct.Count();

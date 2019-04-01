@@ -41,9 +41,9 @@ namespace vladandartem.Controllers
             var paidProducts = from product in cartPaid.Decode()
                     let buff = myDb.Products.Find(product.ProductId)
                     where buff != null
-                    select buff;
+                    select new CartProduct { ProductId = product.ProductId, product = buff, ProductCount = product.ProductCount };
 
-            MainViewModel mvm = new MainViewModel{ cartProducts = cartProducts, paidProducts = paidProducts };
+            MainViewModel mvm = new MainViewModel{ paidProducts = paidProducts };
             
             return View(mvm);
         }

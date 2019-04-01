@@ -1,12 +1,20 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using vladandartem.Models;
 
 namespace vladandartem.ViewModels
 {
     public class EditViewModel
     {
-        public Product product;
+        [Required]
+        public Product product { get; set; }
 
-        public IEnumerable<Category> categories;
+        public IEnumerable<Category> categories { get; set; }
+
+        public EditViewModel()
+        {
+            product = new Product();
+            product.Name = "";
+        }
     }
 }

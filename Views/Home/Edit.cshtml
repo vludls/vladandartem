@@ -7,8 +7,8 @@
             <div class="imgProd"><img src="@Model?.product?.ImgPath" class="addimg" alt=""></div>
             
             <form action="~/Home/Edit" class="addandedit" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="id" value="@Model?.product?.Id">
-                <input type="hidden" name="imgpath" value="@Model?.product?.ImgPath">
+                <input type="hidden" name="product.id" value="@Model?.product?.Id">
+                <input type="hidden" name="product.imgpath" value="@Model?.product?.ImgPath">
                 
                 <div class="custom-file label">
                     <input type="file" name="fileimg" class="custom-file-input file" id="eimg">
@@ -16,20 +16,20 @@
                 </div>
                 <div class="form-group">
                     <label for="name-id">Название товара</label>
-                    <input type="text" class="form-control" id="name-id" name="name" value="@Model?.product?.Name">
+                    <input type="text" class="form-control" id="name-id" name="product.name" value="@Model?.product?.Name">
                     <span asp-validation-for="product.Name"></span>
                 </div>
                 <div class="form-group">
                     <label for="Price">Цена</label>
-                    <input type="number" min="1" name="price" class="form-control" id="Price" value="@Model?.product?.Price">
+                    <input type="number" min="1" name="product.price" class="form-control" id="Price" value="@Model?.product?.Price">
                 </div>
                 <div class="form-group">
                     <label for="Manufacturer">Производитель</label>
-                    <input type="text" class="form-control" id="Manufacturer" name="Manufacturer" value="@Model?.product?.Manufacturer">
+                    <input type="text" class="form-control" id="Manufacturer" name="product.Manufacturer" value="@Model?.product?.Manufacturer">
                     <span asp-validation-for="product.Manufacturer"></span>
                 </div>
                 <label for="select">Категория</label>
-                <select name="categoryId" class="form-control select" id="select">
+                <select name="product.categoryId" class="form-control select" id="select">
                 <span asp-validation-for="product.CategoryId"></span>
                     @foreach (var category in Model?.categories)
                     {
@@ -45,7 +45,7 @@
                 </select>
                 <div class="form-group">
                     <label for="q-id">Количество на складе</label>
-                    <input type="number" class="form-control" id="q-id" min="0" name="count" value="@Model?.product?.Count">
+                    <input type="number" class="form-control" id="q-id" min="0" name="product.count" value="@Model?.product?.Count">
                 </div>
                 <button type="submit" class="btn btn-primary">Изменить</button>
 
