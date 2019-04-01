@@ -92,7 +92,7 @@ ViewData["Title"] = "Shop";
         </li>
     </ul>
 
-    <div class="container pagin">
+    <ul class="container pagination pagin">
         @{  
             int i = 0;
             i = (Model.page >= 4 ? i - 2 : i);
@@ -101,8 +101,10 @@ ViewData["Title"] = "Shop";
         { 
             if(j > 5) { break; }
 
-            <a class="@(i == Model.page ? "active" : "")" href="~/Home/Index?Page=@i">@(i + 1)</a>
+            <li class="@(i == Model.page ? "page-item active" : "page-item")"><a class="page-link" href="~/Home/Index?Page=@i">@(i + 1)</a></li>
         }
-    </div>
+
+        
+    </ul>
     
 </main>

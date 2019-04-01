@@ -13,10 +13,16 @@ header {
 #top {
     height: 35px;
     line-height: 35px;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
     color: #fff;
     background: #4D4D4D;
 }
+    #top > .container > div > a {
+        color: #fff;
+        line-height: 20px; 
+    }
+    #top > .container {
+        justify-content: space-between;
+    }
     .search-form {
         width: 300px;
         margin-top: 17px;
@@ -30,10 +36,15 @@ header {
         margin: auto;
         justify-content: space-between;
         height: 70px;
-        line-height: 70px;
+        
         width: 1140px;
     }
-    
+        .top-buttons {
+            margin-top: 17px;
+        }
+        .top-buttons > a {
+            color: #4D4D4D;
+        }
     .begin {
         position: absolute;
         background: #F3F3F3;
@@ -59,11 +70,7 @@ header {
             text-decoration: none;
         }
         
-        #cart a, .persarea a {
-            font-family: Verdana, Geneva, Tahoma, sans-serif;
-            text-decoration: none;
-            color: #000;
-        }
+        
 nav {
     background: #FAFAFA;
     margin-top: 70px;
@@ -219,15 +226,10 @@ nav {
         
     }
     
-    .cart:disabled {
-        background: #FF5656;
-        font-size: 14px;
-        cursor: inherit;
-    }
 .pagin {
     margin-bottom: 20px;
 }
-    .pagin a {
+    /*.pagin a {
         display: block;
         width: 40px;
         height: 40px;
@@ -240,7 +242,7 @@ nav {
     }
     .pagin a.active {
         background: #d3d3d3;
-    }  
+    }*/
 footer{
     height: 200px;
     background: #4D4D4D;

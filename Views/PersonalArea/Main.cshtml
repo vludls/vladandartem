@@ -1,6 +1,18 @@
 @{
     ViewData["Title"] = "Личный кабинет";
 }
+<ul class="nav nav-pills container nav-in-pers">
+    <li class="nav-item">
+        <a class="nav-link active" href="#">Профиль</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="~/Home/Cart">Корзина</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="~/PersonalArea/Main">Оплаченные товары</a>
+    </li>
+
+</ul>
 
 <main class="container pa">
     <div class="allcart">
@@ -17,12 +29,9 @@
                         </div>
                         <p><span>@product.Price</span> р.</p>
                     </li>
-                }            
+                }         
             </ul>
         </div>
-        <form action="">
-            <button type="button" class="btn btn-primary btn-lg btn-block">Оплатить</button>
-        </form>
     </div>
 
     <div class="paid">

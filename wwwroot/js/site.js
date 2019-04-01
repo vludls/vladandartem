@@ -38,6 +38,7 @@ if (a.substr(1, 5) == 'Page=') {
     scr();
 };
 
+//Предпросмотр изображения
 function readURL(input) {
 
     if (input.files && input.files[0]) {
@@ -54,6 +55,7 @@ function readURL(input) {
 $(".file").change(function () {
     readURL(this);
 });
+//Предпросмотр изображения
 
 //slider
 $(document).ready(function () {
@@ -82,6 +84,19 @@ $(document).ready(function () {
 
     $('.right').click(nextslide);
     $('.left').click(prevslide);
+    //window.onload = timer();
+    function timer() {
+        var timerId = setInterval(nextslide, 3000);
+        $('.right').click(function () {
+            clearInterval(timerId);
+            timerId = setInterval(nextslide, 3000);
+        });
+        $('.left').click(function () {
+            clearInterval(timerId);
+            timerId = setInterval(nextslide, 3000);
+        });
+    };
+    timer();
 });
 //slider
 
@@ -105,6 +120,7 @@ $(document).ready(function () {
     });
 });
 
+//Цена в корзине
 $(document).ready(function () {
     var s = 0;
 
@@ -125,7 +141,8 @@ $(document).ready(function () {
             $('.total-price').html(s)
         })
     })
-})
+});
+//Цена в корзине
 
 
 
