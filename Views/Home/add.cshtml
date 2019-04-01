@@ -1,4 +1,4 @@
-@model vladandartem.Controllers.Errors;
+@model vladandartem.ViewModels.AddViewModel
 @{
     ViewData["Title"] = "Add Product";
 }
@@ -8,34 +8,29 @@
             
 
             <form action="~/Home/Add" class="addandedit" method="post" enctype="multipart/form-data">
-                @if(Model != null)
-                    {
-                        <ul class="error">
-                            @foreach (var error in Model.ErrorMessages)
-                            {
-                                <li>@error</li>
-                            }
-                        </ul>
-                    }
                 <p>Изображение:</p>
                 <label for="aimg" class="label">выбрать</label>
-                <input type="file" name="fileimg" class="file" id="aimg">
+                <input type="file" name="fileImg" class="file" id="aimg">
+                <span asp-validation-for="fileImg"></span>
+                <input type="hidden" name="product.ImgPath" id="add-img-path">
                 <p>Название:</p>
-                <input type="text" name="name" value="@ViewBag?.Name">
+                <input type="text" name="product.Name" value="@Model?.product?.Name">
+                <span asp-validation-for="product.Name"></span>
                 <p>Цена:</p>
-                <input type="text" name="price" value="@ViewBag?.Price">
+                <input type="text" name="product.price" value="@Model?.product?.Price">
                 <p>Производитель:</p>
-                <input type="text" name="manufacturer" value="@ViewBag?.Manufacturer">
+                <input type="text" name="product.Manufacturer" value="@Model?.product?.Manufacturer">
+                <span asp-validation-for="product.Manufacturer"></span>
                 <p>Категория:</p>
-                <select name="categoryId" class="category">
-                    @foreach (var category in ViewBag.CategoriesList)
+                <select name="product.CategoryId" class="category">
+                    @foreach (var category in Model?.categories)
                     {
                         <option value="@category.Id">@category.Name</option>
                     }
                     
                 </select>
                 <p>Количество на складе:</p>
-                <input type="number" min="0" name="count">
+                <input type="number" min="0" name="product.count" value="@Model?.product?.Count">
                 <input type="submit" value="Добавить" class="addProduct">
             </form>
         </main>
