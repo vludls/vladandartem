@@ -140,9 +140,12 @@ namespace vladandartem.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            ViewBag.CategoriesList = myDb.Categories.ToList();
+            EditViewModel evm = new EditViewModel { 
+                product = myDb.Products.Find(id),
+                categories = myDb.Categories.ToList()
+            };
 
-            return View(myDb.Products.Find(id));
+            return View(evm);
         }
         /*[HttpPost]
         public IActionResult Edit(int id, string name, string price, IFormFile fileimg, string imgpath, string manufacturer, int categoryId, int count)
@@ -192,55 +195,29 @@ namespace vladandartem.Controllers
             return View(someProduct);
         }*/
         [HttpPost]
-        public IActionResult Edit(Product product, string imgpath)
+        // Где то тут ошибка с картинкой
+        public IActionResult Edit(Product product, IFormFile fileImg)
         {
-            if(!ModelState.IsValid)
+            if(ModelState.IsValid)
             {
-                return Content("Работает");
-            }
-            Product someProduct = myDb.Products.Find(product.Id);
+                if(fileImg != null)
+                {
+                    fileImg.CopyTo(new FileStream(
+                        $"{HostEnv.WebRootPath}/images/Products/{fileImg.FileName}", 
+                        FileMode.Create)
+                    );
 
-            /*Errors errors = CheckDataValidation(
-                name,
-                price,
-                fileimg,
-                manufacturer,
-                categoryId,
-                imgpath
-            );
+                    product.ImgPath = $"/images/Products/{fileImg.FileName}";
+                }
 
-            if(errors.ErrorMessages.Count() > 0)
-            {
-                ViewBag.Errors = errors;
+                myDb.Products.Update(product);
 
-                return View(someProduct);
-            }
-            */
-            /*if(fileimg != null)
-            {
-                string fileName;
-
-                fileName = HostEnv.WebRootPath + "/images/Products/" + fileimg.FileName;
-
-                fileimg.CopyTo(new FileStream(fileName, FileMode.Create));
-
-                imgpath = "/images/Products/" + fileimg.FileName;
+                myDb.SaveChanges();
             }
 
-            someProduct.Name = name;
-            someProduct.Price = Convert.ToInt32(price);
-            someProduct.ImgPath = imgpath;
-            someProduct.Manufacturer = manufacturer;
-            someProduct.CategoryId = categoryId;
-            someProduct.Count = count;
-
-            myDb.Products.Update(someProduct);
-
-            myDb.SaveChanges();
-
-            ViewBag.CategoriesList = myDb.Categories.ToList();
-            */
-            return View(product);
+            EditViewModel evm = new EditViewModel{ product = product, categories = myDb.Categories.ToList()};
+            
+            return View(evm);
         }
         [HttpPost]
         public IActionResult Add(string name, string price, IFormFile fileimg, string manufacturer, int categoryId, int count)
