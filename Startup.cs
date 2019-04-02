@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -45,8 +46,16 @@ namespace vladandartem
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             string connection = Configuration.GetConnectionString("DefaultConnection");
+            string usersConnection = Configuration.GetConnectionString("UsersConnection");
+
             services.AddDbContext<ProductContext>(options => options.UseSqlServer(connection));
+            services.AddDbContext<UserContext>(options => options.UseSqlServer(usersConnection));
+
+            services.AddIdentity<User, IdentityRole>()
+                .AddEntityFrameworkStores<UserContext>();
+
             //services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -68,6 +77,7 @@ namespace vladandartem
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseSession();
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {
