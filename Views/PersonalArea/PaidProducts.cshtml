@@ -16,19 +16,28 @@
 
 <main class="container pa">
     <div class="over">
+        <div class="order-info">
+            <h3>Заказ № 3596</h3>
+            <p>Сумма заказа: <span></span> </p>
+        </div>
         <ul class="list">
             @if(Model.paidProducts.Any())
             {
                 @foreach(var element in Model.paidProducts)
                 {
                     <li>
-                        <div><img src="@element.product.ImgPath" alt=""></div>
-                        <div class="name-and-quan">
-                            <p>@element.product.Name</p>
-                            <!--<p><span>@element.ProductCount</span> шт.</p>-->
-                            <h3><span class="badge badge-primary">@element.ProductCount</span></h3><span> шт.</span>
+                        <p class="head-of-order">
+                            @element.product.Name
+                        </p>
+                        <div class="order">
+                            <div><img src="@element.product.ImgPath" alt=""></div>
+                            <div class="name-and-quan">
+                                <p>@element.product.Name</p>
+                                <!--<p><span>@element.ProductCount</span> шт.</p>-->
+                                <h3><span class="badge badge-primary">@element.ProductCount</span></h3><span> шт.</span>
+                            </div>
+                            <p><span>@element.product.Price</span> р.</p>
                         </div>
-                        <p><span>@element.product.Price</span> р.</p>
                     </li>
                 }
             }
