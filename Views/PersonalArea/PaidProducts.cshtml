@@ -18,7 +18,10 @@
     <div class="over">
         <div class="order-info">
             <h3>Заказ № 3596</h3>
-            <p>Сумма заказа: <span></span> </p>
+            <hr>
+            <p>Сумма заказа: <span>7567</span><span> р.</span></p>
+            <hr>
+            <p>Состав заказа:</p>
         </div>
         <ul class="list">
             @if(Model.paidProducts.Any())
@@ -33,10 +36,11 @@
                             <div><img src="@element.product.ImgPath" alt=""></div>
                             <div class="name-and-quan">
                                 <p>@element.product.Name</p>
-                                <!--<p><span>@element.ProductCount</span> шт.</p>-->
-                                <h3><span class="badge badge-primary">@element.ProductCount</span></h3><span> шт.</span>
                             </div>
-                            <p><span>@element.product.Price</span> р.</p>
+                            <div>
+                                <span class="unit-price">@element.product.Price</span><span> р.</span>
+                                <p class="badge badge-primary"><span class="units">@element.ProductCount</span> шт.</p>
+                            </div>
                         </div>
                     </li>
                 }

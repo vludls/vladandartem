@@ -152,18 +152,23 @@ $(document).ready(function () {
 
 //Цена в оплаченных
 $(document).ready(function () {
-    $('.list > li > p > span').each(function () {
-        $(this).html($(this).html() * $(this).parent().prev().children('h3').children().html());
+    $('.unit-price').each(function () {
+        $(this).html($(this).html() * $(this).parent().children('p').children('.units').html());
 
     })
 })
 //Цена в оплаченных
 
-//убрать оплачено в корзине
-
+//выкатывание продуктов
 $(document).ready(function () {
-
+    $('.order').hide();
+    $('.head-of-order').each(function () {
+        $(this).on('click', function () {
+            $(this).next().slideToggle();
+        })
+    })
 })
+
 
 
 

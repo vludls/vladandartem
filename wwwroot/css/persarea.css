@@ -1,30 +1,37 @@
 .pa {
     justify-content: space-between;
-    padding: 30px 0;
+    padding: 30px 0 0;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 .over {
     border: 2px solid #e1e1d1;
+    margin-bottom: 30px;
 }
     .order-info {
-        height: 300px;
+        padding: 10px;
+        text-align: center;
     }
+        .order-info > p > span {
+            font-weight: bold;
+            color: #FF5656;
+        }
         .head-of-order {
-            border-top: 2px solid #e1e1d1;
-            border-bottom: 2px solid #e1e1d1;
-            padding: 10px;
+            border-top: 2px solid #fff;
+            padding: 8px;
+            text-align: center;
+            cursor: pointer;
+            background: #007BFF;
+            color: #fff;
         }
         .order {
+            padding: 5px;
+            height: 100px;
             display: flex;
+            border-top: 2px solid #fff;
         }
         .pa .list {
             width: 700px;
         }
-            .order {
-                padding: 5px;
-                height: 100px;
-                display: flex;
-            }
             .order > div {
                 margin-right: 20px;
             }
@@ -32,11 +39,12 @@
                     width: 90px;
                     height: 100%;  
                 }
-                .order > p {
+                .order > div:last-child {
                     width: 95px;
                     color: #FF5656;
                     font-weight: bold;
                     text-align: right;
+                    margin-right: 0;
                 }
                 .name-and-quan {
                     width: 500px; 
