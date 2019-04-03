@@ -1,0 +1,21 @@
+@model vladandartem.ViewModels.AdminMenu.EditUserViewModel
+@{
+    ViewBag.Title = "Редактирование пользователя";
+}
+<form asp-action="Edit" asp-controller="Users">
+    <div asp-validation-summary="All"></div>
+    <div>
+        <input type="hidden" asp-for="Id">
+    </div>
+    <div>
+        <label asp-for="Email">Email</label>
+        <input type="text" asp-for="Email">
+    </div>
+    <div>
+        <label asp-for="Year">Год рождения</label>
+        <input type="number" asp-for="Year">
+    </div>
+    <div>
+        <input type="submit" value="Сохранить">
+    </div>
+</form>

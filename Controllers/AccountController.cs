@@ -55,9 +55,47 @@ namespace vladandartem.Controllers
         }
 
         [HttpGet]
-        public IActionResult Authentication()
+        public IActionResult Login(string returnUrl)
         {
-            return View();
+            return View(new LoginViewModel{ ReturnUrl = returnUrl });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginViewModel evm)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = 
+                    await signInManager.PasswordSignInAsync(evm.Email, evm.Password, evm.RememberMe, false);
+                if (result.Succeeded)
+                {
+                    // проверяем, принадлежит ли URL приложению
+                    if (!string.IsNullOrEmpty(evm.ReturnUrl) && Url.IsLocalUrl(evm.ReturnUrl))
+                    {
+                        return Redirect(evm.ReturnUrl);
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Неправильный логин и (или) пароль");
+                }
+            }
+            return View(evm);
+        }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LogOff()
+        {
+            // удаляем аутентификационные куки
+            await signInManager.SignOutAsync();
+            
+            return RedirectToAction("Index", "Home");
         }
     }
 }

@@ -1,0 +1,23 @@
+@model vladandartem.ViewModels.AdminMenu.CreateUserViewModel
+@{
+    ViewData["title"] = "Добавление пользователя";
+}
+<form method="post" asp-action="Create" asp-controller="Users">
+    <div>
+        <label asp-for="Email"></label>
+        <input type="text" asp-for="Email">
+        <span asp-validation-for="Email"></span>
+    </div>
+    <div>
+        <label asp-for="Password"></label>
+        <input type="text" asp-for="Password">
+        <span asp-validation-for="Password"></span>
+    </div>
+    <div>
+        <label asp-for="Year" class="control-label"></label>
+        <input type="number" asp-for="Year">
+    </div>
+    <div>
+        <input type="submit" value="Добавить">
+    </div>
+</form>
