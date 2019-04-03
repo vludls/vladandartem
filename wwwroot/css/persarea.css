@@ -6,6 +6,8 @@
 .over {
     border: 2px solid #e1e1d1;
     margin-bottom: 30px;
+    border-radius: 7px;
+    overflow: hidden;
 }
     .order-info {
         padding: 10px;

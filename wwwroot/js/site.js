@@ -32,7 +32,6 @@ function scr() {
 }
 if (a.length > 19) {
     scr();
-    //$('#sear').val(a.substr(19));
 }
 if (a.substr(1, 5) == 'Page=') {
     scr();
@@ -84,7 +83,6 @@ $(document).ready(function () {
 
     $('.right').click(nextslide);
     $('.left').click(prevslide);
-    //window.onload = timer();
     function timer() {
         var timerId = setInterval(nextslide, 3000);
         $('.right').click(function () {
@@ -168,7 +166,25 @@ $(document).ready(function () {
         })
     })
 })
+//выкатывание продуктов
 
+//Скрыть кнопку оплатить в корзине
+$(document).ready(function () {
+    if ($('h1').is('.empty')) {
+        $('.continue').hide();
+    }
+})
+//Скрыть кнопку оплатить в корзине
 
+//Подсвечивать незаполненные поля красным
+$(document).ready(function () {
+    $('.regist span').each(function () {
+        if ($(this).html() != "") {
+            $(this).css('color', 'red');
+            $(this).prev().css('border-color', 'red');
+
+        }
+    })
+})
 
 

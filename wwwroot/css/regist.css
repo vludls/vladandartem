@@ -1,0 +1,10 @@
+.regist {
+    margin: 50px auto 30px;
+    border: 2px solid #e1e1d1;
+    border-radius: 7px;
+    padding: 30px;
+}
+    .regist input {
+        width: 300px;
+    }
+    
