@@ -1,18 +1,62 @@
-Добавьте категорию:
-<form action="~/AdminMenu/AddCategory" method="post">
-    <input type="text" name="CategoryName" placeholder="Название категории">
-    <input type="submit" value="Добавить">
-</form>
-
-Удалить категорию:
-<form action="~/AdminMenu/DeleteCategory" method="post">
-    <select name="CategoryId">
+<ul class="nav nav-pills container nav-in-pers">
+    <li class="nav-item">
+        <a class="nav-link active" asp-action="Main">Управление категориями</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-action="Users">Управление пользователями</a>
+    </li>
+</ul>
+<main class="container admin admin-categories">
+    <!--<form action="~/AdminMenu/DeleteCategory" method="post">
+        <div class="form-group">
+            <label for="del-category">Удалить категорию</label>
+            <select name="CategoryId" class="form-control select" id="del-category">
+                @*@foreach(var category in Model)
+                {
+                    <option value="@category.Id">@category.Name</option>
+                }*@
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Удалить</button>
+    </form>-->
+    <ul class="users">
+        <li><p>Категория</p><p>Действие</p></li>
         @foreach(var category in Model)
-        {
-            <option value="@category.Id">@category.Name</option>
-        }
-    </select>
-    <input type="submit" value="Удалить">
-</form>
-
-<a asp-action="Users">Управление пользователями</a>
+                {
+                    <li>
+                        <p>@category.Name</p>
+                        <div>
+                            <button type="submit" class="btn btn-danger delete-user" data-toggle="modal" data-target="@("#a" + category.Id)">
+                                Удалить
+                            </button>
+                        </div>
+                    </li>
+                    <div class="modal fade" id="@("a" + category.Id)" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Удалить категорию?</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                                    <form method="post" asp-action="DeleteCategory" asp-route-id="@category.Id">
+                                        <button type="submit" class="btn btn-danger">Удалить</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+    </ul>
+    <form action="~/AdminMenu/AddCategory" method="post" class="add-new-category">
+        <div class="form-group">
+            <label for="add-category">Добавьте категорию</label>
+            <input type="text" name="CategoryName" class="form-control" id="add-category" placeholder="Название категории">
+        </div>
+        <button type="submit" class="btn btn-primary">Добавить</button>
+    </form>
+</main>

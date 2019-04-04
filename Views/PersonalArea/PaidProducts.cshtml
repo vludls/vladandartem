@@ -10,12 +10,43 @@
         <a class="nav-link" href="~/Home/Cart">Корзина</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link active" href="~/PersonalArea/PaidProducts">Оплаченные товары</a>
+        <a class="nav-link active" href="~/PersonalArea/PaidProducts">Мои заказы</a>
     </li>
 </ul>
 
 <main class="container pa">
-    <div class="over">
+    <div class="list-of-orders">
+        <ul>
+            <li class="order"><p>Заказ № 3596</p>
+                <div>
+                    <ul>
+                        <li><p>Товар</p><p>Цена</p><p>Количество</p><p>Стоимость</p></li>
+                        <li><p>Product</p><p>7456 р.</p><p>2</p><p>14912 р.</p></li>
+                        <li><p>Product</p><p>7456 р.</p><p>2</p><p>14912 р.</p></li>
+                        <li><p>Product</p><p>7456 р.</p><p>2</p><p>14912 р.</p></li>
+                    </ul>
+                    <div class="order-cost">
+                        <span>Cтоимость заказа: </span><span>16943</span><span> р.</span>
+                    </div>
+                </div>
+            </li>
+            <li class="order"><p>Заказ № 3596</p>
+                <div>
+                    <ul>
+                        <li><p>Товар</p><p>Цена</p><p>Количество</p><p>Стоимость</p></li>
+                        <li><p>Product</p><p>7456 р.</p><p>2</p><p>14912 р.</p></li>
+                        <li><p>Product</p><p>7456 р.</p><p>2</p><p>14912 р.</p></li>
+                        <li><p>Product</p><p>7456 р.</p><p>2</p><p>14912 р.</p></li>
+                        <li><p>Product</p><p>7456 р.</p><p>2</p><p>14912 р.</p></li>
+                    </ul>
+                    <div class="order-cost">
+                        <span>Cтоимость заказа: </span><span>16943</span><span> р.</span>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <!--<div class="over">
         <div class="order-info">
             <h3>Заказ № 3596</h3>
             <hr>
@@ -24,7 +55,7 @@
             <p>Состав заказа:</p>
         </div>
         <ul class="list">
-            @if(Model.paidProducts.Any())
+            @*@if(Model.paidProducts.Any())
             {
                 @foreach(var element in Model.paidProducts)
                 {
@@ -48,7 +79,7 @@
             else
             {
                 @("Список оплаченных товаров пуст.")
-            }
+            }*@
         </ul>
-    </div>
+    </div>-->
 </main>

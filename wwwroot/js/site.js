@@ -159,8 +159,8 @@ $(document).ready(function () {
 
 //выкатывание продуктов
 $(document).ready(function () {
-    $('.order').hide();
-    $('.head-of-order').each(function () {
+    $('.order > div').hide();
+    $('.order > p').each(function () {
         $(this).on('click', function () {
             $(this).next().slideToggle();
         })
@@ -186,5 +186,23 @@ $(document).ready(function () {
         }
     })
 })
+
+/*$(document).ready(function () {
+    $('.delete-user').click(function () {
+        $(this).attr('data-target', $(this).parent().prev().children().attr('data-route-id'));
+        alert($(this).attr('data-target'));
+    })
+})*/
+
+/*$(document).ready(function () {
+    var id;
+    $('.delete-user').each(function () {
+        $(this).click(function () {
+            id = 'a' + $(this).parent().prev().children().attr('data-route-id');
+            $(this).attr('data-target', '#' + id);
+            $(this).parent().parent().next().attr('id', id);
+        });
+    })
+})*/
 
 

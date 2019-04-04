@@ -42,10 +42,15 @@ namespace vladandartem.Controllers
             return Redirect("~/AdminMenu/Main");
         }
         [HttpPost]
-        public IActionResult DeleteCategory(int CategoryId)
+        public IActionResult DeleteCategory(int id)
         {
-            Category SomeCategory = myDb.Categories.Find(CategoryId);
+            Category SomeCategory = myDb.Categories.Find(id);
 
+            if(SomeCategory == null)
+            {
+                return NotFound();
+            }
+            
             myDb.Categories.Remove(SomeCategory);
 
             myDb.SaveChanges();

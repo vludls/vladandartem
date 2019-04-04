@@ -29,6 +29,7 @@
     <link rel="stylesheet" href="~/css/persarea.css" />
     <link rel="stylesheet" href="~/css/slider.css" />
     <link rel="stylesheet" href="~/css/regist.css" />
+    <link rel="stylesheet" href="~/css/admin.css" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 </head>
 <body>
@@ -38,8 +39,10 @@
                     <p id="phone">8 (800) 456-78-90</p>
                     @if(!User.Identity.IsAuthenticated)
                     {
-                        <a href="~/Account/Login">Войти</a>
+                    <p>
+                        <a href="~/Account/Login">Войти</a><span> /</span>
                         <a href="~/Account/Register">Регистрация</a>
+                    </p>
                     }
                 </div>
             </div>
