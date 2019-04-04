@@ -14,54 +14,79 @@ using vladandartem.Models;
 using vladandartem.ViewModels.AdminMenu;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace vladandartem.Controllers
 {
     public class AdminMenuController : Controller
     {
-        private UserManager<User> userManager;
-        private ProductContext myDb;
+        private readonly UserManager<User> userManager;
+        private readonly ProductContext context;
 
-        public AdminMenuController(ProductContext context, UserManager<User> userManager)
+        public AdminMenuController(UserManager<User> userManager, ProductContext context)
         {
             this.userManager = userManager;
-            myDb = context;
+            this.context = context;
         }
-        public IActionResult Main()
+        public async Task<IActionResult> Main()
         {
-            return View(myDb.Categories.ToList());
+            if(await userManager.GetUserAsync(HttpContext.User) == null)
+                return new UnauthorizedResult();
+
+            return View(context.Categories.ToList());
         }
 
         [HttpPost]
-        public IActionResult AddCategory(string CategoryName)
+        public async Task<IActionResult> AddCategory(string CategoryName)
         {
-            myDb.Categories.Add(new Category{ Name = CategoryName });
+            if(await userManager.GetUserAsync(HttpContext.User) == null)
+                return new UnauthorizedResult();
 
-            myDb.SaveChanges();
+            context.Categories.Add(new Category{ Name = CategoryName });
+
+            context.SaveChanges();
             
             return Redirect("~/AdminMenu/Main");
         }
         [HttpPost]
-        public IActionResult DeleteCategory(int CategoryId)
+        public async Task<IActionResult> DeleteCategory(int CategoryId)
         {
-            Category SomeCategory = myDb.Categories.Find(CategoryId);
+            if(await userManager.GetUserAsync(HttpContext.User) == null)
+                return new UnauthorizedResult();
 
-            myDb.Categories.Remove(SomeCategory);
+            Category SomeCategory = context.Categories.Find(CategoryId);
 
-            myDb.SaveChanges();
+            context.Categories.Remove(SomeCategory);
+
+            context.SaveChanges();
 
             return Redirect("~/AdminMenu/Main");
         }
 
         [HttpGet]
-        public IActionResult Users() => View(userManager.Users.ToList());
+        public async Task<IActionResult> Users()
+        {
+            if(await userManager.GetUserAsync(HttpContext.User) == null)
+                return new UnauthorizedResult();
+
+            return View(userManager.Users.ToList());
+        }
 
         [HttpGet]
-        public IActionResult CreateUser() => View();
+        public async Task<IActionResult> CreateUser()
+        {
+            if(await userManager.GetUserAsync(HttpContext.User) == null)
+                return new UnauthorizedResult();
+
+            return View();
+        }
 
         [HttpPost]
         public async Task<IActionResult> CreateUser(CreateUserViewModel cuvm)
         {
+            if(await userManager.GetUserAsync(HttpContext.User) == null)
+                return new UnauthorizedResult();
+
             User user = new User { Email = cuvm.Email, UserName = cuvm.Email, Year = cuvm.Year,  };
             
             if(ModelState.IsValid)
@@ -70,6 +95,12 @@ namespace vladandartem.Controllers
 
                 if(result.Succeeded)
                 {
+                    Cart cart = new Cart { UserId = user.Id };
+
+                    context.Cart.Add(cart);
+
+                    context.SaveChanges();
+
                     return RedirectToAction("Users");
                 }
                 else
@@ -86,6 +117,9 @@ namespace vladandartem.Controllers
         [HttpGet]
         public async Task<IActionResult> EditUser(string id)
         {
+            if(await userManager.GetUserAsync(HttpContext.User) == null)
+                return new UnauthorizedResult();
+
             User user = await userManager.FindByIdAsync(id);
 
             if(user == null)
@@ -94,13 +128,16 @@ namespace vladandartem.Controllers
             }
 
             EditUserViewModel euvm = new EditUserViewModel { Email = user.Email, Year = user.Year }; 
-
-            return View(euvm);
+            
+            return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> EditUser(EditUserViewModel euvm)
         {
+            if(await userManager.GetUserAsync(HttpContext.User) == null)
+                return new UnauthorizedResult();
+
             User user = await userManager.FindByIdAsync(euvm.Id);
 
             if(user != null)
@@ -130,12 +167,26 @@ namespace vladandartem.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteUser(string id)
         {
-            User user = await userManager.FindByIdAsync(id);
+            if(await userManager.GetUserAsync(HttpContext.User) == null)
+                return new UnauthorizedResult();
 
+            User user = await userManager.FindByIdAsync(id);
+            
             if(user != null)
             {
+                var buff = userManager.Users.Where(u => u.Id == user.Id)
+                    .Include(u => u.Cart)
+                    .ThenInclude(u => u.CartProducts)
+                    .ThenInclude(u => u.Product)
+                    .FirstOrDefault();
+                
+                context.Cart.Remove(buff.Cart);
+
+                context.SaveChanges();
+
                 await userManager.DeleteAsync(user);
             }
+            
             return RedirectToAction("Users");
         }
     }

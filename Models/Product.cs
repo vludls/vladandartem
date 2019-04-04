@@ -10,7 +10,7 @@ namespace vladandartem.Models
     }
     public class Product
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [Required(ErrorMessage = "Введите название товара")]
         public string Name { get; set; }
@@ -24,6 +24,7 @@ namespace vladandartem.Models
 
         [Required(ErrorMessage = "Выберите категорию")]
         public int CategoryId { get; set; }
+        public Category Category { get; set; }
         public int Count { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-@model IEnumerable<vladandartem.ClassHelpers.CartProduct>
+@model List<vladandartem.ClassHelpers.CartProduct>
 @{
     ViewData["Title"] = "Shop";
 }
@@ -25,21 +25,21 @@
                 {
                     <li>
                         <form action="~/Home/RemoveProductCart" method="post">
-                            <input type="hidden" name="id" value="@element.product.Id">
+                            <input type="hidden" name="id" value="@element.Product.Id">
                             <div class="im-in-cart">
-                                <img src="@element.product.ImgPath" alt="">
+                                <img src="@element.Product.ImgPath" alt="">
                             </div>
                             <p class="name-in-cart">
-                                @element.product.Name
+                                @element.Product.Name
                             </p>
                             <div class="quantity">
                                 <span>Количество:</span>
-                                <input type="number" value="@element.ProductCount" min="1" name="count" class="form-control q" id="quantity"><br>
-                                <span>На складе: </span><span>@element.product.Count</span>
+                                <input type="number" value="@element.Count" min="1" name="count" class="form-control q" id="quantity"><br>
+                                <span>На складе: </span><span>@element.Product.Count</span>
 
                             </div>
                             <p class="price-in-cart">
-                                <span>@element.product.Price</span> р.
+                                <span>@element.Product.Price</span> р.
                             </p>
                             <div>
                                 <!--<input type="submit" name="delfromcart" id="delfromcart" value="X">-->

@@ -36,7 +36,7 @@ namespace vladandartem.Controllers
         [HttpGet]
         public IActionResult PaidProducts()
         {
-            Cart cart = new Cart(HttpContext.Session, "cart");
+            /*Cart cart = new Cart(HttpContext.Session, "cart");
 
             var cartProducts = from product in cart.Decode()
                     let buff = myDb.Products.Find(product.ProductId)
@@ -49,10 +49,10 @@ namespace vladandartem.Controllers
                     let buff = myDb.Products.Find(product.ProductId)
                     where buff != null
                     select new CartProduct { ProductId = product.ProductId, product = buff, ProductCount = product.ProductCount };
-
-            MainViewModel mvm = new MainViewModel{ paidProducts = paidProducts };
             
-            return View(mvm);
+            MainViewModel mvm = new MainViewModel{ paidProducts = paidProducts };
+            */
+            return View(/*mvm*/);
         }
     }
 }

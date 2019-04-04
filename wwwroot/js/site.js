@@ -106,7 +106,7 @@ $(document).ready(function () {
                 url: "/Home/CartChangeProductNum",
                 type: "POST",
                 data: ({
-                    id: $(this).parent().parent().children().first().val(),
+                    id: "" + $(this).parent().parent().children().first().val(),
                     count: $(this).val()
                 }),
                 success: function (data) {

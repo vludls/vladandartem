@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
+//using Microsoft.Extensions.Identity.Core;
 using vladandartem.ViewModels.Account;
 using vladandartem.Models;
 
@@ -8,11 +9,12 @@ namespace vladandartem.Controllers
 {
     public class AccountController : Controller
     {
+        private readonly ProductContext context;
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
-
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public AccountController(ProductContext context, UserManager<User> userManager, SignInManager<User> signInManager)
         {
+            this.context = context;
             this.userManager = userManager;
             this.signInManager = signInManager;
         }
@@ -28,12 +30,23 @@ namespace vladandartem.Controllers
         {
             if(ModelState.IsValid)
             {
-                User user = new User { Email = rvm.Email, UserName = rvm.Email, Year = rvm.Year };
+                //context.Cart.Add(new Cart());
+                User user = new User {
+                    Email = rvm.Email,
+                    UserName = rvm.Email, 
+                    Year = rvm.Year 
+                };
 
                 var result = await userManager.CreateAsync(user, rvm.Password);
 
                 if (result.Succeeded)
                 {
+                    Cart cart = new Cart { UserId = user.Id };
+
+                    context.Cart.Add(cart);
+
+                    context.SaveChanges();
+
                     await signInManager.SignInAsync(user, false);
 
                     return Redirect("~/PersonalArea/Main");

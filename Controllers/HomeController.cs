@@ -8,11 +8,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.EntityFrameworkCore;
 using System.IO;
 using System.Text.RegularExpressions;
 using vladandartem.Models;
 using vladandartem.ClassHelpers;
 using vladandartem.ViewModels.Home;
+using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json;
 
 namespace vladandartem.Controllers
 {
@@ -21,11 +24,14 @@ namespace vladandartem.Controllers
         private ProductContext myDb;
         private readonly IHostingEnvironment HostEnv;
 
-        public HomeController(ProductContext context, IHostingEnvironment HostEnv)
+        private UserManager<User> userManager;
+
+        public HomeController(ProductContext context, IHostingEnvironment HostEnv, UserManager<User> userManager)
         {
             myDb = context;
             
             this.HostEnv = HostEnv;
+            this.userManager = userManager;
         }
 
         [HttpGet]
@@ -75,8 +81,30 @@ namespace vladandartem.Controllers
         }
         
         [HttpGet]
-        public IActionResult Cart()
+        public async Task<IActionResult> Cart()
         {
+            //myDb.Categories.Include
+            User user = await userManager.GetUserAsync(HttpContext.User);
+
+            if(user == null)
+            {
+                return NotFound();
+            }
+
+            var buff = userManager.Users.Where(u => u.Id == user.Id).Include(u => u.Cart)
+                .ThenInclude(u => u.CartProducts)
+                .ThenInclude(g => g.Product)
+                .ThenInclude(u => u.Category).FirstOrDefault();
+
+            if(buff == null)
+            {
+                return NotFound();
+            }
+            //var orders = myDb.Orders.Where(order => order.UserId == user.Id);
+
+            //List<CartProduct> cartProduct =
+            //JsonConvert.DeserializeObject<List<CartProduct>>(user.CartJSON);
+            /*
             Cart cart = new Cart(HttpContext.Session, "cart");
 
             var products = from element in cart.Decode()
@@ -87,35 +115,75 @@ namespace vladandartem.Controllers
                             product = buff,
                             ProductCount = element.ProductCount
                         };
-
-            return View(products);
+            */
+            return View(buff.Cart.CartProducts);
         }
 
         [HttpPost]
-        public IActionResult AddCookie(int id)
+        public async Task<IActionResult> AddCookie(string id)
         {
-            Cart cart = new Cart(HttpContext.Session, "cart");
+            User user = await userManager.GetUserAsync(HttpContext.User);
+
+            if(user == null)
+            {
+                return NotFound();
+            }
+            
+            var buff = userManager.Users.Where(u => u.Id == user.Id).Include(u => u.Cart)
+                .ThenInclude(u => u.CartProducts)
+                .FirstOrDefault();
+
+            if(buff == null)
+            {
+                return NotFound();
+            }
+
+            if(buff.Cart.CartProducts.Find(p => p.ProductId == id) == null)
+            {
+                buff.Cart.CartProducts.Add(new CartProduct { ProductId = id, Count = 1});
+            }
+
+            await userManager.UpdateAsync(buff);
+            //user.Cart.CartProducts.Add(new CartProduct { Product = myDb.Products.Find(id), Count = 1});
+
+            myDb.SaveChanges();
+            //Cart cart = myDb.Users.FirstOrDefault(u => u.Cart.UserId == user.Id);
+
+           /*Cart cart = new Cart(HttpContext.Session, "cart");
 
             cart.Decode();
             cart.Add(id);
-            cart.Save();
+            cart.Save();*/
 
             return Redirect("~/Home/Cart");
         }
         [HttpPost]
-        public IActionResult RemoveProductCart(int id)
+        public async Task<IActionResult> RemoveProductCart(string id)
         {
-            Cart cart = new Cart(HttpContext.Session, "cart");
+            User user = await userManager.GetUserAsync(HttpContext.User);
+
+            if(user == null)
+            {
+                return NotFound();
+            }
+
+            var buff = userManager.Users.Where(u => u.Id == user.Id).Include(u => u.Cart)
+                .ThenInclude(u => u.CartProducts).FirstOrDefault();
+            
+            buff.Cart.CartProducts.Remove(buff.Cart.CartProducts.Find(n => n.ProductId == id));
+
+            await userManager.UpdateAsync(buff);
+            /*Cart cart = new Cart(HttpContext.Session, "cart");
 
             cart.Decode();
             cart.Delete(id);
-            cart.Save();
+            cart.Save();*/
 
             return Redirect("~/Home/Cart");
         }
 
         [HttpGet]
-        public IActionResult Edit(int id)
+        public IActionResult Edit(string id)
         {
             EditViewModel evm = new EditViewModel { 
                 product = myDb.Products.Find(id),
@@ -246,7 +314,7 @@ namespace vladandartem.Controllers
         [HttpPost]
         public IActionResult CartBuy()
         {
-            Cart cart = new Cart(HttpContext.Session, "cart");
+            /*Cart cart = new Cart(HttpContext.Session, "cart");
 
             List<CartProduct> cartData = cart.Decode();
 
@@ -281,7 +349,7 @@ namespace vladandartem.Controllers
 
             cart.Save();
             cartPaid.Save();
-
+            */
             return Redirect("~/PersonalArea/Main");
         }
         [HttpGet]
@@ -290,17 +358,32 @@ namespace vladandartem.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult CartChangeProductNum(int id, int count)
+        public async Task<IActionResult> CartChangeProductNum(string id, int count)
         {
-            Cart cart = new Cart(HttpContext.Session, "cart");
+            User user = await userManager.GetUserAsync(HttpContext.User);
+
+            if(user == null)
+            {
+                return NotFound();
+            }
+
+            var buff = userManager.Users.Where(u => u.Id == user.Id).Include(u => u.Cart)
+                .ThenInclude(u => u.CartProducts).ThenInclude(u => u.Product).FirstOrDefault();
+            
+            CartProduct cartProduct = buff.Cart.CartProducts.Find(n => n.ProductId == id);
+
+            cartProduct.Count = count;
+
+            await userManager.UpdateAsync(buff);
+            /*Cart cart = new Cart(HttpContext.Session, "cart");
 
             cart.Decode();
             cart.Edit(id, count);
             cart.Save();
+            */
+            //Product product = myDb.Products.Find(id);
 
-            Product product = myDb.Products.Find(id);
-
-            return new JsonResult(Convert.ToString(product.Count));
+            return new JsonResult(Convert.ToString(cartProduct.Product.Count));
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

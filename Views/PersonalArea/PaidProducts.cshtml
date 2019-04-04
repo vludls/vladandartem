@@ -1,4 +1,4 @@
-@model vladandartem.ViewModels.PersonalArea.MainViewModel
+@*@model vladandartem.ViewModels.PersonalArea.MainViewModel*@
 @{
     ViewData["Title"] = "Оплаченные товары";
 }
@@ -24,7 +24,7 @@
             <p>Состав заказа:</p>
         </div>
         <ul class="list">
-            @if(Model.paidProducts.Any())
+            @*@if(Model.paidProducts.Any())
             {
                 @foreach(var element in Model.paidProducts)
                 {
@@ -48,7 +48,7 @@
             else
             {
                 @("Список оплаченных товаров пуст.")
-            }
+            }*@
         </ul>
     </div>
 </main>

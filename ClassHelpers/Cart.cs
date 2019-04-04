@@ -8,7 +8,7 @@ using vladandartem.Models;
 
 namespace vladandartem.ClassHelpers
 {
-    public class Cart
+    /*public class Cart
     {
         List<CartProduct> cartProduct = new List<CartProduct>();
 
@@ -71,12 +71,15 @@ namespace vladandartem.ClassHelpers
         {
             return cartProduct.Count();
         }
-    }
+    }*/
 
-    public struct CartProduct
+    public class CartProduct
     {
-        public int ProductId;
-        public Product product;
-        public int ProductCount;
+        public string Id { get; set; }
+        public string CartId { get; set; }
+        public Cart Cart { get; set; }
+        public string ProductId { get; set; }
+        public Product Product { get; set; }
+        public int Count { get; set; }
     }
 }

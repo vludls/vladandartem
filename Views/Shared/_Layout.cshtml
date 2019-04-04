@@ -2,9 +2,9 @@
 @using vladandartem.ClassHelpers;
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @{
-    Cart cart = new Cart(HttpContextAccessor.HttpContext.Session, "cart");
+    /*Cart cart = new Cart(HttpContextAccessor.HttpContext.Session, "cart");
 
-    cart.Decode();
+    cart.Decode();*/
 }
 <!DOCTYPE html>
 <html>
@@ -94,7 +94,10 @@
                             </div>
                         }
 
-                        <div id="cart" class="top-buttons"><a href="~/Home/Cart" class="nav-link">Корзина (@(cart.Count()))</a></div>
+                        @if(User.Identity.IsAuthenticated)
+                        {
+                            <div id="cart" class="top-buttons"><a href="~/Home/Cart" class="nav-link">Корзина (00)</a></div>
+                        }
                     </div>
                  </div> 
             </div>

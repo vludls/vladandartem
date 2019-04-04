@@ -49,10 +49,17 @@ namespace vladandartem
             string usersConnection = Configuration.GetConnectionString("UsersConnection");
 
             services.AddDbContext<ProductContext>(options => options.UseSqlServer(connection));
-            services.AddDbContext<UserContext>(options => options.UseSqlServer(usersConnection));
+            //services.AddDbContext<UserContext>(options => options.UseSqlServer(usersConnection));
 
             services.AddIdentity<User, IdentityRole>()
-                .AddEntityFrameworkStores<UserContext>();
+                .AddEntityFrameworkStores<ProductContext>()
+                .AddDefaultTokenProviders();
+
+            services.Configure<SecurityStampValidatorOptions>(options =>
+            {
+                options.ValidationInterval = TimeSpan.Zero;
+            });
+            //services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<UserContext>();
 
             //services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
 
