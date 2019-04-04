@@ -1,58 +1,51 @@
 .pa {
     justify-content: space-between;
     padding: 30px 0 0;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
-.over {
-    border: 2px solid #e1e1d1;
+.list-of-orders {
     margin-bottom: 30px;
+    border: 2px solid #e1e1d1;
     border-radius: 7px;
     overflow: hidden;
 }
-    .order-info {
-        padding: 10px;
-        text-align: center;
+.order {
+    width: 800px;
+}
+    .order > p {
+        height: 60px;
+        background: #007BFF;
+        color: #fff;
+        border-top: 2px solid #fff;
+        cursor: pointer;
     }
-        .order-info > p > span {
-            font-weight: bold;
-            color: #FF5656;
-        }
-        .head-of-order {
-            border-top: 2px solid #fff;
-            padding: 8px;
-            text-align: center;
-            cursor: pointer;
-            background: #007BFF;
-            color: #fff;
-        }
-        .order {
-            padding: 5px;
-            height: 100px;
+    .order:first-child > p {
+        border: none;
+    }
+    .order > p, .order-cost {
+        height: 60px;
+        line-height: 60px;
+        padding: 0 20px;
+        font-size: 20px;
+    }
+        .order li {
             display: flex;
-            border-top: 2px solid #fff;
+            justify-content: space-between;
         }
-        .pa .list {
-            width: 700px;
+        .order li:nth-child(2n-1) {
+            background: #F3F3F3;
         }
-            .order > div {
-                margin-right: 20px;
+            .order li > p {
+                padding: 10px;
             }
-                .order > div:first-child {
-                    width: 90px;
-                    height: 100%;  
-                }
-                .order > div:last-child {
-                    width: 95px;
-                    color: #FF5656;
-                    font-weight: bold;
-                    text-align: right;
-                    margin-right: 0;
-                }
-                .name-and-quan {
-                    width: 500px; 
-                }
-                    
-                    .order > div > img {
-                        max-width: 90px;
-                        max-height: 90px;
-                    }
+            .order li > p:first-child {
+                width: 300px;
+                padding-left: 20px;
+            }
+            .order li > p:not(:first-child) {
+                width: 140px;
+                text-align: center;
+            }
+        .order-cost {
+            border-top: 2px solid #e1e1d1;
+            text-align: right;
+        }

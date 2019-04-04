@@ -49,14 +49,16 @@ namespace vladandartem.Controllers
             return Redirect("~/AdminMenu/Main");
         }
         [HttpPost]
-        public async Task<IActionResult> DeleteCategory(int CategoryId)
-        {
-            if(await userManager.GetUserAsync(HttpContext.User) == null)
-                return new UnauthorizedResult();
-
+        public async Task<IActionResult> DeleteCategory(int id)
             Category SomeCategory = context.Categories.Find(CategoryId);
 
-            context.Categories.Remove(SomeCategory);
+            if(SomeCategory == null)
+            {
+                return NotFound();
+            }
+
+
+                context.Categories.Remove(SomeCategory);
 
             context.SaveChanges();
 

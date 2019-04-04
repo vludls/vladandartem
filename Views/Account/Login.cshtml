@@ -1,31 +1,30 @@
 @model vladandartem.ViewModels.Account.LoginViewModel
- 
+
+<main class="container"> 
 @if(User.Identity.IsAuthenticated)
 {
     <h1>Вы уже вошли под аккаунт!</h1>
 }
 else
 {
-    <h2>Вход в приложение</h2>
-    <form method="post" asp-controller="Account" asp-action="Login" 
-    asp-route-returnurl="@Model.ReturnUrl">
+
+    <form class="regist" method="post" asp-controller="Account" asp-action="Login" asp-route-returnurl="@Model.ReturnUrl">
         <div asp-validation-summary="ModelOnly"></div>
-        <div>
-            <label asp-for="Email"></label><br />
-            <input asp-for="Email" />
+        <div class="form-group">
+            <label asp-for="Email"></label>
+            <input asp-for="Email" class="form-control" placeholder="Enter email">
             <span asp-validation-for="Email"></span>
         </div>
-        <div>
-            <label asp-for="Password"></label><br />
-            <input asp-for="Password" />
+        <div class="form-group">
+            <label asp-for="Password"></label>
+            <input asp-for="Password" class="form-control">
             <span asp-validation-for="Password"></span>
         </div>
-        <div>
-            <label asp-for="RememberMe"></label><br />
-            <input asp-for="RememberMe" />
+        <div class="form-group form-check">
+            <input class="form-check-input" asp-for="RememberMe">
+            <label class="form-check-label" asp-for="RememberMe"></label>
         </div>
-        <div>
-            <input type="submit" value="Войти" />
-        </div>
+        <button type="submit" class="btn btn-primary">Войти</button>
     </form>
 }
+</main>

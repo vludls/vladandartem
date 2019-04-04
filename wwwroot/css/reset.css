@@ -14,7 +14,7 @@ object, ol, output,
 p, pre, progress,
 q, 
 s, samp, section, small, span, source, strike, strong, sub, sup,
-table, tbody, tfoot, thead, th, tr, video, tt,
+tbody, tfoot, thead, video, tt,
 u, ul, 
 var{
     background: transparent;
@@ -32,18 +32,13 @@ ol, ul {
 blockquote, q {
 	quotes: none;
 }
-table, table td { 
-	padding:0;
-	border:none;
-	border-collapse:collapse;
-}
 img {
 	vertical-align:top; 
 }
 embed { 
 	vertical-align:top;
 }
-* { border:none}
+
 div, li, form{
 	box-sizing: border-box;
 }

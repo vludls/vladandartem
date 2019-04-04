@@ -1,0 +1,28 @@
+.admin {
+    padding: 30px 0;
+}
+    .admin-categories > form {
+        margin-left: 30px;
+        height: 180px;
+    }
+.users li {
+    display: flex;
+}
+.users li:nth-child(4n), .users li:first-child {
+    background: #F3F3F3;
+}
+    .users li p, .users li div {
+        width: 150px;
+        height: 50px;
+        text-align: center;
+        line-height: 50px;
+    }
+
+.add-new-category {
+    border: 2px solid #e1e1d1;
+    border-radius: 7px;
+    padding: 30px;
+}
+    .add-new-category input {
+        width: 270px;
+    }

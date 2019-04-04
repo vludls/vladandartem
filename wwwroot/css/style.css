@@ -1,10 +1,12 @@
 
 .container {
     width: 1140px;
+    min-width: 1140px;
+    padding-right: 0;
+    padding-left: 0;
     display: flex;
     flex-wrap: wrap;
     margin: 0 auto;
-    
 }
 header {
     background: #F3F3F3;
@@ -16,9 +18,8 @@ header {
     color: #fff;
     background: #4D4D4D;
 }
-    #top > .container > div > a {
+    #top a {
         color: #fff;
-        line-height: 20px; 
     }
     #top > .container {
         justify-content: space-between;
