@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System.IO;
 using System.Text.RegularExpressions;
 using vladandartem.Models;
@@ -19,12 +21,14 @@ namespace vladandartem.Controllers
 {
     public class PersonalAreaController : Controller
     {
-        private ProductContext myDb;
+        private readonly ProductContext myDb;
+        private readonly UserManager<User> userManager;
         //private readonly IHostingEnvironment HostEnv;
 
-        public PersonalAreaController(ProductContext context)
+        public PersonalAreaController(ProductContext context, UserManager<User> userManager)
         {
             myDb = context;
+            this.userManager = userManager;
         }
 
         [HttpGet]
@@ -34,8 +38,19 @@ namespace vladandartem.Controllers
         }
 
         [HttpGet]
-        public IActionResult PaidProducts()
+        public async Task<IActionResult> PaidProducts()
         {
+            User user = await userManager.GetUserAsync(HttpContext.User);
+
+            if(user == null)
+            {
+                return NotFound();
+            }
+
+            var buff = userManager.Users.Where(u => u.Id == user.Id).Include(u => u.Order)
+                .ThenInclude(u => u.CartProducts).ThenInclude(u => u.Product).FirstOrDefault();
+
+            
             /*Cart cart = new Cart(HttpContext.Session, "cart");
 
             var cartProducts = from product in cart.Decode()
@@ -52,7 +67,7 @@ namespace vladandartem.Controllers
             
             MainViewModel mvm = new MainViewModel{ paidProducts = paidProducts };
             */
-            return View(/*mvm*/);
+            return View(buff.Order);
         }
     }
 }

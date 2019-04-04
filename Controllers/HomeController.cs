@@ -312,8 +312,35 @@ namespace vladandartem.Controllers
         }
 
         [HttpPost]
-        public IActionResult CartBuy()
+        public async Task<IActionResult> CartOrder()
         {
+            User user = await userManager.GetUserAsync(HttpContext.User);
+
+            if(user == null)
+            {
+                return NotFound();
+            }
+
+            var order = new Order { 
+                UserId = user.Id, 
+                Number = (myDb.Orders.Any() ? myDb.Orders.Last().Number + 1 : 1) 
+            };
+            myDb.Orders.Add(order);
+
+            myDb.SaveChanges();
+
+            var buff = userManager.Users.Where(u => u.Id == user.Id).Include(u => u.Cart)
+                .ThenInclude(u => u.CartProducts).FirstOrDefault();
+
+            foreach(var cp in buff.Cart.CartProducts)
+            {
+                cp.CartId = null;
+                cp.OrderId = order.Id;
+            }
+
+            //buff.Cart.CartProducts.Remove(buff.Cart.CartProducts.Find(n => n.ProductId == id));
+
+            await userManager.UpdateAsync(buff);
             /*Cart cart = new Cart(HttpContext.Session, "cart");
 
             List<CartProduct> cartData = cart.Decode();
@@ -350,7 +377,7 @@ namespace vladandartem.Controllers
             cart.Save();
             cartPaid.Save();
             */
-            return Redirect("~/PersonalArea/Main");
+            return RedirectToAction("PaidProducts", "PersonalArea");
         }
         [HttpGet]
         public IActionResult CartChangeProductNum()

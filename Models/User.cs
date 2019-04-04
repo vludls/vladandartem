@@ -8,7 +8,7 @@ namespace vladandartem.Models
     {
         public int Year { get; set; }
         
-        //public List<Order> Order { get; set; }
+        public List<Order> Order { get; set; }
         public Cart Cart { get; set; }
     }
 }

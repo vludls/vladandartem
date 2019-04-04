@@ -99,7 +99,7 @@
 
                         @if(User.Identity.IsAuthenticated)
                         {
-                            <div id="cart" class="top-buttons"><a href="~/Home/Cart" class="nav-link">Корзина (00)</a></div>
+                            <div id="cart" class="top-buttons"><a href="~/Home/Cart" class="nav-link">Корзина (@await Component.InvokeAsync("CartLayout"))</a></div>
                         }
                     </div>
                  </div> 
