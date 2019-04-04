@@ -50,7 +50,11 @@ namespace vladandartem.Controllers
         }
         [HttpPost]
         public async Task<IActionResult> DeleteCategory(int id)
-            Category SomeCategory = context.Categories.Find(CategoryId);
+        {
+            if(await userManager.GetUserAsync(HttpContext.User) == null)
+                return new UnauthorizedResult();
+
+            Category SomeCategory = context.Categories.Find(id);
 
             if(SomeCategory == null)
             {
@@ -58,7 +62,7 @@ namespace vladandartem.Controllers
             }
 
 
-                context.Categories.Remove(SomeCategory);
+            context.Categories.Remove(SomeCategory);
 
             context.SaveChanges();
 
