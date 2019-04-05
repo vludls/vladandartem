@@ -8,7 +8,7 @@ namespace vladandartem.ViewModels.AdminMenu
         [Display(Name = "Email")]
         public string Email { get; set; }
 
-        [Display(Name = "Год рождения")]
+        [Display(Name = "Дата рождения")]
         public string Year { get; set; }
  
         [Required(ErrorMessage = "Введите пароль")]

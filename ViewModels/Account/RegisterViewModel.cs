@@ -9,7 +9,7 @@ namespace vladandartem.ViewModels.Account
         public string Email { get; set; }
  
         [Required(ErrorMessage = "Введите дату рождения")]
-        [Display(Name = "Год рождения")]
+        [Display(Name = "Дата рождения")]
         public string Year { get; set; }
  
         [Required(ErrorMessage = "Введите пароль")]

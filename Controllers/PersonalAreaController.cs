@@ -36,7 +36,19 @@ namespace vladandartem.Controllers
         {
             return View();
         }
+        [HttpPost]
+        public async Task<IActionResult> PayOrder(string id)
+        {
+            Order order = myDb.Orders.Find(id);
 
+            order.IsPaid = true;
+
+            myDb.Orders.Update(order);
+            
+            myDb.SaveChanges();
+
+            return RedirectToAction("PaidProducts");
+        }
         [HttpGet]
         public async Task<IActionResult> PaidProducts()
         {

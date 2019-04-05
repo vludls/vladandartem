@@ -28,8 +28,14 @@
                     <div class="header-of-order">
                         <p>Заказ № @order.Number</p>
                         <div class="status">
-                            <span class="btn btn-success">Оплачено</span>
-                            <span class="btn btn-warning">Ожидается оплата</span>
+                            @if(order.IsPaid)
+                            {
+                                <span class="btn btn-success">Оплачено</span>
+                            }
+                            else
+                            {
+                                <span class="btn btn-warning">Ожидается оплата</span>
+                            }
                         </div>
                         <div class="open-order"><i class="fas fa-chevron-circle-down"></i></div>
                     </div> 
@@ -44,9 +50,12 @@
                         </ul>
                         <div class="order-cost">
                             <div class="buy">
-                                <form method="post">
-                                    <button type="submit" class="btn btn-success">Оплатить</button>
-                                </form>
+                                @if(!order.IsPaid)
+                                {
+                                    <form method="post" asp-route-id="@order.Id" asp-action="PayOrder">
+                                        <button type="submit" class="btn btn-success">Оплатить</button>
+                                    </form>
+                                }
                             </div>
                             <div class="cost-of-order">
                                 <span>Cтоимость заказа: @summary р.</span>
