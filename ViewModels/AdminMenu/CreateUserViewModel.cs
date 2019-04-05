@@ -9,7 +9,7 @@ namespace vladandartem.ViewModels.AdminMenu
         public string Email { get; set; }
 
         [Display(Name = "Год рождения")]
-        public int Year { get; set; }
+        public string Year { get; set; }
  
         [Required(ErrorMessage = "Введите пароль")]
         [DataType(DataType.Password)]

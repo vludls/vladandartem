@@ -17,8 +17,13 @@
 <main class="container pa">
     <div class="list-of-orders">
         <ul>
+            @{
+                int summary = 0;
+            }
             @foreach(var order in Model)
             {
+                summary = 0;
+
                 <li class="order">
                     <div class="header-of-order">
                         <p>Заказ № @order.Number</p>
@@ -33,6 +38,7 @@
                             <li><p>Товар</p><p>Цена</p><p>Количество</p><p>Стоимость</p></li>
                             @foreach(var element in order.CartProducts)
                             {
+                                summary += element.Count * element.Product.Price;
                                 <li><p>@element.Product.Name</p><p>@element.Product.Price р.</p><p>@element.Count</p><p>@(element.Count * element.Product.Price) р.</p></li>
                             }
                         </ul>
@@ -43,7 +49,7 @@
                                 </form>
                             </div>
                             <div class="cost-of-order">
-                                <span>Cтоимость заказа: 16943 р.</span>
+                                <span>Cтоимость заказа: @summary р.</span>
                             </div> 
                         </div>
                     </div>    

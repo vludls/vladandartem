@@ -6,7 +6,7 @@ namespace vladandartem.Models
 {    
     public class User : IdentityUser
     {
-        public int Year { get; set; }
+        public string Year { get; set; }
         
         public List<Order> Order { get; set; }
         public Cart Cart { get; set; }

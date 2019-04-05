@@ -16,7 +16,7 @@ namespace vladandartem.Models
         public DbSet<Order> Orders { get; set; }
         public DbSet<CartProduct> CartProduct { get; set; }
         //public DbSet<User> Users { get; set; }
-        public DbSet<OrderProduct> OrdersProducts { get; set; }
+        //public DbSet<OrderProduct> OrdersProducts { get; set; }
         public DbSet<Cart> Cart { get; set; }
         public ProductContext(DbContextOptions<ProductContext> options) : base(options)
         {
