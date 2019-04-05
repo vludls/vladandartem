@@ -11,17 +11,36 @@
 .order {
     width: 800px;
 }
-    .order > p {
-        height: 60px;
+    .header-of-order {
         background: #007BFF;
         color: #fff;
         border-top: 2px solid #fff;
-        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
     }
-    .order:first-child > p {
+        .status {
+            transform: translateX(160px);
+        }
+            .status > span, .buy button {
+                margin-bottom: 7px;
+            }
+            .status > span {
+                cursor: inherit;
+            }
+        .open-order {
+            cursor: pointer;
+            margin-top: 9px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+            .open-order > i {
+                font-size: 40px;
+            }
+    .order:first-child > .header-of-order {
         border: none;
     }
-    .order > p, .order-cost {
+    .header-of-order, .order-cost {
         height: 60px;
         line-height: 60px;
         padding: 0 20px;
@@ -47,5 +66,7 @@
             }
         .order-cost {
             border-top: 2px solid #e1e1d1;
-            text-align: right;
+            display: flex;
+            justify-content: space-between;
+
         }

@@ -8,10 +8,10 @@
 .users li {
     display: flex;
 }
-.users li:nth-child(4n), .users li:first-child {
+.users li:nth-child(2n-1){
     background: #F3F3F3;
 }
-    .users li p, .users li div {
+    .users li p, .users li > div:not(:last-child) {
         width: 150px;
         height: 50px;
         text-align: center;
@@ -26,3 +26,10 @@
     .add-new-category input {
         width: 270px;
     }
+.create-new-user {
+    margin-left: 30px;
+
+}
+.centering > button, .centering > a {
+    margin-bottom: 5px;
+}

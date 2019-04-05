@@ -25,9 +25,13 @@ header {
         justify-content: space-between;
     }
     .search-form {
-        width: 300px;
         margin-top: 17px;
+        
+        float: right;
     }
+        .search-form > .form-control {
+            width: 270px;
+        }
     .fix {
         height: 70px;
         position: relative;
@@ -171,12 +175,12 @@ nav {
             top: 0;
         }
     .img {
-        width: 230px;
-        height: 230px;
+        width: 226px;
+        height: 226px;
     }
         .img img {
-            max-width: 230px;
-            max-height: 230px;
+            max-width: 226px;
+            max-height: 226px;
         }
     .name {
         font-size: 18px;
