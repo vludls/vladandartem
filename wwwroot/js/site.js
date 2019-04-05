@@ -208,5 +208,6 @@ $(document).ready(function () {
 })*/
 
 $('.datepicker').datepicker({
-    language: "ru"
+    language: "ru",
+    format: "dd.mm.yyyy"
 });
