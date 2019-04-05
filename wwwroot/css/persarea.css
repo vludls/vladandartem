@@ -19,7 +19,9 @@
         justify-content: space-between;
     }
         .status {
-            transform: translateX(160px);
+            transform: translateX(210px);
+            width: 165px;
+            text-align: right;
         }
             .status > span, .buy button {
                 margin-bottom: 7px;
