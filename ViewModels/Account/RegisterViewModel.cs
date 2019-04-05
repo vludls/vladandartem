@@ -10,7 +10,7 @@ namespace vladandartem.ViewModels.Account
  
         [Required(ErrorMessage = "Введите дату рождения")]
         [Display(Name = "Год рождения")]
-        public int Year { get; set; }
+        public string Year { get; set; }
  
         [Required(ErrorMessage = "Введите пароль")]
         [DataType(DataType.Password)]
