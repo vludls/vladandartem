@@ -37,7 +37,7 @@ namespace vladandartem.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> PayOrder(string id)
+        public IActionResult PayOrder(string id)
         {
             Order order = myDb.Orders.Find(id);
 
@@ -79,7 +79,7 @@ namespace vladandartem.Controllers
             
             MainViewModel mvm = new MainViewModel{ paidProducts = paidProducts };
             */
-            return View(buff.Order);
+            return View(buff.Order.OrderByDescending(n => n.Number).ToList());
         }
     }
 }

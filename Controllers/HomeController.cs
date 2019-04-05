@@ -323,7 +323,7 @@ namespace vladandartem.Controllers
 
             var order = new Order { 
                 UserId = user.Id, 
-                Number = (myDb.Orders.Any() ? myDb.Orders.Last().Number + 1 : 1) 
+                Number = (myDb.Orders.Any() ? myDb.Orders.OrderBy(n => n.Number).Last().Number + 1 : 1) 
             };
             myDb.Orders.Add(order);
 
