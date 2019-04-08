@@ -1,5 +1,9 @@
 @model vladandartem.ViewModels.Account.RegisterViewModel
 
+@section Scripts {
+    <script src="~/js/empty-fields.js"></script>
+}
+
 <main class="container">
     <form class="regist" method="post" asp-controller="Account" asp-action="Register">
         <div asp-validation-summary="ModelOnly"></div>

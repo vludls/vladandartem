@@ -1,5 +1,9 @@
 @model vladandartem.ViewModels.Account.LoginViewModel
 
+@section Scripts {
+    <script src="~/js/empty-fields.js"></script>
+}
+
 <main class="container"> 
 @if(User.Identity.IsAuthenticated)
 {

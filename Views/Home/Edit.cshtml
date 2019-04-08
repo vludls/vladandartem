@@ -3,7 +3,9 @@
     ViewData["Title"] = "Redact Product";
 }
 
-
+@section Scripts {
+    <script src="~/js/add-and-edit.js"></script>
+}
 
         <main class="container redact">
             <div class="imgProd"><img src="@Model?.product?.ImgPath" class="addimg" alt=""></div>
@@ -52,9 +54,4 @@
                 <button type="submit" class="btn btn-primary">Изменить</button>
                 
             </form>
-        </main>
-
-@section Scripts
-{
-    <script src="~/js/test.js"></script>
-}     
+        </main>    

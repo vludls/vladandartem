@@ -1,3 +1,7 @@
+@section Scripts {
+    <script src="~/js/users.js"></script>
+}
+
 <ul class="nav nav-pills container nav-in-pers">
     <li class="nav-item">
         <a class="nav-link active" asp-action="Main">Управление категориями</a>
@@ -14,36 +18,37 @@
                     <li>
                         <p>@category.Name</p>
                         <div class="centering">
-                            <button type="submit" class="btn btn-danger delete-user" data-toggle="modal" data-target="@("#a" + category.Id)">
+                            <button type="submit" class="btn btn-danger delete-user" data-toggle="modal" data-route-id="@category.Id" data-target="@("#a" + category.Id)">
                                 Удалить
                             </button>
                         </div>
-                    
-                        <div class="modal fade" id="@("a" + category.Id)" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-                            aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h6 class="modal-title">Подтвердите действие</h6>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <h6>Удалить категорию @category.Name?</h6>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                                        <form method="post" asp-action="DeleteCategory" asp-route-id="@category.Id">
-                                            <button type="submit" class="btn btn-danger">Удалить</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
                     </li>
                 }
     </ul>
+    <div class="modal fade" id="" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title">Подтвердите действие</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h6>Удалить категорию </h6>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                    <form method="post" asp-action="DeleteCategory">
+                        <input type="hidden" name="id">
+                        <button type="submit" class="btn btn-danger">Удалить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <form action="~/AdminMenu/AddCategory" method="post" class="add-new-category">
         <div class="form-group">
             <label for="add-category">Добавьте категорию</label>

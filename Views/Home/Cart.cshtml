@@ -2,6 +2,11 @@
 @{
     ViewData["Title"] = "Shop";
 }
+
+@section Scripts {
+    <script src="~/js/cart.js"></script>
+}
+
 <ul class="nav nav-pills container nav-in-pers">
     <li class="nav-item">
         <a class="nav-link" href="~/PersonalArea/Main">Профиль</a>
@@ -39,10 +44,10 @@
 
                             </div>
                             <p class="price-in-cart">
+                                <input type="hidden" value="@element.Product.Price">
                                 <span>@element.Product.Price</span> р.
                             </p>
                             <div>
-                                <!--<input type="submit" name="delfromcart" id="delfromcart" value="X">-->
                                 <button type="submit" name="delfromcart" class="btn btn-primary newicon" ><i class="far fa-trash-alt"></i></button>
                             </div>
                         </form>
@@ -55,11 +60,8 @@
             <h1 class="empty">Корзина пуста</h1>
         }
     </div>
-    <!--<div class="continue">
-        <a href="">Продолжить</a>
-    </div>-->
     <form asp-action="CartOrder" method="post" class="continue">
-        <p class="total">Итоговая сумма: <span class="total-price">3456 </span><span>р.</span></p>
+        <p class="total">Итоговая сумма: <span class="total-price"></span><span>р.</span></p>
         <input type="submit" value="Заказать" class="btn btn-primary btn-lg btn-block">
     </form>
 </main>

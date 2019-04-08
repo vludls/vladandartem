@@ -3,8 +3,12 @@
     ViewData["Title"] = "Add Product";
 }
 
+@section Scripts {
+    <script src="~/js/add-and-edit.js"></script>
+    <script src="~/js/add.js"></script>
+}
         <main class="container redact">
-            <<div class="imgProd"><img src="~/images/img.jpg" alt="" class="addimg"></div>
+            <div class="imgProd"><img src="~/images/img.jpg" alt="" class="addimg"></div>
             
 
             <form action="~/Home/Add" class="addandedit" method="post" enctype="multipart/form-data">
