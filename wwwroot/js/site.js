@@ -60,7 +60,7 @@ $(".file").change(function () {
 $(document).ready(function () {
 
 
-    var width = $('#mainSlider').width();
+    var width = $('.mainSlider').width();
 
     $('.slides>li:last-child').prependTo('.slides');
     function nextslide() {

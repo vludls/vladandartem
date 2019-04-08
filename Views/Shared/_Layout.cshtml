@@ -35,9 +35,9 @@
 </head>
 <body>
     <header>
-            <div id="top">
+            <div class="top">
                 <div class="container">
-                    <p id="phone">8 (800) 456-78-90</p>
+                    <p>8 (800) 456-78-90</p>
                     @if(!User.Identity.IsAuthenticated)
                     {
                     <p>
@@ -50,24 +50,9 @@
             <div class="fix begin">
                 <div>
                     <div class="container center">
-                        <div id="logo">
+                        <div class="logo">
                             <a href="~/Home/Index">Logo</a>
                         </div>
-                        
-                        
-                        <!--<div class="top-buttons">
-                            <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Example@mail.ru
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" href="~/PersonalArea/Main">Личный кабинет</a>
-                                    <a class="dropdown-item" href="#">Админка</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">Выйти</a>
-                                </div>
-                            </div>
-                        </div>-->
                         @if(User.Identity.IsAuthenticated)
                         {   
                             <div class="nav-item dropdown top-buttons">
@@ -91,7 +76,7 @@
 
                         @if(User.Identity.IsAuthenticated)
                         {
-                            <div id="cart" class="top-buttons"><a href="~/Home/Cart" class="nav-link">Корзина (@await Component.InvokeAsync("CartLayout"))</a></div>
+                            <div class="top-buttons"><a href="~/Home/Cart" class="nav-link">Корзина (@await Component.InvokeAsync("CartLayout"))</a></div>
                         }
                         <form class="form-inline my-2 my-lg-0 search-form" action="~/Home/Index" method="get">
                             <input type="hidden" name="isSearch" value="true">
@@ -102,7 +87,7 @@
                  </div> 
             </div>
             <nav>
-                <ul class="container" id="menu">
+                <ul class="container menu">
                     <li><a href="">Ноутбуки</a></li>
                     <li><a href="">Мониторы</a></li>
                     <li><a href="">Смартфоны</a></li>
@@ -116,8 +101,7 @@
 
         @RenderBody()
         
-
-    <footer></footer>
+        <footer></footer>
 
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
