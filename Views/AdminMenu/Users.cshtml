@@ -1,4 +1,10 @@
 @model IEnumerable<User>
+
+@section Scripts
+{
+    <script src="~/js/users.js"></script>
+}
+
 <ul class="nav nav-pills container nav-in-pers">
     <li class="nav-item">
         <a class="nav-link" asp-action="Main">Управление категориями</a>
@@ -24,32 +30,31 @@
                         Удалить
                     </button>
                 </div>
-            
-                <div class="modal fade" id="@("a" + user.Id)" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-                    aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h6 class="modal-title">Подтвердите действие</h6>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <h6>Удалить пользователя @user.Email?</h6>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                                <form method="post" asp-action="DeleteUser" asp-route-id="@user.Id">
-                                    <button type="submit" class="btn btn-danger">Удалить</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </li>
         }
     </ul>
+    <div class="modal fade" id="" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title">Подтвердите действие</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h6>Удалить пользователя</h6>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                    <form method="post" asp-action="DeleteUser" asp-route-id="@*@user.Id*@">
+                        <button type="submit" class="btn btn-danger">Удалить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="create-new-user">
         <a class="btn btn-primary btn-lg" asp-action="CreateUser" role="button">Создать нового пользователя</a>
     </div>

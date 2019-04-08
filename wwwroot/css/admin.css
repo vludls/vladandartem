@@ -11,7 +11,7 @@
 .users li:nth-child(2n-1){
     background: #F3F3F3;
 }
-    .users li p, .users li > div:not(:last-child) {
+    .users li p, .users li > div:last-child {
         width: 150px;
         height: 50px;
         text-align: center;
