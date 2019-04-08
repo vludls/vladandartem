@@ -3,11 +3,11 @@
 ViewData["Title"] = "Shop";
 }
 
-<div id="sliderAndBar">
-    <div class="container" id="inside">
-        <div id="leftBar">
-            <ul id="navBar">
-                <li id="inf">ИНФОРМАЦИЯ</li>
+<div class="slider-and-bar">
+    <div class="container inside">
+        <div class="leftBar">
+            <ul class="navBar">
+                <li class="inf">ИНФОРМАЦИЯ</li>
                 <li><a href="">О нас</a></li>
                 <li><a href="">Информация о доставке</a></li>
                 <li><a href="">Акции</a></li>
@@ -17,7 +17,7 @@ ViewData["Title"] = "Shop";
             </ul>
         </div>
 
-        <div id="mainSlider">
+        <div class="mainSlider">
             <ul class="slides">
                 <li>
                     <img src="~/images/slide.jpg" alt="">
@@ -48,7 +48,7 @@ ViewData["Title"] = "Shop";
 
 
 <main>
-    <ul class="container" id="products">
+    <ul class="container products">
         @foreach (var product in Model.products)
         {
             <li>
@@ -75,7 +75,7 @@ ViewData["Title"] = "Shop";
                 </div>
             </li>
         }
-        <li id="plus">
+        <li class="plus">
             <a href="/home/add"></a>
             <img src="~/images/plus.png" alt="">
         </li>
