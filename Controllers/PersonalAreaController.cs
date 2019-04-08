@@ -23,7 +23,6 @@ namespace vladandartem.Controllers
     {
         private readonly ProductContext myDb;
         private readonly UserManager<User> userManager;
-        //private readonly IHostingEnvironment HostEnv;
 
         public PersonalAreaController(ProductContext context, UserManager<User> userManager)
         {
@@ -43,8 +42,6 @@ namespace vladandartem.Controllers
 
             order.IsPaid = true;
 
-            myDb.Orders.Update(order);
-            
             myDb.SaveChanges();
 
             return RedirectToAction("PaidProducts");
@@ -54,15 +51,14 @@ namespace vladandartem.Controllers
         {
             User user = await userManager.GetUserAsync(HttpContext.User);
 
-            if(user == null)
-            {
+            var buff = userManager.Users.Include(u => u.Order)
+            .ThenInclude(u => u.CartProducts)
+            .ThenInclude(u => u.Product)
+            .FirstOrDefault(u => u.Id == user.Id);
+
+            if (buff == null)
                 return NotFound();
-            }
 
-            var buff = userManager.Users.Where(u => u.Id == user.Id).Include(u => u.Order)
-                .ThenInclude(u => u.CartProducts).ThenInclude(u => u.Product).FirstOrDefault();
-
-            
             /*Cart cart = new Cart(HttpContext.Session, "cart");
 
             var cartProducts = from product in cart.Decode()

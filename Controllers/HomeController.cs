@@ -29,7 +29,7 @@ namespace vladandartem.Controllers
         public HomeController(ProductContext context, IHostingEnvironment HostEnv, UserManager<User> userManager)
         {
             myDb = context;
-            
+
             this.HostEnv = HostEnv;
             this.userManager = userManager;
         }
@@ -38,17 +38,17 @@ namespace vladandartem.Controllers
         public IActionResult Index(bool isSearch = false, string searchArgument = "", int page = 0)
         {
             // Если в поиск ничего не введено, то помечаем что пользователь не хочет искать
-            if(String.IsNullOrEmpty(searchArgument)) isSearch = false;
+            if (String.IsNullOrEmpty(searchArgument)) isSearch = false;
 
             IEnumerable<Product> products;
             int productCounted = 0;
 
             // Если в поиск введено значение
-            if(isSearch)
+            if (isSearch)
             {
                 // Заносит продукт в массив, если строка в поиске совпадает на 50%
                 // и более с названием товара
-                products = myDb.Products.Where(n => 
+                products = myDb.Products.Where(n =>
                     CompareTwoString(searchArgument, n.Name) >= 50.0 ||
                     CompareTwoString(searchArgument, n.Manufacturer) >= 50.0
                 );
@@ -57,17 +57,18 @@ namespace vladandartem.Controllers
             else
             {
                 // Берем элементов на 5 страниц
-                products = myDb.Products.Take(4*5);
+                products = myDb.Products.Take(4 * 5);
             }
 
             productCounted = products.Count();
             products = products.Skip(page * 4);
             products = products.Take(4);
 
-            IndexViewModel ivm = new IndexViewModel {
+            IndexViewModel ivm = new IndexViewModel
+            {
                 products = products,
                 page = page,
-                pagesCount = (int)Math.Ceiling((decimal)((double)(productCounted)/4)),
+                pagesCount = (int)Math.Ceiling((decimal)((double)(productCounted) / 4)),
                 searchArgument = searchArgument
             };
 
@@ -79,14 +80,14 @@ namespace vladandartem.Controllers
         {
             return View();
         }
-        
+
         [HttpGet]
         public async Task<IActionResult> Cart()
         {
             //myDb.Categories.Include
             User user = await userManager.GetUserAsync(HttpContext.User);
 
-            if(user == null)
+            if (user == null)
             {
                 return NotFound();
             }
@@ -96,7 +97,7 @@ namespace vladandartem.Controllers
                 .ThenInclude(g => g.Product)
                 .ThenInclude(u => u.Category).FirstOrDefault();
 
-            if(buff == null)
+            if (buff == null)
             {
                 return NotFound();
             }
@@ -124,23 +125,23 @@ namespace vladandartem.Controllers
         {
             User user = await userManager.GetUserAsync(HttpContext.User);
 
-            if(user == null)
+            if (user == null)
             {
                 return NotFound();
             }
-            
+
             var buff = userManager.Users.Where(u => u.Id == user.Id).Include(u => u.Cart)
                 .ThenInclude(u => u.CartProducts)
                 .FirstOrDefault();
 
-            if(buff == null)
+            if (buff == null)
             {
                 return NotFound();
             }
 
-            if(buff.Cart.CartProducts.Find(p => p.ProductId == id) == null)
+            if (buff.Cart.CartProducts.Find(p => p.ProductId == id) == null)
             {
-                buff.Cart.CartProducts.Add(new CartProduct { ProductId = id, Count = 1});
+                buff.Cart.CartProducts.Add(new CartProduct { ProductId = id, Count = 1 });
             }
 
             await userManager.UpdateAsync(buff);
@@ -149,11 +150,11 @@ namespace vladandartem.Controllers
             myDb.SaveChanges();
             //Cart cart = myDb.Users.FirstOrDefault(u => u.Cart.UserId == user.Id);
 
-           /*Cart cart = new Cart(HttpContext.Session, "cart");
+            /*Cart cart = new Cart(HttpContext.Session, "cart");
 
-            cart.Decode();
-            cart.Add(id);
-            cart.Save();*/
+             cart.Decode();
+             cart.Add(id);
+             cart.Save();*/
 
             return Redirect("~/Home/Cart");
         }
@@ -162,14 +163,14 @@ namespace vladandartem.Controllers
         {
             User user = await userManager.GetUserAsync(HttpContext.User);
 
-            if(user == null)
+            if (user == null)
             {
                 return NotFound();
             }
 
             var buff = userManager.Users.Where(u => u.Id == user.Id).Include(u => u.Cart)
                 .ThenInclude(u => u.CartProducts).FirstOrDefault();
-            
+
             buff.Cart.CartProducts.Remove(buff.Cart.CartProducts.Find(n => n.ProductId == id));
 
             await userManager.UpdateAsync(buff);
@@ -185,7 +186,8 @@ namespace vladandartem.Controllers
         [HttpGet]
         public IActionResult Edit(string id)
         {
-            EditViewModel evm = new EditViewModel { 
+            EditViewModel evm = new EditViewModel
+            {
                 product = myDb.Products.Find(id),
                 categories = myDb.Categories.ToList()
             };
@@ -196,12 +198,12 @@ namespace vladandartem.Controllers
         [HttpPost]
         public IActionResult Edit(EditViewModel evm, IFormFile fileImg)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                if(fileImg != null)
+                if (fileImg != null)
                 {
                     fileImg.CopyTo(new FileStream(
-                        $"{HostEnv.WebRootPath}/images/Products/{fileImg.FileName}", 
+                        $"{HostEnv.WebRootPath}/images/Products/{fileImg.FileName}",
                         FileMode.Create)
                     );
 
@@ -213,8 +215,8 @@ namespace vladandartem.Controllers
                 myDb.SaveChanges();
             }
 
-            evm.categories = myDb.Categories.ToList(); 
-            
+            evm.categories = myDb.Categories.ToList();
+
             return View(evm);
         }
 
@@ -226,14 +228,14 @@ namespace vladandartem.Controllers
         [HttpPost]
         public IActionResult Add(AddViewModel avm)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 string fileName;
 
                 fileName = $"{HostEnv.WebRootPath}/images/Products/{avm.fileImg.FileName}";
 
                 avm.fileImg.CopyTo(new FileStream(
-                    $"{HostEnv.WebRootPath}/images/Products/{avm.fileImg.FileName}", 
+                    $"{HostEnv.WebRootPath}/images/Products/{avm.fileImg.FileName}",
                     FileMode.Create
                     )
                 );
@@ -248,7 +250,7 @@ namespace vladandartem.Controllers
             }
 
             avm.categories = myDb.Categories.ToList();
-            
+
             return View(avm);
         }
 
@@ -272,8 +274,8 @@ namespace vladandartem.Controllers
 
             string[] MaxWordsArray;
             string[] MinWordsArray;
-            
-            if(firstArrayWordsCount > secondsArrayWordsCount)
+
+            if (firstArrayWordsCount > secondsArrayWordsCount)
             {
                 MaxWordsArray = strFirstWordsArray;
                 MinWordsArray = strSecondWordsArray;
@@ -291,13 +293,13 @@ namespace vladandartem.Controllers
 
             bool[] minWordsArrayChecked = new bool[minWordsCount];
 
-            for(int i = 0; i < maxWordsCount; i++)
+            for (int i = 0; i < maxWordsCount; i++)
             {
-                for(int j = 0; j < minWordsCount; j++)
+                for (int j = 0; j < minWordsCount; j++)
                 {
-                    if(minWordsArrayChecked[j]) continue;
+                    if (minWordsArrayChecked[j]) continue;
 
-                    if(String.Equals(MaxWordsArray[i].ToLower(), MinWordsArray[j].ToLower()))
+                    if (String.Equals(MaxWordsArray[i].ToLower(), MinWordsArray[j].ToLower()))
                     {
                         minWordsArrayChecked[j] = true;
                         similar++;
@@ -316,14 +318,15 @@ namespace vladandartem.Controllers
         {
             User user = await userManager.GetUserAsync(HttpContext.User);
 
-            if(user == null)
+            if (user == null)
             {
                 return NotFound();
             }
 
-            var order = new Order { 
-                UserId = user.Id, 
-                Number = (myDb.Orders.Any() ? myDb.Orders.OrderBy(n => n.Number).Last().Number + 1 : 1) 
+            var order = new Order
+            {
+                UserId = user.Id,
+                Number = (myDb.Orders.Any() ? myDb.Orders.OrderBy(n => n.Number).Last().Number + 1 : 1)
             };
             myDb.Orders.Add(order);
 
@@ -332,7 +335,7 @@ namespace vladandartem.Controllers
             var buff = userManager.Users.Where(u => u.Id == user.Id).Include(u => u.Cart)
                 .ThenInclude(u => u.CartProducts).FirstOrDefault();
 
-            foreach(var cp in buff.Cart.CartProducts)
+            foreach (var cp in buff.Cart.CartProducts)
             {
                 cp.CartId = null;
                 cp.OrderId = order.Id;
@@ -389,14 +392,14 @@ namespace vladandartem.Controllers
         {
             User user = await userManager.GetUserAsync(HttpContext.User);
 
-            if(user == null)
+            if (user == null)
             {
                 return NotFound();
             }
 
             var buff = userManager.Users.Where(u => u.Id == user.Id).Include(u => u.Cart)
                 .ThenInclude(u => u.CartProducts).ThenInclude(u => u.Product).FirstOrDefault();
-            
+
             CartProduct cartProduct = buff.Cart.CartProducts.Find(n => n.ProductId == id);
 
             cartProduct.Count = count;
