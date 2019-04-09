@@ -27,6 +27,7 @@
             }
             @foreach(var order in Model)
             {
+                @order.OrderTime.ToString();
                 summary = 0;
 
                 <li class="order">

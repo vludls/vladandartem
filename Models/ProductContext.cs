@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using vladandartem.Models;
 using vladandartem.ClassHelpers;
@@ -9,7 +10,7 @@ namespace vladandartem.Models
     {
 
     }
-    public class ProductContext : IdentityDbContext<User>
+    public class ProductContext : IdentityDbContext<User, IdentityRole<int>, int>
     {
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }

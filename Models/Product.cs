@@ -1,16 +1,21 @@
+using Newtonsoft.Json;
+using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace vladandartem.Models
 {
     public class Test : RegularExpressionAttribute
     {
-        public Test(string pattern, string ErrorMessageCustom) : base(pattern) {
+        public Test(string pattern, string ErrorMessageCustom) : base(pattern)
+        {
             ErrorMessage = ErrorMessageCustom;
         }
     }
+    [Serializable]
     public class Product
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         [Required(ErrorMessage = "Введите название товара")]
         public string Name { get; set; }
@@ -24,6 +29,8 @@ namespace vladandartem.Models
 
         [Required(ErrorMessage = "Выберите категорию")]
         public int CategoryId { get; set; }
+
+        [JsonIgnore]
         public Category Category { get; set; }
         public int Count { get; set; }
     }

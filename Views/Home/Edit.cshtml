@@ -37,7 +37,7 @@
                 <span asp-validation-for="product.CategoryId"></span>
                     @foreach (var category in Model?.categories)
                     {
-                        if(Model?.product?.CategoryId == category.Id)
+                        if(Model?.product.CategoryId == category.Id)
                         {
                             <option value="@category.Id" selected>@category.Name</option>
                         }

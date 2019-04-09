@@ -2,6 +2,8 @@ using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using vladandartem.Models;
@@ -72,17 +74,20 @@ namespace vladandartem.ClassHelpers
             return cartProduct.Count();
         }
     }*/
-
+    [Serializable]
     public class CartProduct
     {
-        public string Id { get; set; }
-        public string CartId { get; set; }
+        public int Id { get; set; }
+        public int? CartId { get; set; }
+        [ForeignKey("CartId")]
         public Cart Cart { get; set; }
 
-        public string OrderId { get; set; }
+        public int? OrderId { get; set; }
+        [ForeignKey("OrderId")]
         public Order Order { get; set; }
 
-        public string ProductId { get; set; }
+        public int ProductId { get; set; }
+        [ForeignKey("ProductId")]
         public Product Product { get; set; }
         public int Count { get; set; }
     }

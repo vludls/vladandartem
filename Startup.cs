@@ -51,7 +51,7 @@ namespace vladandartem
             services.AddDbContext<ProductContext>(options => options.UseSqlServer(connection));
             //services.AddDbContext<UserContext>(options => options.UseSqlServer(usersConnection));
 
-            services.AddIdentity<User, IdentityRole>()
+            services.AddIdentity<User, IdentityRole<int>>()
                 .AddEntityFrameworkStores<ProductContext>()
                 .AddDefaultTokenProviders();
 
@@ -80,7 +80,7 @@ namespace vladandartem
                 app.UseHsts();
             }
 
-            
+
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseSession();
