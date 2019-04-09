@@ -1,0 +1,46 @@
+@model vladandartem.ViewModels.AdminMenu.AnalyticsViewModel
+@section Scripts
+{
+    <script src="~/js/Analytics.js"></script>
+}
+
+<form asp-action="Analytics" method="post">
+    <input type="hidden" name="TimeZoneOffset">
+    <label>Категория:</label>
+    <select name="CategoryId">
+        <option value="0">Все</option>
+        @foreach(var category in Model.Categories)
+        {
+            <option value="@category.Id">@category.Name</option>
+        }
+    </select>
+
+    <label>Продукт(ы):</label>
+    <select name="ProductId">
+        <option value="0">Все</option>
+        @foreach(var product in Model.Products)
+        {
+            <option value="@product.Id">@product.Name</option>
+        }
+    </select>
+
+    <label>Пользователь:</label>
+    <select name="UserEmail">
+        <option value="0">Все</option>
+        @foreach(var user in Model.Users)
+        {
+            <option value="@user.Id">@user.Email</option>
+        }
+    </select>
+
+    <label>C:</label>
+    <input type="text" class="datepicker" name="DateFrom">
+    
+    <label>По:</label>
+    <input type="text" class="datepicker" name="DateTo">
+    
+    <label>За все время</label>
+    <input type="checkbox" name="AllTime">
+
+    <input type="submit" value="Показать">
+</form>

@@ -121,7 +121,7 @@ namespace vladandartem.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddCookie(string id)
+        public async Task<IActionResult> AddCookie(int id)
         {
             User user = await userManager.GetUserAsync(HttpContext.User);
 
@@ -159,7 +159,7 @@ namespace vladandartem.Controllers
             return Redirect("~/Home/Cart");
         }
         [HttpPost]
-        public async Task<IActionResult> RemoveProductCart(string id)
+        public async Task<IActionResult> RemoveProductCart(int id)
         {
             User user = await userManager.GetUserAsync(HttpContext.User);
 
@@ -388,7 +388,7 @@ namespace vladandartem.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> CartChangeProductNum(string id, int count)
+        public async Task<IActionResult> CartChangeProductNum(int id, int count)
         {
             User user = await userManager.GetUserAsync(HttpContext.User);
 

@@ -36,11 +36,13 @@ namespace vladandartem.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult PayOrder(string id)
+        public IActionResult PayOrder(int id)
         {
             Order order = myDb.Orders.Find(id);
 
             order.IsPaid = true;
+
+            order.OrderTime = DateTime.UtcNow;
 
             myDb.SaveChanges();
 
