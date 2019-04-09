@@ -39,12 +39,11 @@
                             </p>
                             <div class="quantity">
                                 <span>Количество:</span>
-                                <input type="number" value="@element.Count" min="1" name="count" class="form-control q" id="quantity"><br>
+                                <input type="hidden" value="@element.Product.Price" class="hidden">
+                                <input type="number" value="@element.Count" min="1" name="count" class="form-control q"><br>
                                 <span>На складе: </span><span>@element.Product.Count</span>
-
                             </div>
-                            <p class="price-in-cart">
-                                <input type="hidden" value="@element.Product.Price">
+                            <p class="price-in-cart"> 
                                 <span>@element.Product.Price</span> р.
                             </p>
                             <div>

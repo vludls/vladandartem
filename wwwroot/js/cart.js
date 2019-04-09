@@ -9,17 +9,17 @@ $(document).ready(function () {
     //Скрыть кнопку оплатить в корзине
 
     //Цена в корзине
-    var p = [];
+    /*var p = [];
     for (var i = 0; i < $('.list ul').children('li').length; i++) {
         p[i] = $('.list ul li:nth-child(' + (i + 1) + ') .price-in-cart span').text(); //Массив цен всех продуктов в корзине
-    }
+    }*/
     var s = 0;
     $('.price-in-cart > span').each(function () {
-        $(this).html($(this).html() * $(this).parent().prev().children('input').val());
-        s += (+$(this).html());
+        $(this).text($(this).text() * $(this).parent().prev().children('input.q').val());
+        s += (+$(this).text());
     });
     
-    $('.total-price').html(s);
+    $('.total-price').text(s); //итоговая цена в корзине
 
     
 
@@ -29,11 +29,11 @@ $(document).ready(function () {
         $(this).on('input', function () {
             s = 0;
 
-            $(this).parent().next().children().html($(this).val() * p[$(this).closest('li').index()]);
+            $(this).parent().next().children().text($(this).val() * $(this).prev().val());
             $('.price-in-cart > span').each(function () {
                 s += (+$(this).html());
             });
-            $('.total-price').html(s)
+            $('.total-price').html(s) //итоговая цена в корзине
         });
 
         //ajax
