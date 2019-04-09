@@ -1,0 +1,11 @@
+.analytics > form {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+    .analytics-row {
+        
+    }
+    .analytics-row input, .analytics-row select {
+        width: 400px;
+    }
