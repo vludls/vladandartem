@@ -15,3 +15,26 @@
         color: #007bff;
         cursor: pointer;
     }
+.result {
+    flex-direction: column;
+}
+    .result > ul > li > h5 {
+        background: #007bff;
+        width: 310px;
+        padding: 10px 20px;
+        color: #fff;
+    }
+    .result > ul > li > ul > li > ul{
+        display: flex;
+    }
+    .result > ul > li > ul > li > ul > li span {
+        display: block;
+        text-align: center;
+        width: 80px;
+    }
+    .result > ul > li > ul > li > ul > li > span:nth-child(2n-1) {
+        background: #f3f3f3;
+    }
+    .result > ul > li > ul > li> ul > li:nth-child(3) > span {
+        width: 150px;
+    }

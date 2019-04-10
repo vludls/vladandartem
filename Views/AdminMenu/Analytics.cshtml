@@ -54,45 +54,35 @@
             <button type="submit" class="btn btn-primary margin">Показать</button>
         </div>
     </form>
+
+    <div class="container result">
+        <ul>
+            <li>
+                <h5>Nokia</h5>
+                <ul>
+                    <li>
+                        <h5 class="month">Январь</h5>
+                        <ul>
+                            <li><span>День</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></li>
+                            <li><span>Продано</span><span>5</span><span>7</span><span>4</span><span>8</span><span>3</span><span>6</span><span>7</span><span>5</span><span>4</span><span>7</span></li>
+                            <li><span>Выручка</span><span>57900</span><span>43900</span><span>39000</span><span>101300</span><span>19000</span><span>98770</span><span>19888</span><span>17900</span><span>19000</span><span>19000</span></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <h5 class="month">Февраль</h5>
+                        <ul>
+                            <li><span>День</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></li>
+                            <li><span>Продано</span><span>5</span><span>7</span><span>4</span><span>8</span><span>3</span><span>6</span><span>7</span><span>5</span><span>4</span><span>7</span></li>
+                            <li><span>Выручка</span><span>57900</span><span>43900</span><span>39000</span><span>101300</span><span>19000</span><span>98770</span><span>19888</span><span>17900</span><span>19000</span><span>19000</span></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>Samsung</li>
+        </ul>
+
+        
+            
+    </div>
 </div>
 
-<form asp-action="Analytics" method="post">
-    <input type="hidden" name="TimeZoneOffset">
-    <label>Категория:</label>
-    <select name="CategoryId">
-        <option value="0">Все</option>
-        @foreach(var category in Model.Categories)
-        {
-            <option value="@category.Id">@category.Name</option>
-        }
-    </select>
-
-    <label>Продукт(ы):</label>
-    <select name="ProductId">
-        <option value="0">Все</option>
-        @foreach(var product in Model.Products)
-        {
-            <option value="@product.Id">@product.Name</option>
-        }
-    </select>
-
-    <label>Пользователь:</label>
-    <select name="UserEmail">
-        <option value="0">Все</option>
-        @foreach(var user in Model.Users)
-        {
-            <option value="@user.Id">@user.Email</option>
-        }
-    </select>
-
-    <label>C:</label>
-    <input type="text" class="datepicker" name="DateFrom">
-    
-    <label>По:</label>
-    <input type="text" class="datepicker" name="DateTo">
-    
-    <label>За все время</label>
-    <input type="checkbox" name="AllTime">
-
-    <input type="submit" value="Показать">
-</form>

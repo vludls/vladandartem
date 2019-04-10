@@ -4,15 +4,19 @@ $(document).ready(function () {
 
     $("form input[type='hidden']").val(offset);
 
-    $('form').submit(function(){
+    $('form').submit(function(e){
         var form = $(this);
         $.ajax({
             url: "/AdminMenu/LoadAnalytics",
             type: "POST",
             data: form.serialize(),
             success: function (data) {
-                document.write(data);
+                var result = JSON.parse(data);
+                
+                //$('.result').text(result);
+                $('.result').text(result[0]["Product"]["Name"]);
             }
         });
+        e.preventDefault();
     });
 });
