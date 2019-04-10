@@ -5,7 +5,7 @@ using vladandartem.Models;
 
 namespace vladandartem.ViewModels.AdminMenu
 {
-    public class Test2
+    public class LoadAnalyticsViewModel
     {
         public Product Product { get; set; }
         public int Sales { get; set; }

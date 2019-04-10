@@ -261,7 +261,9 @@ namespace vladandartem.Controllers
 
             myDb.SaveChanges();
 
-            return Redirect("~/Home/Index");
+            //return Redirect("~/Home/Index");
+
+            return new EmptyResult();
         }
 
         private double CompareTwoString(string strFirst, string strSecond)
