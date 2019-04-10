@@ -253,10 +253,10 @@ namespace vladandartem.Controllers
                     products = products.Where(n => n.Product.Id == model.ProductId);
                 }
 
-                /*if (model.UserEmail != null)
+                if (model.UserEmail != "0")
                 {
                     products = products.Where(n => n.Order.User.Email == model.UserEmail);
-                }*/
+                }
 
                 // Проходим отфильтрованные продукты
                 foreach (var product in products)
