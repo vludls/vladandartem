@@ -42,11 +42,14 @@ namespace vladandartem.Controllers
             if (await userManager.GetUserAsync(HttpContext.User) == null)
                 return new UnauthorizedResult();
 
-            context.Categories.Add(new Category { Name = CategoryName });
+            Category category = new Category { Name = CategoryName };
+
+            context.Categories.Add(category);
 
             context.SaveChanges();
 
-            return Redirect("~/AdminMenu/Main");
+            return Content(JsonConvert.SerializeObject(category));
+            //return Redirect("~/AdminMenu/Main");
         }
         [HttpPost]
         public async Task<IActionResult> DeleteCategory(int id)
@@ -121,12 +124,12 @@ namespace vladandartem.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> EditUser(string id)
+        public async Task<IActionResult> EditUser(int id)
         {
             if (await userManager.GetUserAsync(HttpContext.User) == null)
                 return new UnauthorizedResult();
 
-            User user = await userManager.FindByIdAsync(id);
+            User user = await userManager.FindByIdAsync(id.ToString());
 
             if (user == null)
             {
@@ -135,7 +138,7 @@ namespace vladandartem.Controllers
 
             EditUserViewModel euvm = new EditUserViewModel { Email = user.Email, Year = user.Year };
 
-            return View();
+            return View(euvm);
         }
 
         [HttpPost]
@@ -212,13 +215,13 @@ namespace vladandartem.Controllers
         public IActionResult LoadAnalytics(SomeViewModel model)
         {
             // Получаем все заказы и их поля
-            var buff = context.Orders.Include(n => n.CartProducts)
+            var orders = context.Orders.Include(n => n.CartProducts)
                 .ThenInclude(n => n.Product)
                 .ThenInclude(c => c.Category)
                 .Include(n => n.User)
                 .ToList();
 
-            List<Test2> test = new List<Test2>();
+            List<LoadAnalyticsViewModel> lavm = new List<LoadAnalyticsViewModel>();
 
             // Текущая дата(счетчик даты)
             DateTime dateFromBuff = model.DateFrom;
@@ -231,17 +234,17 @@ namespace vladandartem.Controllers
                 dateFromPostBuff = dateFromPostBuff.AddDays(1);
 
                 // Получаем продукты(CartProduct), которые соответствуют текущему счетчику даты 
-                var products = from order in buff
-                               from ttt in order.CartProducts
-                               orderby ttt.Id
-                               select ttt;
+                var products = from order in orders
+                               from cartProduct in order.CartProducts
+                               orderby cartProduct.Id
+                               select cartProduct;
 
+                // Пролистываем те элементы, которые уже отображены на странице и берем новые 10
                 products = products.Skip(model.LastItemId).Take(10);
 
                 // Если не отображать за все время, то фильтрует по выбранной дате
                 if (model.AllTime != 1)
                 {
-                    //return Content("123");
                     products = products.Where(cp => cp.Order.OrderTime.Day == dateFromBuff.Day &&
                                    cp.Order.OrderTime.Month == dateFromBuff.Month &&
                                    cp.Order.OrderTime.Year == dateFromBuff.Year);
@@ -259,6 +262,7 @@ namespace vladandartem.Controllers
                     products = products.Where(n => n.Product.Id == model.ProductId);
                 }
 
+                // Если выбран конкретный пользователь, то фильтруем по нему
                 if (model.UserId != 0)
                 {
                     products = products.Where(n => n.Order.User.Id == model.UserId);
@@ -267,31 +271,34 @@ namespace vladandartem.Controllers
                 // Проходим отфильтрованные продукты
                 foreach (var product in products)
                 {
-                    var element = test.FirstOrDefault(n => n.Product.Id == product.Product.Id);
+                    // Берем продукт из аналитики
+                    var productFromAnalytics = lavm.FirstOrDefault(n => n.Product.Id == product.Product.Id);
 
-                    // Если элемента в массиве результата нет
-                    if (element == null)
+                    // Если продукта в аналитике нет
+                    if (productFromAnalytics == null)
                     {
-                        element = new Test2 { Product = product.Product };
-                        
-                        test.Add(element);
+                        // Добавляем его
+                        productFromAnalytics = new LoadAnalyticsViewModel { Product = product.Product };
+
+                        lavm.Add(productFromAnalytics);
                     }
 
                     // Если прошлый день больше следующего
                     if (dateFromPostBuff.Day >= dateFromBuff.Day)
                     {
                         // Добавляем месяц
-                        element.MonthsState.Add(new MonthState(dateFromBuff));
+                        productFromAnalytics.MonthsState.Add(new MonthState(dateFromBuff));
                     }
 
-                    var month = element.MonthsState.Last();
+                    var month = productFromAnalytics.MonthsState.Last();
 
                     var day = new DayState(dateFromBuff);
+
                     day.Sales += product.Count;
                     day.Revenue += product.Count * product.Product.Price;
 
-                    element.Sales += day.Sales;
-                    element.Revenue += day.Revenue;
+                    productFromAnalytics.Sales += day.Sales;
+                    productFromAnalytics.Revenue += day.Revenue;
 
                     month.Days.Add(day);
                 }
@@ -305,7 +312,7 @@ namespace vladandartem.Controllers
                 dateFromBuff = dateFromBuff.AddDays(1);
             }
             
-            return Content(JsonConvert.SerializeObject(test));
+            return Content(JsonConvert.SerializeObject(lavm));
         }
     }
 }
