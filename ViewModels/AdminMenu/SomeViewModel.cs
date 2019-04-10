@@ -9,10 +9,10 @@ namespace vladandartem.ViewModels.AdminMenu
         public int CategoryId { get; set; }
         public int ProductId { get; set; }
 
-        public string UserEmail { get; set; }
+        public int UserId { get; set; }
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
-        public bool AllTime { get; set; }
+        public int AllTime { get; set; }
         public int LastItemId { get; set; }
     }
 }
