@@ -1,11 +1,17 @@
 .analytics > form {
+    width: 100%;
     display: flex;
     justify-content: space-between;
-    width: 100%;
+    padding: 30px 0;
 }
-    .analytics-row {
-        
+    .analytics input.datepicker, .analytics select {
+        width: 160px;
     }
-    .analytics-row input, .analytics-row select {
-        width: 400px;
+    .analytics .margin {
+        margin-top: 24px;
+    }
+    label.margin:hover {
+        background: #fff;
+        color: #007bff;
+        cursor: pointer;
     }

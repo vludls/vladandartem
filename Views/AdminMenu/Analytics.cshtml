@@ -5,16 +5,18 @@
 }
 
 <div class="container analytics">
-    <form asp-action="Analytics" method="post">
-        <div class="analytics-row">
-            <input type="hidden" name="TimeZoneOffset">
+    <form asp-action="LoadAnalytics" method="post"> 
+        <input type="hidden" name="TimeZoneOffset">
+        <div class="form-group">
             <label for="select-category">Категория</label>
-            <select name="product.CategoryId" class="form-control select" id="select-category">
+            <select name="CategoryId" class="form-control select" id="select-category">
                 @foreach(var category in Model.Categories)
                 {
                     <option value="@category.Id">@category.Name</option>
                 }
             </select>
+        </div>
+        <div class="form-group">
             <label for="select-product-name">Продукт(ы):</label>
             <select name="ProductId" class="form-control select" id="select-product-name">
                 <option value="0">Все</option>
@@ -23,6 +25,8 @@
                     <option value="@product.Id">@product.Name</option>
                 }
             </select>
+        </div>
+        <div class="form-group">
             <label for="select-email">Пользователь:</label>
             <select name="UserEmail" class="form-control select" id="select-email">
                 <option value="0">Все</option>
@@ -32,21 +36,22 @@
                 }
             </select>
         </div>
-        <div class="analytics-row">
-            <div class="form-group">
-                <label for="DateFrom"></label>
-                <input class="form-control datepicker" name="DateFrom" id="DateFrom">
-            </div>
-            <div class="form-group">
-                <label for="DateTo"></label>
-                <input class="form-control datepicker" name="DateTo" id="DateTo">
-            </div>
-            <div class="form-group">
-                <label for="AllTime">За всё время</label>
-                <input type="checkbox" name="AllTime" class="form-check-input" id="AllTime">
-            </div>
-
-            <button type="submit" class="btn btn-primary">Показать</button>
+    
+        <div class="form-group">
+            <label for="DateFrom">С:</label>
+            <input class="form-control datepicker" name="DateFrom" id="DateFrom">
+        </div>
+        <div class="form-group">
+            <label for="DateTo">По:</label>
+            <input class="form-control datepicker" name="DateTo" id="DateTo">
+        </div>
+        <div class="btn-group-toggle" data-toggle="buttons">
+            <label class="btn btn-outline-primary margin">
+                <input type="checkbox" name="AllTime">За всё время
+            </label>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary margin">Показать</button>
         </div>
     </form>
 </div>
