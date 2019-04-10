@@ -19,4 +19,8 @@ $(document).ready(function () {
         });
         e.preventDefault();
     });
+
+    $("form input[type='checkbox']").on("change", function () {
+        $(this).val($(this).prop('checked') ? 1 : 0);
+    });
 });

@@ -232,14 +232,20 @@ namespace vladandartem.Controllers
 
                 // Получаем продукты(CartProduct), которые соответствуют текущему счетчику даты 
                 var products = from order in buff
-                               where order.OrderTime.Day == dateFromBuff.Day &&
-                                   order.OrderTime.Month == dateFromBuff.Month &&
-                                   order.OrderTime.Year == dateFromBuff.Year
                                from ttt in order.CartProducts
                                orderby ttt.Id
                                select ttt;
 
                 products = products.Skip(model.LastItemId).Take(10);
+
+                // Если не отображать за все время, то фильтрует по выбранной дате
+                if (model.AllTime != 1)
+                {
+                    //return Content("123");
+                    products = products.Where(cp => cp.Order.OrderTime.Day == dateFromBuff.Day &&
+                                   cp.Order.OrderTime.Month == dateFromBuff.Month &&
+                                   cp.Order.OrderTime.Year == dateFromBuff.Year);
+                }
 
                 // Если выбрана конкретная категория, то фильтруем по ней
                 if (model.CategoryId != 0)
@@ -253,10 +259,10 @@ namespace vladandartem.Controllers
                     products = products.Where(n => n.Product.Id == model.ProductId);
                 }
 
-                /*if (model.UserEmail != null)
+                if (model.UserId != 0)
                 {
-                    products = products.Where(n => n.Order.User.Email == model.UserEmail);
-                }*/
+                    products = products.Where(n => n.Order.User.Id == model.UserId);
+                }
 
                 // Проходим отфильтрованные продукты
                 foreach (var product in products)
@@ -288,6 +294,12 @@ namespace vladandartem.Controllers
                     element.Revenue += day.Revenue;
 
                     month.Days.Add(day);
+                }
+
+                // Если выбрано поле за все время, то нет смысла пробегать еще раз т.к фильтры не срабатывали и уже все для каждого дня посчитано
+                if (model.AllTime == 1)
+                {
+                    break;
                 }
 
                 dateFromBuff = dateFromBuff.AddDays(1);
