@@ -4,7 +4,7 @@ $(document).ready(function () {
 
     $("form input[type='hidden']").val(offset);
 
-    $('form').submit(function(e){
+    $('.analytics > form').submit(function (e) {
         var form = $(this);
         $.ajax({
             url: "/AdminMenu/LoadAnalytics",
@@ -12,12 +12,15 @@ $(document).ready(function () {
             data: form.serialize(),
             success: function (data) {
                 var result = JSON.parse(data);
-                
+                $('.test').text(data);
+                $('.len').html('<p>Количество товаров: ' + result.length + '</p>');
+                //$('.test').text(data);
                 //$('.result').text(result);
-                $('.result').text(result[0]["Product"]["Name"]);
-                var ul = $('.result > ul');
+                // $('.test').text(result[0]["Product"]["Name"]);
+                //var ul = $('.result > ul');
                 for (var i = 0; i < result.length; i++) {
-                    
+                    $('.jason').append('<p>' + result[i]["Product"]["Name"] + ' Продано: ' + result[i]["Sales"] + ' Выручка: ' + result[i]["Revenue"] + '</p>');
+                    $('.jason').append('<p>' + result[i]["MonthsState"].length + '</p>');
                 }
             }
         });
@@ -29,12 +32,12 @@ $(document).ready(function () {
     });
 
     $('.months').hide();
-    $('.name-in-analitics').each(function(){
-        $(this).click(function(){
+    $('.name-in-analitics').each(function () {
+        $(this).click(function () {
             $(this).next().slideToggle();
         });
     });
 
-    
+
 
 });

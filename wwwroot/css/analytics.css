@@ -61,7 +61,7 @@
     text-align: center;
 }
 .months table th:nth-child(3), .months table td:nth-child(3) {
-    width: 159px;
+    width: 155px;
 }
 .months table tr:nth-child(2n-1) {
     background: #f3f3f3;
