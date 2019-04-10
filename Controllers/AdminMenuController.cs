@@ -228,7 +228,7 @@ namespace vladandartem.Controllers
             // Проходим каждый день с указанной начальной даты до указаной конечной даты
             while (DateTime.Compare(dateFromBuff, model.DateTo) <= 0)
             {
-                dateFromPostBuff.AddDays(1);
+                dateFromPostBuff = dateFromPostBuff.AddDays(1);
 
                 // Получаем продукты(CartProduct), которые соответствуют текущему счетчику даты 
                 var products = from order in buff
@@ -252,6 +252,11 @@ namespace vladandartem.Controllers
                 {
                     products = products.Where(n => n.Product.Id == model.ProductId);
                 }
+
+                /*if (model.UserEmail != null)
+                {
+                    products = products.Where(n => n.Order.User.Email == model.UserEmail);
+                }*/
 
                 // Проходим отфильтрованные продукты
                 foreach (var product in products)
