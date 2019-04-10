@@ -184,7 +184,7 @@ namespace vladandartem.Controllers
         }
 
         [HttpGet]
-        public IActionResult Edit(string id)
+        public IActionResult Edit(int id)
         {
             EditViewModel evm = new EditViewModel
             {
@@ -333,10 +333,11 @@ namespace vladandartem.Controllers
             myDb.SaveChanges();
 
             var buff = userManager.Users.Where(u => u.Id == user.Id).Include(u => u.Cart)
-                .ThenInclude(u => u.CartProducts).FirstOrDefault();
+                .ThenInclude(u => u.CartProducts).ThenInclude(u => u.Product).FirstOrDefault();
 
             foreach (var cp in buff.Cart.CartProducts)
             {
+                cp.Product.Count--;
                 cp.CartId = null;
                 cp.OrderId = order.Id;
             }

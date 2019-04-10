@@ -12090,23 +12090,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\roskvartal\\.nuget\\packages\\": {},
+    "C:\\Users\\Владислав\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\roskvartal\\Documents\\vladandartem\\vladandartem.csproj",
+      "projectUniqueName": "C:\\Users\\Владислав\\Documents\\vladandartem\\vladandartem.csproj",
       "projectName": "vladandartem",
-      "projectPath": "C:\\Users\\roskvartal\\Documents\\vladandartem\\vladandartem.csproj",
-      "packagesPath": "C:\\Users\\roskvartal\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\roskvartal\\Documents\\vladandartem\\obj\\",
+      "projectPath": "C:\\Users\\Владислав\\Documents\\vladandartem\\vladandartem.csproj",
+      "packagesPath": "C:\\Users\\Владислав\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Владислав\\Documents\\vladandartem\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\roskvartal\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Владислав\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -12114,7 +12114,6 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "http://nuget1.roskvartal.ru/nuget": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
