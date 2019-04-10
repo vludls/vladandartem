@@ -15,6 +15,10 @@ $(document).ready(function () {
                 
                 //$('.result').text(result);
                 $('.result').text(result[0]["Product"]["Name"]);
+                var ul = $('.result > ul');
+                for (var i = 0; i < result.length; i++) {
+                    
+                }
             }
         });
         e.preventDefault();
@@ -23,4 +27,14 @@ $(document).ready(function () {
     $("form input[type='checkbox']").on("change", function () {
         $(this).val($(this).prop('checked') ? 1 : 0);
     });
+
+    $('.months').hide();
+    $('.name-in-analitics').each(function(){
+        $(this).click(function(){
+            $(this).next().slideToggle();
+        });
+    });
+
+    
+
 });

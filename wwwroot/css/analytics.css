@@ -18,23 +18,54 @@
 .result {
     flex-direction: column;
 }
+.result > ul {
+    margin-bottom: 60px;
+    border: 2px solid #f3f3f3;
+    border-radius: 7px;
+    overflow: hidden;
+}
+    
     .result > ul > li > h5 {
         background: #007bff;
-        width: 310px;
+        width: 1140px;
         padding: 10px 20px;
         color: #fff;
+        border-bottom: 2px solid #fff;
+    }
+    .products-in-analytics:last-child > h5 {
+        border: none;
     }
     .result > ul > li > ul > li > ul{
         display: flex;
     }
-    .result > ul > li > ul > li > ul > li span {
-        display: block;
-        text-align: center;
-        width: 80px;
+.months {
+    display: flex;
+    flex-wrap: wrap;
+}
+    .months > li {
+        border: 2px solid #f3f3f3;
+        border-radius: 7px;
+        overflow: hidden;
+        margin-top: 27px;
+        margin-bottom: 30px;
+        margin-left: 30px;
     }
-    .result > ul > li > ul > li > ul > li > span:nth-child(2n-1) {
-        background: #f3f3f3;
-    }
-    .result > ul > li > ul > li> ul > li:nth-child(3) > span {
-        width: 150px;
-    }
+        .months > li > h5 {
+            padding: 10px 20px;
+            background: #28a745;
+            color: #fff;
+        }
+    
+.months table th, .months table td {
+    width: 90px;
+    text-align: center;
+}
+.months table th:nth-child(3), .months table td:nth-child(3) {
+    width: 159px;
+}
+.months table tr:nth-child(2n-1) {
+    background: #f3f3f3;
+}
+.products-in-analytics {
+    
+}
