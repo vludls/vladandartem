@@ -2,7 +2,7 @@ $(document).ready(function () {
     let date = new Date()
     let offset = -date.getTimezoneOffset() / 60;
 
-    $("form input[type='hidden']").val(offset);
+    $("#first-input-hidden").val(offset);
 
     $('.analytics > form').submit(function (e) {
         var form = $(this);
@@ -11,6 +11,8 @@ $(document).ready(function () {
             type: "POST",
             data: form.serialize(),
             success: function (data) {
+                document.write(data);
+                /*
                 var result = JSON.parse(data);
                 $('.test').text(data);
                 $('.len').html('<p>Количество товаров: ' + result.length + '</p>');
@@ -21,7 +23,7 @@ $(document).ready(function () {
                 for (var i = 0; i < result.length; i++) {
                     $('.jason').append('<p>' + result[i]["Product"]["Name"] + ' Продано: ' + result[i]["Sales"] + ' Выручка: ' + result[i]["Revenue"] + '</p>');
                     $('.jason').append('<p>' + result[i]["MonthsState"].length + '</p>');
-                }
+                }*/
             }
         });
         e.preventDefault();

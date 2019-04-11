@@ -10,7 +10,7 @@
 </div>
 <div class="container analytics">
     <form asp-action="LoadAnalytics" method="post">
-        <input type="hidden" name="TimeZoneOffset">
+        <input id="first-input-hidden" type="hidden" name="TimeZoneOffset">
         <div class="form-group">
             <label for="select-category">Категория</label>
             <select name="CategoryId" class="form-control select" id="select-category">
@@ -54,7 +54,7 @@
             <input id="checkbox" type="checkbox" name="AllTime">
 
         </div>
-        <input type="hidden" name="LastItemId" value="0">
+        <input id="second-input-hidden"type="hidden" name="LastItemId" value="0">
         <div class="form-group">
             <button type="submit" class="btn btn-primary margin">Показать</button>
         </div>
