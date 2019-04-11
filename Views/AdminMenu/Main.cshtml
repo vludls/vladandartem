@@ -1,3 +1,4 @@
+@model vladandartem.ViewModels.AdminMenu.MainViewModel
 @section Scripts {
     <script src="~/js/users.js"></script>
     <script src="~/js/add-category.js"></script>
@@ -14,7 +15,7 @@
 <main class="container admin admin-categories">
     <ul class="users">
         <li><p>Категория</p><p>Действие</p></li>
-        @foreach(var category in Model)
+        @foreach (var category in Model.Categories)
         {
             <li>
                 <p>@category.Name</p>
@@ -28,7 +29,7 @@
         }
     </ul>
     <div class="modal fade" id="" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-        aria-hidden="true">
+         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -52,6 +53,12 @@
     </div>
     <form action="~/AdminMenu/AddCategory" method="post" class="add-new-category">
         <div class="form-group">
+            <select name="SectionId">
+                @foreach (var sec in Model.Sections)
+                {
+                    <option value="@sec.Id">@sec.Name</option>
+                }
+            </select>
             <label for="add-category">Добавьте категорию</label>
             <input type="text" name="CategoryName" class="form-control" id="add-category" placeholder="Название категории">
         </div>

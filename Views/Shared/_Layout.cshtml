@@ -90,13 +90,7 @@
             </div>
             <nav>
                 <ul class="container menu">
-                    <li><a href="">Ноутбуки</a></li>
-                    <li><a href="">Мониторы</a></li>
-                    <li><a href="">Смартфоны</a></li>
-                    <li><a href="">Планшеты</a></li>
-                    <li><a href="">Телевизоры</a></li>                   
-                    <li><a href="">Моноблоки</a></li>
-                    <li><a href="">Видеокамеры</a></li> 
+                    @await Component.InvokeAsync("SectionLayout")
                 </ul>
             </nav>
         </header>
