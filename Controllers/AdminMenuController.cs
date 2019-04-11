@@ -28,28 +28,33 @@ namespace vladandartem.Controllers
             this.userManager = userManager;
             this.context = context;
         }
+        [HttpGet]
         public async Task<IActionResult> Main()
         {
             if (await userManager.GetUserAsync(HttpContext.User) == null)
                 return new UnauthorizedResult();
 
-            return View(context.Categories.ToList());
+            MainViewModel mvm = new MainViewModel {
+                Sections = context.Sections.ToList(),
+                Categories = context.Categories.ToList()
+            };
+
+            return View(mvm);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddCategory(string CategoryName)
+        public async Task<IActionResult> AddCategory(int SectionId, string CategoryName)
         {
             if (await userManager.GetUserAsync(HttpContext.User) == null)
                 return new UnauthorizedResult();
 
-            Category category = new Category { Name = CategoryName };
+            Category category = new Category { Name = CategoryName, SectionId = SectionId };
 
             context.Categories.Add(category);
 
             context.SaveChanges();
 
             return Content(JsonConvert.SerializeObject(category));
-            //return Redirect("~/AdminMenu/Main");
         }
         [HttpPost]
         public async Task<IActionResult> DeleteCategory(int id)
@@ -212,18 +217,47 @@ namespace vladandartem.Controllers
             return View(model);
         }
         [HttpPost]
-        public IActionResult LoadGeneralAnalytics(SomeViewModel model)
+        public IActionResult LoadGeneralAnalytics(LoadAnalytics model)
         {
             return Content(getAnalyticsJson(model, true));
         }
 
         [HttpPost]
-        public IActionResult LoadAnalytics(SomeViewModel model)
+        public IActionResult LoadAnalytics(LoadAnalytics model)
         {
             return Content(getAnalyticsJson(model, false));
         }
 
-        private string getAnalyticsJson(SomeViewModel model, bool isSkip)
+        [HttpGet]
+        public IActionResult Section()
+        {
+            return View(context.Sections.ToList());
+        }
+        [HttpPost]
+        public IActionResult SectionAdd(string SectionName)
+        {
+            context.Sections.Add(new Section { Name = SectionName });
+
+            context.SaveChanges();
+
+            return new EmptyResult();
+        }
+        [HttpPost]
+        public IActionResult SectionDelete(int SectionId)
+        {
+            Section section = context.Sections.Find(SectionId);
+
+            if(section != null)
+            {
+                context.Sections.Remove(section);
+
+                context.SaveChanges();
+            }
+
+            return new EmptyResult();
+        }
+
+        private string getAnalyticsJson(LoadAnalytics model, bool isSkip)
         {
             // Получаем все заказы и их поля
             var orders = context.Orders.Include(n => n.CartProducts)
@@ -233,8 +267,8 @@ namespace vladandartem.Controllers
                 .ToList();
 
             List<ProductAnalytics> productAnalytics = new List<ProductAnalytics>();
-            GeneralAnalytics generalAnalytics;
 
+            // Получаем все CartProduct и сортируем по возрастанию по айди
             var products = from order in orders
                            from cartProduct in order.CartProducts
                            orderby cartProduct.Id
@@ -253,13 +287,9 @@ namespace vladandartem.Controllers
                 );
             }
 
+            // Если isSkip == false, то значит это подгрузка общей статистики и нам надо получить все элементы, а не только 10
             if(isSkip)
                 products = products.Skip(model.LastItemId).Take(10);
-
-            if (model.CategoryId == 0 || model.ProductId == 0)
-            {
-                generalAnalytics = new GeneralAnalytics();
-            }
 
             // Если выбрана конкретная категория, то фильтруем по ней
             if (model.CategoryId != 0)
@@ -286,8 +316,10 @@ namespace vladandartem.Controllers
             // Проходим все отфильтрованные продукты (CartProduct)
             foreach (var product in products)
             {
+                // Ищем в готовой аналитике этот продукт
                 var lavmItem = productAnalytics.FirstOrDefault(item => item.Product.Id == product.Product.Id);
 
+                // Если его там нет, то заносим в аналитику этот продукт
                 if (lavmItem == null)
                 {
                     lavmItem = new ProductAnalytics { Product = product.Product };

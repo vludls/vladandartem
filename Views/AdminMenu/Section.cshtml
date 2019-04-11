@@ -1,0 +1,22 @@
+﻿@model IEnumerable<vladandartem.Models.Section>
+
+@{
+    ViewData["Title"] = "View";
+}
+
+@foreach (var item in Model)
+{
+    @item.Name
+
+    <form asp-action="SectionDelete">
+        <input type="hidden" name="SectionId" value="@item.Id">
+        <input type="submit" value="Удалить">
+    </form>
+}
+
+<form asp-action="SectionAdd">
+    <input type="text" name="SectionName" placeholder="Название секции">
+    <input type="submit" value="Добавить">
+</form>
+
+</table>

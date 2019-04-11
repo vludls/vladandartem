@@ -5,19 +5,6 @@ using vladandartem.Models;
 
 namespace vladandartem.ViewModels.AdminMenu
 {
-    /*public class LoadAnalyticsViewModel
-    {
-        public string GeneralAnalytics { get; set; }
-        public string ProductAnalytics { get; set; }
-    }*/
-
-    public class GeneralAnalytics
-    {
-        public int Sales { get; set; }
-        public int Revenue { get; set; }
-        public List<MonthState> MonthsState { get; set; } = new List<MonthState>();
-    }
-
     public class ProductAnalytics
     {
         public Product Product { get; set; }
