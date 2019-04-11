@@ -16,3 +16,12 @@ $('.datepicker').datepicker({
     language: "ru",
     format: "dd.mm.yyyy"
 });
+function forAddCategory () {
+    var button = this;
+    $(this).click(function () {
+        $('.fade').attr('id', $(button).attr('data-target').substr(1));
+        $('.fade form input').val($(button).attr('data-route-id'));
+        $('.modal-body > h6').text('Удалить категорию ' + $(this).closest('li').children('p:first-child').text() + '?');
+    });
+}
+
