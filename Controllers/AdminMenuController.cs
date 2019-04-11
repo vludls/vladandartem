@@ -212,7 +212,18 @@ namespace vladandartem.Controllers
             return View(model);
         }
         [HttpPost]
+        public IActionResult LoadGeneralAnalytics(SomeViewModel model)
+        {
+            return Content(getAnalyticsJson(model, true));
+        }
+
+        [HttpPost]
         public IActionResult LoadAnalytics(SomeViewModel model)
+        {
+            return Content(getAnalyticsJson(model, false));
+        }
+
+        private string getAnalyticsJson(SomeViewModel model, bool isSkip)
         {
             // Получаем все заказы и их поля
             var orders = context.Orders.Include(n => n.CartProducts)
@@ -221,98 +232,112 @@ namespace vladandartem.Controllers
                 .Include(n => n.User)
                 .ToList();
 
-            List<LoadAnalyticsViewModel> lavm = new List<LoadAnalyticsViewModel>();
+            List<ProductAnalytics> productAnalytics = new List<ProductAnalytics>();
+            GeneralAnalytics generalAnalytics;
 
-            // Текущая дата(счетчик даты)
-            DateTime dateFromBuff = model.DateFrom;
-            // Прошлая текущая дата
-            DateTime dateFromPostBuff = dateFromBuff;
+            var products = from order in orders
+                           from cartProduct in order.CartProducts
+                           orderby cartProduct.Id
+                           select cartProduct;
 
-            // Проходим каждый день с указанной начальной даты до указаной конечной даты
-            while (DateTime.Compare(dateFromBuff, model.DateTo) <= 0)
+            // Если не отображать за все время, то фильтрует по выбранной дате
+            if (model.AllTime != 1)
             {
-                dateFromPostBuff = dateFromPostBuff.AddDays(1);
+                products = products.Where(cp =>
+                    cp.Order.OrderTime.Day >= model.DateFrom.Day &&
+                    cp.Order.OrderTime.Month >= model.DateFrom.Month &&
+                    cp.Order.OrderTime.Year >= model.DateFrom.Year &&
+                    cp.Order.OrderTime.Day <= model.DateTo.Day &&
+                    cp.Order.OrderTime.Month <= model.DateTo.Month &&
+                    cp.Order.OrderTime.Year <= model.DateTo.Year
+                );
+            }
 
-                // Получаем продукты(CartProduct), которые соответствуют текущему счетчику даты 
-                var products = from order in orders
-                               from cartProduct in order.CartProducts
-                               orderby cartProduct.Id
-                               select cartProduct;
-
-                // Пролистываем те элементы, которые уже отображены на странице и берем новые 10
+            if(isSkip)
                 products = products.Skip(model.LastItemId).Take(10);
 
-                // Если не отображать за все время, то фильтрует по выбранной дате
-                if (model.AllTime != 1)
+            if (model.CategoryId == 0 || model.ProductId == 0)
+            {
+                generalAnalytics = new GeneralAnalytics();
+            }
+
+            // Если выбрана конкретная категория, то фильтруем по ней
+            if (model.CategoryId != 0)
+            {
+                products = products.Where(n => n.Product.CategoryId == model.CategoryId);
+            }
+
+            // Если выбран конкретный продукт, то фильтруем по нему
+            if (model.ProductId != 0)
+            {
+                products = products.Where(n => n.Product.Id == model.ProductId);
+            }
+
+            // Если выбран конкретный пользователь, то фильтруем по нему
+            if (model.UserId != 0)
+            {
+                products = products.Where(n => n.Order.User.Id == model.UserId);
+            }
+
+            products = products.OrderBy(n => n.Order.OrderTime);
+
+            DateTime datePostBuff = new DateTime();
+
+            // Проходим все отфильтрованные продукты (CartProduct)
+            foreach (var product in products)
+            {
+                var lavmItem = productAnalytics.FirstOrDefault(item => item.Product.Id == product.Product.Id);
+
+                if (lavmItem == null)
                 {
-                    products = products.Where(cp => cp.Order.OrderTime.Day == dateFromBuff.Day &&
-                                   cp.Order.OrderTime.Month == dateFromBuff.Month &&
-                                   cp.Order.OrderTime.Year == dateFromBuff.Year);
+                    lavmItem = new ProductAnalytics { Product = product.Product };
+
+                    lavmItem.MonthsState.Add(new MonthState(product.Order.OrderTime));
+
+                    productAnalytics.Add(lavmItem);
                 }
 
-                // Если выбрана конкретная категория, то фильтруем по ней
-                if (model.CategoryId != 0)
+                // Если прошлый день больше следующего
+                if (datePostBuff.Day > product.Order.OrderTime.Day)
                 {
-                    products = products.Where(n => n.Product.CategoryId == model.CategoryId);
+                    // Добавляем месяц к продукту в аналитике
+                    lavmItem.MonthsState.Add(new MonthState(datePostBuff));
                 }
 
-                // Если выбран конкретный продукт, то фильтруем по нему
-                if (model.ProductId != 0)
+                // Прошлая дата
+                datePostBuff = product.Order.OrderTime;
+
+                var month = lavmItem.MonthsState.Last();
+
+                DayState day = month.Days.Find(ds =>
+                    ds.Day.Day == datePostBuff.Day &&
+                    ds.Day.Month == datePostBuff.Month &&
+                    ds.Day.Year == datePostBuff.Year
+                );
+
+                if (day == null)
                 {
-                    products = products.Where(n => n.Product.Id == model.ProductId);
-                }
-
-                // Если выбран конкретный пользователь, то фильтруем по нему
-                if (model.UserId != 0)
-                {
-                    products = products.Where(n => n.Order.User.Id == model.UserId);
-                }
-
-                // Проходим отфильтрованные продукты
-                foreach (var product in products)
-                {
-                    // Берем продукт из аналитики
-                    var productFromAnalytics = lavm.FirstOrDefault(n => n.Product.Id == product.Product.Id);
-
-                    // Если продукта в аналитике нет
-                    if (productFromAnalytics == null)
-                    {
-                        // Добавляем его
-                        productFromAnalytics = new LoadAnalyticsViewModel { Product = product.Product };
-
-                        lavm.Add(productFromAnalytics);
-                    }
-
-                    // Если прошлый день больше следующего
-                    if (dateFromPostBuff.Day >= dateFromBuff.Day)
-                    {
-                        // Добавляем месяц
-                        productFromAnalytics.MonthsState.Add(new MonthState(dateFromBuff));
-                    }
-
-                    var month = productFromAnalytics.MonthsState.Last();
-
-                    var day = new DayState(dateFromBuff);
+                    day = new DayState(datePostBuff);
 
                     day.Sales += product.Count;
                     day.Revenue += product.Count * product.Product.Price;
 
-                    productFromAnalytics.Sales += day.Sales;
-                    productFromAnalytics.Revenue += day.Revenue;
+                    lavmItem.Sales += day.Sales;
+                    lavmItem.Revenue += day.Revenue;
 
                     month.Days.Add(day);
                 }
-
-                // Если выбрано поле за все время, то нет смысла пробегать еще раз т.к фильтры не срабатывали и уже все для каждого дня посчитано
-                if (model.AllTime == 1)
+                else
                 {
-                    break;
-                }
+                    day.Sales += product.Count;
+                    day.Revenue += product.Count * product.Product.Price;
 
-                dateFromBuff = dateFromBuff.AddDays(1);
+                    lavmItem.Sales += day.Sales;
+                    lavmItem.Revenue += day.Revenue;
+                }
             }
-            
-            return Content(JsonConvert.SerializeObject(lavm));
+
+            return JsonConvert.SerializeObject(productAnalytics);
         }
     }
 }
