@@ -43,4 +43,17 @@ $(document).ready(function () {
     };
     timer();
     //slider
+
+    $('.delete-products').submit(function (e) {
+        var form = $(this);
+        $.ajax({
+            url: "/Home/RemoveProduct",
+            type: "POST",
+            data: form.serialize(),
+            success: function () {
+                $(form).closest('li').remove();
+            }
+        });
+        e.preventDefault();
+    });
 });
