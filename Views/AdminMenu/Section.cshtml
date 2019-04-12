@@ -42,7 +42,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                    <form asp-action="SectionDelete">
+                    <form asp-action="SectionDelete" method="post" class="section-delete">
                         <input type="hidden" name="SectionId">
                         <button type="submit" class="btn btn-danger">Удалить</button>
                     </form>
@@ -54,7 +54,7 @@
     <form asp-action="SectionAdd" method="post" class="add-new-category">
         <div class="form-group">
             <label for="add-section">Добавьте раздел</label>
-            <input type="text" name="SectionName" class="form-control" id="add-section" placeholder="Название раздела">
+            <input type="text" name="SectionName" class="form-control add-category" id="add-section" placeholder="Название раздела">
         </div>
         <button type="submit" class="btn btn-primary">Добавить</button>
     </form>
