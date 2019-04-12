@@ -7,23 +7,12 @@
     <script src="~/js/cart.js"></script>
 }
 
-<ul class="nav nav-pills container nav-in-pers">
-    <li class="nav-item">
-        <a class="nav-link" href="~/PersonalArea/Main">Профиль</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link active" href="~/Home/Cart">Корзина</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="~/PersonalArea/PaidProducts">Мои заказы</a>
-    </li>
-
-</ul>
+@Html.Partial("_GetTabs", new vladandartem.ViewModels.PersonalArea.GetTabsViewModel { SectionId = 2 })
 
 <main class="container lop">
-    
+
     <div class="list">
-        @if(Model.Count() > 0)
+        @if (Model.Count() > 0)
         {
             <ul>
                 @foreach (var element in Model)
@@ -43,11 +32,11 @@
                                 <input type="number" value="@element.Count" min="1" name="count" class="form-control q"><br>
                                 <span>На складе: </span><span>@element.Product.Count</span>
                             </div>
-                            <p class="price-in-cart"> 
+                            <p class="price-in-cart">
                                 <span>@element.Product.Price</span> р.
                             </p>
                             <div>
-                                <button type="submit" name="delfromcart" class="btn btn-primary newicon" ><i class="far fa-trash-alt"></i></button>
+                                <button type="submit" name="delfromcart" class="btn btn-primary newicon"><i class="far fa-trash-alt"></i></button>
                             </div>
                         </form>
                     </li>

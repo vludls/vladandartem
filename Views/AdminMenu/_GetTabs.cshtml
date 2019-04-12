@@ -1,14 +1,16 @@
-﻿<ul class="nav nav-pills container nav-in-pers">
+﻿@model vladandartem.ViewModels.AdminMenu.GetTabsViewModel
+
+<ul class="nav nav-pills container nav-in-pers">
     <li class="nav-item">
-        <a class="nav-link active" asp-action="Main">Управление категориями</a>
+        <a class="nav-link @(Model.SectionId == 1 ? "active" : "")" asp-action="Main">Управление категориями</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" asp-action="Users">Управление пользователями</a>
+        <a class="nav-link @(Model.SectionId == 2 ? "active" : "")" asp-action="Users">Управление пользователями</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" asp-action="Section">Управление разделами</a>
+        <a class="nav-link @(Model.SectionId == 3 ? "active" : "")" asp-action="Section">Управление разделами</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" asp-action="Analytics">Аналитика</a>
+        <a class="nav-link @(Model.SectionId == 4 ? "active" : "")" asp-action="Analytics">Аналитика</a>
     </li>
 </ul>

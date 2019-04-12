@@ -4,12 +4,7 @@
     ViewData["Title"] = "View";
 }
 
-@section Scripts {
-    <!--<script src="~/js/users.js"></script>
-    <script src="~/js/add-category.js"></script>-->
-}
-
-@Html.Partial("_GetTabs")
+@Html.Partial("_GetTabs", new vladandartem.ViewModels.AdminMenu.GetTabsViewModel { SectionId = 2 })
 
 <main class="container admin admin-categories">
     <ul class="users">
