@@ -18,6 +18,7 @@
     border-radius: 7px;
     padding: 30px;
     margin-left: 30px;
+    height: 100%;
 }
     .add-new-category input {
         width: 270px;

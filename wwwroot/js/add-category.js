@@ -8,7 +8,7 @@ $('.add-new-category').each(function() {
             success: function (data) {
                 var NameOfCategory = JSON.parse(data);
                 $('.users').append('<li><p>' + NameOfCategory["Name"] + '</p><div class="centering"><button type="submit" class="btn btn-danger delete-user" data-toggle="modal" data-route-id="' + NameOfCategory["Id"] + '" data-target="#a'+ NameOfCategory["Id"] +'">Удалить</button></div></li>');
-                $('#add-category').val('');
+                $('.add-category').val('');
                 $('.centering > button').each(forAddCategory); //Для модалки
             }
         });

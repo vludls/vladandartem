@@ -6,7 +6,7 @@
 
 @Html.Partial("_GetTabs", new vladandartem.ViewModels.AdminMenu.GetTabsViewModel { SectionId = 1 })
 
-<main class="container admin admin-categories">
+<main class="container admin">
     <ul class="users">
         <li><p>Категория</p><p>Действие</p></li>
         @foreach (var category in Model.Categories)
@@ -57,7 +57,7 @@
         </div>
         <div class="form-group">
             <label for="add-category">Добавьте категорию</label>
-            <input type="text" name="CategoryName" class="form-control" id="add-category" placeholder="Название категории">
+            <input type="text" name="CategoryName" class="form-control add-category" id="add-category" placeholder="Название категории">
         </div>
         <button type="submit" class="btn btn-primary">Добавить</button>
     </form>
