@@ -4,20 +4,7 @@
     ViewData["Title"] = "View";
 }
 
-<ul class="nav nav-pills container nav-in-pers">
-    <li class="nav-item">
-        <a class="nav-link" asp-action="Main">Управление категориями</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-action="Users">Управление пользователями</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link active" asp-action="Section">Управление разделами</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-action="Analytics">Аналитика</a>
-    </li>
-</ul>
+@Html.Partial("_GetTabs")
 
 <main class="container">
     <ul class="users">

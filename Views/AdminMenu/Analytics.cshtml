@@ -1,26 +1,15 @@
 @model vladandartem.ViewModels.AdminMenu.AnalyticsViewModel
 @section Scripts
-{
+    {
     <script src="~/js/Analytics.js"></script>
 }
-<ul class="nav nav-pills container nav-in-pers">
-    <li class="nav-item">
-        <a class="nav-link" asp-action="Main">Управление категориями</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-action="Users">Управление пользователями</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-action="Section">Управление разделами</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link active" asp-action="Analytics">Аналитика</a>
-    </li>
-</ul>
+
+@Html.Partial("_GetTabs")
+
 <div class="test"></div>
 <div class="jason">
-        
-        
+
+
 </div>
 <div class="container analytics">
     <form asp-action="LoadAnalytics" method="post">
@@ -68,7 +57,7 @@
             <input id="checkbox" type="checkbox" name="AllTime">
 
         </div>
-        <input id="second-input-hidden"type="hidden" name="LastItemId" value="0">
+        <input id="second-input-hidden" type="hidden" name="LastItemId" value="0">
         <div class="form-group">
             <button type="submit" class="btn btn-primary margin">Показать</button>
         </div>
@@ -297,8 +286,8 @@
             </li>-->
         </ul>
 
-        
-            
+
+
     </div>
 </div>
 
