@@ -11,7 +11,7 @@
         <li><p>E-mail</p><p>Дата рождения</p><p>Редактирование</p><p>Удаление</p></li>
         @foreach (var user in Model)
         {
-            <li>
+            <li id="@("s" + user.Id)">
                 <p>@user.Email</p>
                 <p>@user.Year</p>
                 <p class="centering">

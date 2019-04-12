@@ -7,8 +7,7 @@ $('.add-new-category').each(function() {
             data: form.serialize(),
             success: function (data) {
                 var NameOfSection = JSON.parse(data);
-                alert(data);
-                $('.users').append('<li><p>' + NameOfSection["Name"] + '</p><div class="centering"><button type="submit" class="btn btn-danger delete-user" data-toggle="modal" data-route-id="' + NameOfSection["Id"] + '" data-target="#a'+ NameOfSection["Id"] +'">Удалить</button></div></li>');
+                $('.users').append('<li id="s' + NameOfSection["Id"] + '"><p>' + NameOfSection["Name"] + '</p><div class="centering"><button type="submit" class="btn btn-danger delete-user" data-toggle="modal" data-route-id="' + NameOfSection["Id"] + '" data-target="#a'+ NameOfSection["Id"] +'">Удалить</button></div></li>');
                 $('.add-category').val('');
                 $('.centering > button').each(forAddCategory); //Для модалки
             }
@@ -22,10 +21,11 @@ $('.section-delete').submit(function (e) {
     $.ajax({
         url: "/AdminMenu/SectionDelete",
         type: "POST",
-        data: form.serialize(),
-        success: function () {
-            var test = 'centering';
-            alert($('.' + test).attr('class'));
+        data: del.serialize(),
+        success: function (data) {
+            var DelSection = data;
+            $('#s' + DelSection).remove();
+            $('.close-modal').trigger('click');
         }
     });
     e.preventDefault();
