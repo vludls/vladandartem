@@ -179,16 +179,18 @@ namespace vladandartem.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteUser(string id)
+        public async Task<IActionResult> DeleteUser(int id)
         {
-            if (await userManager.GetUserAsync(HttpContext.User) == null)
+            User mainUser = await userManager.GetUserAsync(HttpContext.User);
+
+            if (mainUser == null)
                 return new UnauthorizedResult();
 
-            User user = await userManager.FindByIdAsync(id);
+            User findedUser = await userManager.FindByIdAsync(Convert.ToString(id));
 
-            if (user != null)
+            if (findedUser != null && mainUser != findedUser)
             {
-                var buff = userManager.Users.Where(u => u.Id == user.Id)
+                var buff = userManager.Users.Where(u => u.Id == findedUser.Id)
                     .Include(u => u.Cart)
                     .ThenInclude(u => u.CartProducts)
                     .ThenInclude(u => u.Product)
@@ -198,10 +200,10 @@ namespace vladandartem.Controllers
 
                 context.SaveChanges();
 
-                await userManager.DeleteAsync(user);
+                await userManager.DeleteAsync(findedUser);
             }
 
-            return RedirectToAction("Users");
+            return Content(Convert.ToString(id));
         }
 
         [HttpGet]
@@ -256,7 +258,7 @@ namespace vladandartem.Controllers
                 context.SaveChanges();
             }
 
-            return new EmptyResult();
+            return Content(Convert.ToString(SectionId));
         }
 
         private string getAnalyticsJson(LoadAnalytics model, bool isSkip)
