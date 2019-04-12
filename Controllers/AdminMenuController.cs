@@ -221,47 +221,106 @@ namespace vladandartem.Controllers
         [HttpPost]
         public IActionResult LoadGeneralAnalytics(LoadAnalytics model)
         {
-            return Content(getAnalyticsJson(model, true));
+            // Получаем все заказы и их поля
+            var orders = context.Orders.Include(n => n.CartProducts)
+                .ThenInclude(n => n.Product)
+                .ThenInclude(c => c.Category)
+                .Include(n => n.User)
+                .ToList();
+
+            // Получаем все CartProduct и сортируем по возрастанию по айди
+            var products = from order in orders
+                           from cartProduct in order.CartProducts
+                           orderby cartProduct.Id
+                           select cartProduct;
+
+            // Если не отображать за все время, то фильтрует по выбранной дате
+            if (model.AllTime != 1)
+            {
+                products = products.Where(cp =>
+                    cp.Order.OrderTime.Day >= model.DateFrom.Day &&
+                    cp.Order.OrderTime.Month >= model.DateFrom.Month &&
+                    cp.Order.OrderTime.Year >= model.DateFrom.Year &&
+                    cp.Order.OrderTime.Day <= model.DateTo.Day &&
+                    cp.Order.OrderTime.Month <= model.DateTo.Month &&
+                    cp.Order.OrderTime.Year <= model.DateTo.Year
+                );
+            }
+
+            // Если выбрана конкретная категория, то фильтруем по ней
+            if (model.CategoryId != 0)
+            {
+                products = products.Where(n => n.Product.CategoryId == model.CategoryId);
+            }
+
+            // Если выбран конкретный продукт, то фильтруем по нему
+            if (model.ProductId != 0)
+            {
+                products = products.Where(n => n.Product.Id == model.ProductId);
+            }
+
+            // Если выбран конкретный пользователь, то фильтруем по нему
+            if (model.UserId != 0)
+            {
+                products = products.Where(n => n.Order.User.Id == model.UserId);
+            }
+
+            products = products.OrderBy(n => n.Order.OrderTime);
+
+            DateTime datePostBuff = products.First().Order.OrderTime;
+
+            LoadGeneralAnalyticsViewModel productAnalytics = new LoadGeneralAnalyticsViewModel();
+
+            productAnalytics.MonthsState.Add(new MonthState(products.First().Order.OrderTime));
+
+            // Проходим все отфильтрованные продукты (CartProduct)
+            foreach (var product in products)
+            {
+                // Если прошлый день больше следующего
+                if (datePostBuff.Day > product.Order.OrderTime.Day)
+                {
+                    // Добавляем месяц к продукту в аналитике
+                    productAnalytics.MonthsState.Add(new MonthState(datePostBuff));
+                }
+
+                // Прошлая дата
+                datePostBuff = product.Order.OrderTime;
+
+                var month = productAnalytics.MonthsState.Last();
+
+                DayState day = month.Days.Find(ds =>
+                    ds.Day.Day == datePostBuff.Day &&
+                    ds.Day.Month == datePostBuff.Month &&
+                    ds.Day.Year == datePostBuff.Year
+                );
+
+                if (day == null)
+                {
+                    day = new DayState(datePostBuff);
+
+                    day.Sales += product.Count;
+                    day.Revenue += product.Count * product.Product.Price;
+
+                    productAnalytics.Sales += product.Count;
+                    productAnalytics.Revenue += product.Count * product.Product.Price;
+
+                    month.Days.Add(day);
+                }
+                else
+                {
+                    day.Sales += product.Count;
+                    day.Revenue += product.Count * product.Product.Price;
+
+                    productAnalytics.Sales += product.Count;
+                    productAnalytics.Revenue += product.Count * product.Product.Price;
+                }
+            }
+
+            return Content(JsonConvert.SerializeObject(productAnalytics));
         }
 
         [HttpPost]
         public IActionResult LoadAnalytics(LoadAnalytics model)
-        {
-            return Content(getAnalyticsJson(model, false));
-        }
-
-        [HttpGet]
-        public IActionResult Section()
-        {
-            return View(context.Sections.ToList());
-        }
-        [HttpPost]
-        public IActionResult SectionAdd(string SectionName)
-        {
-            Section section = new Section { Name = SectionName };
-
-            context.Sections.Add(section);
-
-            context.SaveChanges();
-
-            return Content(JsonConvert.SerializeObject(section));
-        }
-        [HttpPost]
-        public IActionResult SectionDelete(int SectionId)
-        {
-            Section section = context.Sections.Find(SectionId);
-
-            if(section != null)
-            {
-                context.Sections.Remove(section);
-
-                context.SaveChanges();
-            }
-
-            return Content(Convert.ToString(SectionId));
-        }
-
-        private string getAnalyticsJson(LoadAnalytics model, bool isSkip)
         {
             // Получаем все заказы и их поля
             var orders = context.Orders.Include(n => n.CartProducts)
@@ -291,9 +350,7 @@ namespace vladandartem.Controllers
                 );
             }
 
-            // Если isSkip == false, то значит это подгрузка общей статистики и нам надо получить все элементы, а не только 10
-            if(isSkip)
-                products = products.Skip(model.LastItemId).Take(10);
+            products = products.Skip(model.LastItemId).Take(10);
 
             // Если выбрана конкретная категория, то фильтруем по ней
             if (model.CategoryId != 0)
@@ -318,7 +375,7 @@ namespace vladandartem.Controllers
             DateTime datePostBuff = products.First().Order.OrderTime;
 
             // Проходим все отфильтрованные продукты (CartProduct)
-           foreach (var product in products)
+            foreach (var product in products)
             {
                 // Ищем в готовой аналитике этот продукт
                 var lavmItem = productAnalytics.FirstOrDefault(item => item.Product.Id == product.Product.Id);
@@ -373,7 +430,38 @@ namespace vladandartem.Controllers
                 }
             }
 
-            return JsonConvert.SerializeObject(productAnalytics);
+            return Content(JsonConvert.SerializeObject(productAnalytics));
+        }
+
+        [HttpGet]
+        public IActionResult Section()
+        {
+            return View(context.Sections.ToList());
+        }
+        [HttpPost]
+        public IActionResult SectionAdd(string SectionName)
+        {
+            Section section = new Section { Name = SectionName };
+
+            context.Sections.Add(section);
+
+            context.SaveChanges();
+
+            return Content(JsonConvert.SerializeObject(section));
+        }
+        [HttpPost]
+        public IActionResult SectionDelete(int SectionId)
+        {
+            Section section = context.Sections.Find(SectionId);
+
+            if(section != null)
+            {
+                context.Sections.Remove(section);
+
+                context.SaveChanges();
+            }
+
+            return Content(Convert.ToString(SectionId));
         }
     }
 }
