@@ -236,11 +236,13 @@ namespace vladandartem.Controllers
         [HttpPost]
         public IActionResult SectionAdd(string SectionName)
         {
-            context.Sections.Add(new Section { Name = SectionName });
+            Section section = new Section { Name = SectionName };
+
+            context.Sections.Add(section);
 
             context.SaveChanges();
 
-            return new EmptyResult();
+            return Content(JsonConvert.SerializeObject(section));
         }
         [HttpPost]
         public IActionResult SectionDelete(int SectionId)
@@ -311,10 +313,10 @@ namespace vladandartem.Controllers
 
             products = products.OrderBy(n => n.Order.OrderTime);
 
-            DateTime datePostBuff = new DateTime();
+            DateTime datePostBuff = products.First().Order.OrderTime;
 
             // Проходим все отфильтрованные продукты (CartProduct)
-            foreach (var product in products)
+           foreach (var product in products)
             {
                 // Ищем в готовой аналитике этот продукт
                 var lavmItem = productAnalytics.FirstOrDefault(item => item.Product.Id == product.Product.Id);
