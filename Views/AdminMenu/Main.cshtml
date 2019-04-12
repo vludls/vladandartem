@@ -47,8 +47,8 @@
     </div>
     <form action="~/AdminMenu/AddCategory" method="post" class="add-new-category">
         <div class="form-group">
-            <label for="add-section">Выберите раздел</label>
-            <select name="SectionId" class="form-control select" id="add-section">
+            <label for="select-section">Выберите раздел</label>
+            <select name="SectionId" class="form-control select" id="select-section">
                 @foreach (var sec in Model.Sections)
                 {
                     <option value="@sec.Id">@sec.Name</option>
