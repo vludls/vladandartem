@@ -15,6 +15,7 @@ namespace vladandartem.Models
 
         [Column(TypeName = "datetime2")]
         public DateTime OrderTime { get; set; }
+        public int SummaryPrice { get; set; }
         public List<CartProduct> CartProducts { get; set; }
     }
 }

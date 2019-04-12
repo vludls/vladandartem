@@ -127,17 +127,18 @@ namespace vladandartem.Controllers
                 return NotFound();
             }
 
+            var buff = userManager.Users.Where(u => u.Id == user.Id).Include(u => u.Cart)
+                .ThenInclude(u => u.CartProducts).ThenInclude(u => u.Product).FirstOrDefault();
+
             var order = new Order
             {
                 UserId = user.Id,
-                Number = (myDb.Orders.Any() ? myDb.Orders.OrderBy(n => n.Number).Last().Number + 1 : 1)
+                Number = (myDb.Orders.Any() ? myDb.Orders.OrderBy(n => n.Number).Last().Number + 1 : 1),
+                SummaryPrice = buff.Cart.CartProducts.Sum(n => n.Product.Price * n.Count)
             };
             myDb.Orders.Add(order);
 
             myDb.SaveChanges();
-
-            var buff = userManager.Users.Where(u => u.Id == user.Id).Include(u => u.Cart)
-                .ThenInclude(u => u.CartProducts).ThenInclude(u => u.Product).FirstOrDefault();
 
             foreach (var cp in buff.Cart.CartProducts)
             {
