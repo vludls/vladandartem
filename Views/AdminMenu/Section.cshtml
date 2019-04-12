@@ -4,6 +4,38 @@
     ViewData["Title"] = "View";
 }
 
+<ul class="nav nav-pills container nav-in-pers">
+    <li class="nav-item">
+        <a class="nav-link" asp-action="Main">Управление категориями</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-action="Users">Управление пользователями</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" asp-action="Section">Управление разделами</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-action="Analytics">Аналитика</a>
+    </li>
+</ul>
+
+<main class="container">
+    <ul class="users">
+        <li><p>Категория</p><p>Действие</p></li>
+        @foreach (var item in Model)
+        {
+            <li>
+                <p>@item.Name</p>
+                <div class="centering">
+                    <button type="submit" class="btn btn-danger delete-user" data-toggle="modal" data-route-id="@item.Id" data-target="@("#a" + item.Id)">
+                        Удалить
+                    </button>
+                </div>
+
+            </li>
+        }
+    </ul>
+</main>
 @foreach (var item in Model)
 {
     @item.Name

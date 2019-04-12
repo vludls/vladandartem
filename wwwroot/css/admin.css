@@ -1,10 +1,6 @@
 .admin {
     padding: 30px 0;
 }
-    .admin-categories > form {
-        margin-left: 30px;
-        height: 180px;
-    }
 .users li {
     display: flex;
 }
@@ -22,13 +18,13 @@
     border: 2px solid #e1e1d1;
     border-radius: 7px;
     padding: 30px;
+    margin-left: 30px;
 }
     .add-new-category input {
         width: 270px;
     }
 .create-new-user {
     margin-left: 30px;
-
 }
 .centering > button, .centering > a {
     margin-bottom: 5px;

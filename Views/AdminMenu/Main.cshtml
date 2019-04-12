@@ -11,6 +11,12 @@
     <li class="nav-item">
         <a class="nav-link" asp-action="Users">Управление пользователями</a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-action="Section">Управление разделами</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-action="Analytics">Аналитика</a>
+    </li>
 </ul>
 <main class="container admin admin-categories">
     <ul class="users">
@@ -53,12 +59,15 @@
     </div>
     <form action="~/AdminMenu/AddCategory" method="post" class="add-new-category">
         <div class="form-group">
-            <select name="SectionId">
+            <label for="add-section">Выберите раздел</label>
+            <select name="SectionId" class="form-control select" id="add-section">
                 @foreach (var sec in Model.Sections)
                 {
                     <option value="@sec.Id">@sec.Name</option>
                 }
             </select>
+        </div>
+        <div class="form-group">
             <label for="add-category">Добавьте категорию</label>
             <input type="text" name="CategoryName" class="form-control" id="add-category" placeholder="Название категории">
         </div>
