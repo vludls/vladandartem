@@ -311,10 +311,10 @@ namespace vladandartem.Controllers
 
             products = products.OrderBy(n => n.Order.OrderTime);
 
-            DateTime datePostBuff = new DateTime();
+            DateTime datePostBuff = products.First().Order.OrderTime;
 
             // Проходим все отфильтрованные продукты (CartProduct)
-            foreach (var product in products)
+           foreach (var product in products)
             {
                 // Ищем в готовой аналитике этот продукт
                 var lavmItem = productAnalytics.FirstOrDefault(item => item.Product.Id == product.Product.Id);

@@ -65,7 +65,7 @@
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                     <a class="dropdown-item" href="#">Профиль</a>
                                     <a class="dropdown-item" href="~/AdminMenu/Main">Админка</a>
-                                    <a class="dropdown-item" href="~/Home/Cart">Корзина</a>
+                                    <a class="dropdown-item" asp-controller="PersonalArea" asp-action="Cart">Корзина</a>
                                     <a class="dropdown-item" href="~/PersonalArea/PaidProducts">Мои заказы</a>
                                     <div class="dropdown-divider"></div>
                                     <form method="post" asp-controller="Account" asp-action="LogOff">
@@ -78,7 +78,7 @@
 
                         @if(User.Identity.IsAuthenticated)
                         {
-                            <div class="top-buttons"><a href="~/Home/Cart" class="nav-link">Корзина (@await Component.InvokeAsync("CartLayout"))</a></div>
+                            <div class="top-buttons"><a asp-controller="PersonalArea" asp-action="Cart" class="nav-link">Корзина (@await Component.InvokeAsync("CartLayout"))</a></div>
                         }
                         <form class="form-inline my-2 my-lg-0 search-form" action="~/Home/Index" method="get">
                             <input type="hidden" name="isSearch" value="true">
