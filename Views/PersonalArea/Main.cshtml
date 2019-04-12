@@ -1,15 +1,5 @@
 @{
     ViewData["Title"] = "Личный кабинет";
 }
-<ul class="nav nav-pills container nav-in-pers">
-    <li class="nav-item">
-        <a class="nav-link active" href="~/PersonalArea/Main">Профиль</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="~/Home/Cart">Корзина</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="~/PersonalArea/PaidProducts">Оплаченные товары</a>
-    </li>
 
-</ul>
+@Html.Partial("_GetTabs", new vladandartem.ViewModels.PersonalArea.GetTabsViewModel { SectionId = 1 })

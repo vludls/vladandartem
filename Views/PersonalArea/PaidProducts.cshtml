@@ -7,17 +7,7 @@
     <script src="~/js/paid-products.js"></script>
 }
 
-<ul class="nav nav-pills container nav-in-pers">
-    <li class="nav-item">
-        <a class="nav-link" href="~/PersonalArea/Main">Профиль</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="~/Home/Cart">Корзина</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link active" href="~/PersonalArea/PaidProducts">Мои заказы</a>
-    </li>
-</ul>
+@Html.Partial("_GetTabs", new vladandartem.ViewModels.PersonalArea.GetTabsViewModel { SectionId = 3 })
 
 <main class="container pa">
     <div class="list-of-orders">
@@ -25,7 +15,7 @@
             @{
                 int summary = 0;
             }
-            @foreach(var order in Model)
+            @foreach (var order in Model)
             {
                 @order.OrderTime.ToString();
                 summary = 0;
@@ -34,7 +24,7 @@
                     <div class="header-of-order">
                         <p>Заказ № @order.Number</p>
                         <div class="status">
-                            @if(order.IsPaid)
+                            @if (order.IsPaid)
                             {
                                 <span class="btn btn-success">Оплачено</span>
                             }
@@ -44,11 +34,11 @@
                             }
                         </div>
                         <div class="open-order"><i class="fas fa-chevron-circle-down"></i></div>
-                    </div> 
+                    </div>
                     <div>
                         <ul>
                             <li><p>Товар</p><p>Цена</p><p>Количество</p><p>Стоимость</p></li>
-                            @foreach(var element in order.CartProducts)
+                            @foreach (var element in order.CartProducts)
                             {
                                 summary += element.Count * element.Product.Price;
                                 <li><p>@element.Product.Name</p><p>@element.Product.Price р.</p><p>@element.Count</p><p>@(element.Count * element.Product.Price) р.</p></li>
@@ -56,7 +46,7 @@
                         </ul>
                         <div class="order-cost">
                             <div class="buy">
-                                @if(!order.IsPaid)
+                                @if (!order.IsPaid)
                                 {
                                     <form method="post" asp-route-id="@order.Id" asp-action="PayOrder">
                                         <button type="submit" class="btn btn-success">Оплатить</button>
@@ -65,9 +55,9 @@
                             </div>
                             <div class="cost-of-order">
                                 <span>Cтоимость заказа: @summary р.</span>
-                            </div> 
+                            </div>
                         </div>
-                    </div>    
+                    </div>
                 </li>
             }
         </ul>

@@ -79,5 +79,113 @@ namespace vladandartem.Controllers
             */
             return View(buff.Order.OrderByDescending(n => n.Number).ToList());
         }
+        [HttpGet]
+        public async Task<IActionResult> Cart()
+        {
+            //myDb.Categories.Include
+            User user = await userManager.GetUserAsync(HttpContext.User);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var buff = userManager.Users.Where(u => u.Id == user.Id).Include(u => u.Cart)
+                .ThenInclude(u => u.CartProducts)
+                .ThenInclude(g => g.Product)
+                .ThenInclude(u => u.Category).FirstOrDefault();
+
+            if (buff == null)
+            {
+                return NotFound();
+            }
+            //var orders = myDb.Orders.Where(order => order.UserId == user.Id);
+
+            //List<CartProduct> cartProduct =
+            //JsonConvert.DeserializeObject<List<CartProduct>>(user.CartJSON);
+            /*
+            Cart cart = new Cart(HttpContext.Session, "cart");
+
+            var products = from element in cart.Decode()
+                        let buff = myDb.Products.Find(element.ProductId)
+                        where buff != null
+                        select new CartProduct {
+                            ProductId = element.ProductId,
+                            product = buff,
+                            ProductCount = element.ProductCount
+                        };
+            */
+            return View(buff.Cart.CartProducts);
+        }
+        [HttpPost]
+        public async Task<IActionResult> CartOrder()
+        {
+            User user = await userManager.GetUserAsync(HttpContext.User);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var order = new Order
+            {
+                UserId = user.Id,
+                Number = (myDb.Orders.Any() ? myDb.Orders.OrderBy(n => n.Number).Last().Number + 1 : 1)
+            };
+            myDb.Orders.Add(order);
+
+            myDb.SaveChanges();
+
+            var buff = userManager.Users.Where(u => u.Id == user.Id).Include(u => u.Cart)
+                .ThenInclude(u => u.CartProducts).ThenInclude(u => u.Product).FirstOrDefault();
+
+            foreach (var cp in buff.Cart.CartProducts)
+            {
+                cp.Product.Count--;
+                cp.CartId = null;
+                cp.OrderId = order.Id;
+            }
+
+            //buff.Cart.CartProducts.Remove(buff.Cart.CartProducts.Find(n => n.ProductId == id));
+
+            await userManager.UpdateAsync(buff);
+            /*Cart cart = new Cart(HttpContext.Session, "cart");
+
+            List<CartProduct> cartData = cart.Decode();
+
+            var errors = from element in cartData
+                        let product = myDb.Products.Find(element.ProductId)
+                        where element.ProductCount > product.Count
+                        select $"Недопустимое количество товара: {product.Name}";
+
+            if(errors.Any()) return View(errors);
+
+            Cart cartPaid = new Cart(HttpContext.Session, "paid");
+
+            cartPaid.Decode();
+            
+            if(cartData != null)
+            {
+                foreach(var element in cartData)
+                {
+                    cartPaid.Add(element.ProductId, element.ProductCount);
+
+                    Product product = myDb.Products.Find(element.ProductId);
+
+                    product.Count -= element.ProductCount;
+
+                    myDb.Products.Update(product);
+
+                    myDb.SaveChanges();
+                }
+
+                cartData.Clear();
+            }
+
+            cart.Save();
+            cartPaid.Save();
+            */
+            return RedirectToAction("PaidProducts", "PersonalArea");
+        }
     }
 }

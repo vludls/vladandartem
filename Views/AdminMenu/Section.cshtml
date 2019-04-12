@@ -4,7 +4,7 @@
     ViewData["Title"] = "View";
 }
 
-@Html.Partial("_GetTabs")
+@Html.Partial("_GetTabs", new vladandartem.ViewModels.AdminMenu.GetTabsViewModel { SectionId = 2 })
 
 <main class="container">
     <ul class="users">

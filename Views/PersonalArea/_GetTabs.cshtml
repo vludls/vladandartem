@@ -1,0 +1,13 @@
+﻿@model vladandartem.ViewModels.PersonalArea.GetTabsViewModel
+
+<ul class="nav nav-pills container nav-in-pers">
+    <li class="nav-item">
+        <a class="nav-link @(Model.SectionId == 1 ? "active" : "")" asp-action="Main">Профиль</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(Model.SectionId == 2 ? "active" : "")" asp-action="Cart">Корзина</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(Model.SectionId == 3 ? "active" : "")" asp-action="PaidProducts">Мои заказы</a>
+    </li>
+</ul>
