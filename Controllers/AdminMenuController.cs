@@ -354,8 +354,8 @@ namespace vladandartem.Controllers
                     day.Sales += product.Count;
                     day.Revenue += product.Count * product.Product.Price;
 
-                    lavmItem.Sales += day.Sales;
-                    lavmItem.Revenue += day.Revenue;
+                    lavmItem.Sales += product.Count;
+                    lavmItem.Revenue += product.Count * product.Product.Price;
 
                     month.Days.Add(day);
                 }
@@ -364,8 +364,8 @@ namespace vladandartem.Controllers
                     day.Sales += product.Count;
                     day.Revenue += product.Count * product.Product.Price;
 
-                    lavmItem.Sales += day.Sales;
-                    lavmItem.Revenue += day.Revenue;
+                    lavmItem.Sales += product.Count;
+                    lavmItem.Revenue += product.Count * product.Product.Price;
                 }
             }
 
