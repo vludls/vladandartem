@@ -236,11 +236,13 @@ namespace vladandartem.Controllers
         [HttpPost]
         public IActionResult SectionAdd(string SectionName)
         {
-            context.Sections.Add(new Section { Name = SectionName });
+            Section section = new Section { Name = SectionName };
+
+            context.Sections.Add(section);
 
             context.SaveChanges();
 
-            return new EmptyResult();
+            return Content(JsonConvert.SerializeObject(section));
         }
         [HttpPost]
         public IActionResult SectionDelete(int SectionId)
