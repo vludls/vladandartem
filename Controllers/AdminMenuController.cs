@@ -15,17 +15,21 @@ using vladandartem.ViewModels.AdminMenu;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace vladandartem.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class AdminMenuController : Controller
     {
         private readonly UserManager<User> userManager;
+        private readonly RoleManager<IdentityRole<int>> roleManager;
         private readonly ProductContext context;
 
-        public AdminMenuController(UserManager<User> userManager, ProductContext context)
+        public AdminMenuController(UserManager<User> userManager, RoleManager<IdentityRole<int>> roleManager, ProductContext context)
         {
             this.userManager = userManager;
+            this.roleManager = roleManager;
             this.context = context;
         }
         [HttpGet]
@@ -462,6 +466,12 @@ namespace vladandartem.Controllers
             }
 
             return Content(Convert.ToString(SectionId));
+        }
+
+        [HttpGet]
+        public IActionResult Role()
+        {
+            return View(roleManager.Roles.ToList());
         }
     }
 }
