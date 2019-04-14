@@ -36,7 +36,7 @@
                 
                 <label for="select-add">Категория</label>
                 <select name="product.CategoryId" class="form-control select" id="select-add">
-                   @foreach (var category in Model?.categories)
+                    @foreach (var category in Model?.categories)
                     {
                         <option value="@category.Id">@category.Name</option>
                     }

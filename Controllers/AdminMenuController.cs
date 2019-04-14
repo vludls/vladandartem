@@ -15,6 +15,7 @@ using vladandartem.ViewModels.AdminMenu;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 
 namespace vladandartem.Controllers
@@ -32,13 +33,12 @@ namespace vladandartem.Controllers
             this.roleManager = roleManager;
             this.context = context;
         }
+        /* Ниже идет раздел связанный с управлением категориями */
         [HttpGet]
-        public async Task<IActionResult> Main()
+        public IActionResult Main()
         {
-            if (await userManager.GetUserAsync(HttpContext.User) == null)
-                return new UnauthorizedResult();
-
-            MainViewModel mvm = new MainViewModel {
+            MainViewModel mvm = new MainViewModel
+            {
                 Sections = context.Sections.ToList(),
                 Categories = context.Categories.ToList()
             };
@@ -47,64 +47,55 @@ namespace vladandartem.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddCategory(int SectionId, string CategoryName)
+        public IActionResult AddCategory([Required]int SectionId, [Required]string CategoryName)
         {
-            if (await userManager.GetUserAsync(HttpContext.User) == null)
-                return new UnauthorizedResult();
-
-            Category category = new Category { Name = CategoryName, SectionId = SectionId };
-
-            context.Categories.Add(category);
-
-            context.SaveChanges();
-
-            return Content(JsonConvert.SerializeObject(category));
-        }
-        [HttpPost]
-        public async Task<IActionResult> DeleteCategory(int id)
-        {
-            if (await userManager.GetUserAsync(HttpContext.User) == null)
-                return new UnauthorizedResult();
-
-            Category SomeCategory = context.Categories.Find(id);
-
-            if (SomeCategory == null)
+            if (context.Sections.Find(SectionId) != null)
             {
-                return NotFound();
+                Category category = new Category { Name = CategoryName, SectionId = SectionId };
+
+                context.Categories.Add(category);
+
+                context.SaveChanges();
+
+                return Content(JsonConvert.SerializeObject(category));
             }
 
+            return new EmptyResult();
+        }
+        [HttpPost]
+        public IActionResult DeleteCategory([Required]int id)
+        {
+            if (ModelState.IsValid)
+            {
+                Category SomeCategory = context.Categories.Find(id);
 
-            context.Categories.Remove(SomeCategory);
+                if (SomeCategory == null)
+                {
+                    context.Categories.Remove(SomeCategory);
 
-            context.SaveChanges();
+                    context.SaveChanges();
+                }
+            }
 
-            return Redirect("~/AdminMenu/Main");
+            return RedirectToAction("Main");
         }
 
+        /* Ниже идет раздел управления пользователями */
         [HttpGet]
-        public async Task<IActionResult> Users()
+        public IActionResult Users()
         {
-            if (await userManager.GetUserAsync(HttpContext.User) == null)
-                return new UnauthorizedResult();
-
             return View(userManager.Users.ToList());
         }
 
         [HttpGet]
-        public async Task<IActionResult> CreateUser()
+        public IActionResult CreateUser()
         {
-            if (await userManager.GetUserAsync(HttpContext.User) == null)
-                return new UnauthorizedResult();
-
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateUser(CreateUserViewModel cuvm)
         {
-            if (await userManager.GetUserAsync(HttpContext.User) == null)
-                return new UnauthorizedResult();
-
             User user = new User { Email = cuvm.Email, UserName = cuvm.Email, Year = cuvm.Year, };
 
             if (ModelState.IsValid)
@@ -135,9 +126,6 @@ namespace vladandartem.Controllers
         [HttpGet]
         public async Task<IActionResult> EditUser(int id)
         {
-            if (await userManager.GetUserAsync(HttpContext.User) == null)
-                return new UnauthorizedResult();
-
             User user = await userManager.FindByIdAsync(id.ToString());
 
             if (user == null)
@@ -153,9 +141,6 @@ namespace vladandartem.Controllers
         [HttpPost]
         public async Task<IActionResult> EditUser(EditUserViewModel euvm)
         {
-            if (await userManager.GetUserAsync(HttpContext.User) == null)
-                return new UnauthorizedResult();
-
             User user = await userManager.FindByIdAsync(euvm.Id);
 
             if (user != null)
@@ -187,9 +172,6 @@ namespace vladandartem.Controllers
         {
             User mainUser = await userManager.GetUserAsync(HttpContext.User);
 
-            if (mainUser == null)
-                return new UnauthorizedResult();
-
             User findedUser = await userManager.FindByIdAsync(Convert.ToString(id));
 
             if (findedUser != null && mainUser != findedUser)
@@ -210,6 +192,7 @@ namespace vladandartem.Controllers
             return Content(Convert.ToString(id));
         }
 
+        /* Ниже идет раздел связанный с аналитикой */
         [HttpGet]
         public IActionResult Analytics()
         {
@@ -333,6 +316,9 @@ namespace vladandartem.Controllers
                 .Include(n => n.User)
                 .ToList();
 
+            // Каждый элемент содержит характеристику продукта, сумма проданного количества, 
+            // сумма полученой прибыли этого продукта за весь указанный период.
+            // А также проданное количество и полученная прибыль за каждый день этого продукта.
             List<ProductAnalytics> productAnalytics = new List<ProductAnalytics>();
 
             // Получаем все CartProduct и сортируем по возрастанию по айди
@@ -341,7 +327,7 @@ namespace vladandartem.Controllers
                            orderby cartProduct.Id
                            select cartProduct;
 
-            // Если не отображать за все время, то фильтрует по выбранной дате
+            // Если не отображать за все время, то фильтрует по выбранному периоду даты
             if (model.AllTime != 1)
             {
                 products = products.Where(cp =>
@@ -437,41 +423,130 @@ namespace vladandartem.Controllers
             return Content(JsonConvert.SerializeObject(productAnalytics));
         }
 
+        /* Ниже идет раздел связанный с секциями */
         [HttpGet]
         public IActionResult Section()
         {
             return View(context.Sections.ToList());
         }
         [HttpPost]
-        public IActionResult SectionAdd(string SectionName)
+        public IActionResult SectionAdd([Required]string SectionName)
         {
-            Section section = new Section { Name = SectionName };
-
-            context.Sections.Add(section);
-
-            context.SaveChanges();
-
-            return Content(JsonConvert.SerializeObject(section));
-        }
-        [HttpPost]
-        public IActionResult SectionDelete(int SectionId)
-        {
-            Section section = context.Sections.Find(SectionId);
-
-            if(section != null)
+            if (ModelState.IsValid)
             {
-                context.Sections.Remove(section);
+                Section section = new Section { Name = SectionName };
+
+                context.Sections.Add(section);
 
                 context.SaveChanges();
+
+                return Content(JsonConvert.SerializeObject(section));
             }
 
-            return Content(Convert.ToString(SectionId));
+            return new EmptyResult();
+        }
+        [HttpPost]
+        public IActionResult SectionDelete([Required]int SectionId)
+        {
+            if (ModelState.IsValid)
+            {
+                Section section = context.Sections.Find(SectionId);
+
+                if (section != null)
+                {
+                    context.Sections.Remove(section);
+
+                    context.SaveChanges();
+
+                    return Content(Convert.ToString(SectionId));
+                }
+            }
+
+            return new EmptyResult();
         }
 
         [HttpGet]
         public IActionResult Role()
         {
             return View(roleManager.Roles.ToList());
+        }
+
+        /* Ниже идет раздел связанный с детальными полями у продуктов */
+        [HttpGet]
+        public IActionResult ProductDetails()
+        {
+            List<DetailField> model = context.DetailFields.Include(n => n.DetailFieldDefinitions).ThenInclude(n => n.Definition).ToList();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult ProductDetailsFieldAdd([Required]string DetailFieldName)
+        {
+            if (ModelState.IsValid)
+            {
+                context.DetailFields.Add(new DetailField { Name = DetailFieldName });
+
+                context.SaveChanges();
+            }
+
+            return new EmptyResult();
+        }
+
+        [HttpPost]
+        public IActionResult ProductDetailsFieldDelete([Required]int DetailFieldId)
+        {
+            if (ModelState.IsValid)
+            {
+                DetailField detailField = context.DetailFields.Find(DetailFieldId);
+
+                if (detailField != null)
+                {
+                    context.DetailFields.Remove(detailField);
+
+                    context.SaveChanges();
+                }
+            }
+
+            return new EmptyResult();
+        }
+
+        [HttpPost]
+        public IActionResult ProductDetailsDefinitionAdd([Required]int DetailFieldId, [Required]string DefinitionName)
+        {
+            if (ModelState.IsValid)
+            {
+                if (context.DetailFields.Find(DetailFieldId) != null)
+                {
+                    Definition Definition = new Definition { Name = DefinitionName };
+                    context.Definitions.Add(Definition);
+
+                    context.SaveChanges();
+
+                    context.DetailFieldDefinitions.Add(new DetailFieldDefinition { DetailFieldId = DetailFieldId, DefinitionId = Definition.Id });
+
+                    context.SaveChanges();
+                }
+            }
+
+            return new EmptyResult();
+        }
+        [HttpPost]
+        public IActionResult ProductDetailsDefinitionDelete([Required]int DefinitionId)
+        {
+            if (ModelState.IsValid)
+            {
+                Definition definition = context.Definitions.Find(DefinitionId);
+
+                if (definition != null)
+                {
+                    context.Definitions.Remove(definition);
+
+                    context.SaveChanges();
+                }
+            }
+
+            return new EmptyResult();
         }
     }
 }

@@ -64,7 +64,10 @@
                     
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                     <a class="dropdown-item" href="#">Профиль</a>
-                                    @(User.IsInRole("admin") ? "<a class=\"dropdown-item\" href=\"~/AdminMenu/Main\">Админка</a>" : "")
+                                    @if(User.IsInRole("admin"))
+                                    {
+                                        <a class="dropdown-item" href="~/AdminMenu/Main">Админка</a>
+                                    }
                                     <a class="dropdown-item" asp-controller="PersonalArea" asp-action="Cart">Корзина</a>
                                     <a class="dropdown-item" href="~/PersonalArea/PaidProducts">Мои заказы</a>
                                     <div class="dropdown-divider"></div>

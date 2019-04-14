@@ -11,50 +11,57 @@
 
 <main class="container pa">
     <div class="list-of-orders">
-        <ul>
-            @foreach (var order in Model)
-            {
-                @order.OrderTime.ToString();
+        @if (Model.Any())
+        {
+            <ul>
+                @foreach (var order in Model)
+                {
+                    @order.OrderTime.ToString();
 
-                <li class="order">
-                    <div class="header-of-order">
-                        <p>Заказ № @order.Number</p>
-                        <div class="status">
-                            @if (order.IsPaid)
-                            {
-                                <span class="btn btn-success">Оплачено</span>
-                            }
-                            else
-                            {
-                                <span class="btn btn-warning">Ожидается оплата</span>
-                            }
-                        </div>
-                        <div class="open-order"><i class="fas fa-chevron-circle-down"></i></div>
-                    </div>
-                    <div>
-                        <ul>
-                            <li><p>Товар</p><p>Цена</p><p>Количество</p><p>Стоимость</p></li>
-                            @foreach (var element in order.CartProducts)
-                            {
-                                <li><p>@element.Product.Name</p><p>@element.Product.Price р.</p><p>@element.Count</p><p>@(element.Count * element.Product.Price) р.</p></li>
-                            }
-                        </ul>
-                        <div class="order-cost">
-                            <div class="buy">
-                                @if (!order.IsPaid)
+                    <li class="order">
+                        <div class="header-of-order">
+                            <p>Заказ № @order.Number</p>
+                            <div class="status">
+                                @if (order.IsPaid)
                                 {
-                                    <form method="post" asp-route-id="@order.Id" asp-action="PayOrder">
-                                        <button type="submit" class="btn btn-success">Оплатить</button>
-                                    </form>
+                                    <span class="btn btn-success">Оплачено</span>
+                                }
+                                else
+                                {
+                                    <span class="btn btn-warning">Ожидается оплата</span>
                                 }
                             </div>
-                            <div class="cost-of-order">
-                                <span>Cтоимость заказа: @order.SummaryPrice р.</span>
+                            <div class="open-order"><i class="fas fa-chevron-circle-down"></i></div>
+                        </div>
+                        <div>
+                            <ul>
+                                <li><p>Товар</p><p>Цена</p><p>Количество</p><p>Стоимость</p></li>
+                                @foreach (var element in order.CartProducts)
+                                {
+                                    <li><p>@element.Product.Name</p><p>@element.Product.Price р.</p><p>@element.Count</p><p>@(element.Count * element.Product.Price) р.</p></li>
+                                }
+                            </ul>
+                            <div class="order-cost">
+                                <div class="buy">
+                                    @if (!order.IsPaid)
+                                    {
+                                        <form method="post" asp-route-id="@order.Id" asp-action="PayOrder">
+                                            <button type="submit" class="btn btn-success">Оплатить</button>
+                                        </form>
+                                    }
+                                </div>
+                                <div class="cost-of-order">
+                                    <span>Cтоимость заказа: @order.SummaryPrice р.</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </li>
-            }
-        </ul>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <h1>Список заказов пуст :(</h1>
+        }
     </div>
 </main>

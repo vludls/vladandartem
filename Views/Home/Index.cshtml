@@ -66,23 +66,30 @@ ViewData["Title"] = "Shop";
                     @product.Price р.
                 </p>
                 <div class="links">
-                    <form action="~/Home/AddCookie" method="post">
+                    <form asp-action="AddCookie" method="post">
                         <input type="hidden" name="id" value="@product.Id">
                         <input value="@(@product.Count <= 0 ? "нет в наличии" : "в корзину")" class="btn btn-primary" type="submit" @(@product.Count <= 0 ? " disabled=\"disabled\"" : "")>
                     </form>
-                    <a href="/home/Edit?id=@product.Id" class="btn btn-primary newicon"><i class="fas fa-pen"></i></a>
-                    <form action="~/Home/RemoveProduct" method="post" class="delete-products">
-                        <input type="hidden" name="id" value="@product.Id">
-                        <button type="submit" class="btn btn-primary newicon"><i class="far fa-trash-alt"></i></button>
-                    </form>
+
+                    @if (User.IsInRole("admin"))
+                    {
+                        <a href="/home/Edit?id=@product.Id" class="btn btn-primary newicon"><i class="fas fa-pen"></i></a>
+                        <form action="~/Home/RemoveProduct" method="post" class="delete-products">
+                            <input type="hidden" name="id" value="@product.Id">
+                            <button type="submit" class="btn btn-primary newicon"><i class="far fa-trash-alt"></i></button>
+                        </form>
+                    }
                 </div>
             </li>
         }
-        <li class="plus">
-            <a href="/home/add"></a>
-            <img src="~/images/plus.png" alt="">
-        </li>
-    </ul>
+        @if (User.IsInRole("admin"))
+        {
+            <li class="plus">
+                <a href="/home/add"></a>
+                <img src="~/images/plus.png" alt="">
+            </li>
+        }
+        </ul>
 
     <ul class="container pagination pagin">
         @{  

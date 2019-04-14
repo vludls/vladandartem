@@ -10,5 +10,7 @@ namespace vladandartem.ViewModels.Home
         public Product product { get; set; }
 
         public IEnumerable<Category> categories { get; set; }
+
+        public List<DetailField> DetailFields { get; set; }
     }
 }
