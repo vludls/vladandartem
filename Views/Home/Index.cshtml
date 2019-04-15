@@ -59,6 +59,7 @@ ViewData["Title"] = "Shop";
                 
                     <div class="img">
                         <img src="@product.ImgPath" alt="">
+                        <a href="~/Home/Product?ProductId=@product.Id"></a>
                     </div>
                     <p class="name">
                         <a href="~/Home/Product?ProductId=@product.Id">@product.Name</a>

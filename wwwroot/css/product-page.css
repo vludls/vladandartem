@@ -6,6 +6,7 @@
 }
     .header-product {
         justify-content: space-between;
+        padding: 30px 0;
     }
     .image-and-main {
         justify-content: space-between;
@@ -27,11 +28,12 @@
                 }
 .header-specifications {
     text-align: center;
+    padding: 30px 0;
 }
 .specifications {
     width: 1140px;
-    margin: 0 auto;
     border: 1px;
+    margin-bottom: 30px; 
 }
     .specifications td {
         width: 570px;

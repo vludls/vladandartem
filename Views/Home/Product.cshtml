@@ -4,16 +4,6 @@
     ViewData["Title"] = "Product";
 }
 
-
-Категория: <span>@Model.Category.Name</span>
-
-
-Детальная информация:
-@foreach (var productDetailField in Model.ProductDetailFields)
-{
-    @productDetailField.DetailField.Name @(productDetailField.DetailField.Definitions.First(n => n.Id == productDetailField.DefinitionId).Name)
-}
-
 <main class="container product-page">
     <div class="header-product">
         <h1>@Model.Name</h1>
@@ -33,21 +23,12 @@
     </div>
     <h1 class="header-specifications">Характеристики</h1>
     <table class="specifications" border="1">
-        <tr>
-            <td>Процессор</td><td>intel</td>
-        </tr>
-        <tr>
-            <td>Процессор</td><td>intel</td>
-        </tr>
-        <tr>
-            <td>Процессор</td><td>intel</td>
-        </tr>
-        <tr>
-            <td>Процессор</td><td>intel</td>
-        </tr>
-        <tr>
-            <td>Процессор</td><td>intel</td>
-        </tr>
+        @foreach (var productDetailField in Model.ProductDetailFields)
+        {
+            <tr>
+                <td>@productDetailField.DetailField.Name</td><td>@(productDetailField.DetailField.Definitions.First(n => n.Id == productDetailField.DefinitionId).Name)</td>
+            </tr>
+        }
     </table>
 </main>
 
