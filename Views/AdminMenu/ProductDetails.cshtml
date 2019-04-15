@@ -4,60 +4,72 @@
     ViewData["Title"] = "ProductDetails";
 }
 
+@section Scripts {
+    <script src="~/js/details.js"></script>
+}
+
 @Html.Partial("_GetTabs", new vladandartem.ViewModels.AdminMenu.GetTabsViewModel { SectionId = 5 })
 
-<form asp-action="ProductDetailsFieldAdd" method="post">
-    <input type="text" name="DetailFieldName"/>
-    <input type="submit" value="Добавить"/>
-</form>
-
-<hr />
-
-<form asp-action="ProductDetailsDefinitionAdd" method="post">
-    <select name="DetailFieldId">
-        <option value="0">Выберите поле</option>
+<main class="container details">
+    <div class="add-and-delete-field">
+        <form asp-action="ProductDetailsFieldAdd" method="post" class="add-field">
+            <div class="form-group">
+                <label for="DetailFieldName">Добавить поле</label>
+                <input type="text" name="DetailFieldName" class="form-control" id="DetailFieldName"/>
+            </div>
+            <button type="submit" class="btn btn-primary">Добавить</button>
+        </form>
+        <form asp-action="ProductDetailsDefinitionAdd" method="post">
+            <div class="form-group">
+                <label for="DetailFieldId">Выбрать поле</label>
+                <select name="DetailFieldId" class="form-control select" id="DetailFieldId">
+                    <option value="0">Выберите поле</option>
+                    @foreach (var detailField in Model)
+                    {
+                        <option value="@detailField.Id">@detailField.Name</option>
+                    }
+                </select>
+                <label for="DefinitionName">Добавить значение</label>
+                <input type="text" class="form-control" name="DefinitionName" id="DefinitionName"/>
+            </div>
+            <button type="submit" class="btn btn-primary">Прикрепить</button>
+        </form>
+        <form asp-action="ProductDetailsFieldDelete" method="post">
+            <div class="form-group">
+                <label for="DetailFieldId">Удалить поле</label>
+                <select name="DetailFieldId" class="form-control" id="DetailFieldId">
+                <option value="0">Выберите поле</option>
+                @foreach (var field in Model)
+                {
+                    <option value="@field.Id">@field.Name</option>
+                }
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Удалить</button>
+        </form>
+    </div>
+    
+    <ul class="list-of-fields">
+        <li><p class="field-name">Поле</p><p class="select-value">Значение</p><p class="last-column">Действие</p></li>
         @foreach (var detailField in Model)
         {
-            <option value="@detailField.Id">@detailField.Name</option>
-        }
-    </select>
-
-    <input type="text" name="DefinitionName" />
-    <input type="submit" value="Прикрепить"/>
-</form>
-<hr />
-
-<table>
-    @foreach (var detailField in Model)
-    {
-        <tr>
-            <td>@detailField.Name</td>
-
-            <td>
-                <form asp-action="ProductDetailsDefinitionDelete" method="post">
-                    <select name="DefinitionId">
-                        <option value="0">Выберите определение</option>
+        <li>
+            <p class="field-name">@detailField.Name</p>
+            <form asp-action="ProductDetailsDefinitionDelete" method="post">
+                <div class="select-value">
+                    <select name="DefinitionId" class="form-control">
+                        <option value="0">Выберите значение</option>
                         @foreach (var definition in detailField.Definitions)
                         {
                             <option value="@definition.Id">@definition.Name</option>
                         }
                     </select>
-                    <input type="submit" value="Удалить" />
-                </form>
-        </tr>
-    }
-</table>
-
-<hr />
-
-<form asp-action="ProductDetailsFieldDelete" method="post">
-    <select name="DetailFieldId">
-        <option value="0">Выберите поле</option>
-        @foreach (var field in Model)
-        {
-            <option value="@field.Id">@field.Name</option>
+                </div>
+                <div class="last-column">
+                    <button type="submit" class="btn btn-danger">Удалить</button>
+                </div>
+            </form>
+        </li>
         }
-    </select>
-    <input type="submit" value="Удалить" />
-</form>
-
+    </ul>
+</main>
