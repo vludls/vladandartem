@@ -4,17 +4,50 @@
     ViewData["Title"] = "Product";
 }
 
-Картинка продукта:
-<img src="@Model?.ImgPath" class="addimg" alt="">
-Название продукта: <span>@Model.Name</span>
-Цена продукта: <span>@Model.Price</span>
-Производитель: <span>@Model.Manufacturer</span>
+
 Категория: <span>@Model.Category.Name</span>
-На складе: <span>@Model.Count</span>
+
 
 Детальная информация:
 @foreach (var productDetailField in Model.ProductDetailFields)
 {
     @productDetailField.DetailField.Name @(productDetailField.DetailField.Definitions.First(n => n.Id == productDetailField.DefinitionId).Name)
 }
+
+<main class="container product-page">
+    <div class="header-product">
+        <h1>@Model.Name</h1>
+        <h3><span class="badge badge-success">@Model.Manufacturer</span></h3>
+    </div>
+    <div class="image-and-main">
+        <div class="imgProd">
+            <img src="@Model?.ImgPath" class="addimg" alt="">
+        </div>
+        <div class="main-info">
+            <form action="" class="add-to-cart">
+                <h2>@Model.Price р.</h2>
+                <button type="button" class="btn btn-primary btn-lg btn-block">Добавить в корзину</button>
+                <h5 class="on-stock">На складе: <span class="badge badge-success">@Model.Count</span></h5>
+            </form>
+        </div>
+    </div>
+    <h1 class="header-specifications">Характеристики</h1>
+    <table class="specifications" border="1">
+        <tr>
+            <td>Процессор</td><td>intel</td>
+        </tr>
+        <tr>
+            <td>Процессор</td><td>intel</td>
+        </tr>
+        <tr>
+            <td>Процессор</td><td>intel</td>
+        </tr>
+        <tr>
+            <td>Процессор</td><td>intel</td>
+        </tr>
+        <tr>
+            <td>Процессор</td><td>intel</td>
+        </tr>
+    </table>
+</main>
 

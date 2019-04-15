@@ -64,12 +64,6 @@ function analitic (form) {
                 }
             };
             
-            /*$('.toggle').hide();
-            $('.name-in-analitics').each(function () {
-                $(this).click(function () {
-                    $(this).next().slideToggle();   
-                });
-            });*/
             if (document.documentElement.scrollTop > 500) {
                 $('#second-input-hidden').val($('#second-input-hidden').val() + 10);
                 analitic (form)

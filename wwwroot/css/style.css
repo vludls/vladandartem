@@ -179,6 +179,9 @@ nav {
     .name {
         font-size: 18px;
     }
+        .name a {
+            color: #000;
+        }
     .price { 
         font-size: 20px;
         font-weight: bold;

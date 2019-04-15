@@ -56,12 +56,12 @@ ViewData["Title"] = "Shop";
         @foreach (var product in Model.products)
         {
             <li>
-                <a href="~/Home/Product?ProductId=@product.Id">
+                
                     <div class="img">
                         <img src="@product.ImgPath" alt="">
                     </div>
                     <p class="name">
-                        @product.Name
+                        <a href="~/Home/Product?ProductId=@product.Id">@product.Name</a>
                     </p>
                     <p class="price">
                         @product.Price р.
@@ -81,7 +81,7 @@ ViewData["Title"] = "Shop";
                             </form>
                         }
                     </div>
-                </a>
+                
             </li>
         }
         @if (User.IsInRole("admin"))
