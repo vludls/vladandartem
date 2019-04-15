@@ -11,7 +11,8 @@ $(document).ready(function () {
     //Цена в корзине
     var s = 0;
     function sum() {
-        $(this).parent().next().children().text($(this).val() * $(this).prev().val());
+        //$(this).parent().next().children().text($(this).val() * $(this).prev().val());
+        $('#price' + $(this).attr('data-id')).text($(this).val() * $(this).prev().val());
         s += $(this).val() * $(this).prev().val();
         $('.total-price').text(s);
     };
@@ -30,12 +31,13 @@ $(document).ready(function () {
                 url: "/Home/CartChangeProductNum",
                 type: "POST",
                 data: ({
-                    id: "" + $(this).parent().parent().children().first().val(),
+                    //id: "" + $(this).parent().parent().children().first().val(),
+                    id: "" + $('#hidden' + $(q).attr('data-id')).val(),
                     count: $(this).val()
                 }),
                 success: function (data) {
-                    $(q).next().next().next().html(data);
-
+                    //$(q).next().next().next().html(data);
+                    $('#count' + $(q).attr('data-id')).text(data);
                 }
             });
         });

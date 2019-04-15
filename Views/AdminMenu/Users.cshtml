@@ -11,7 +11,7 @@
         <li><p>E-mail</p><p>Дата рождения</p><p>Редактирование</p><p>Удаление</p></li>
         @foreach (var user in Model)
         {
-            <li id="@("s" + user.Id)">
+            <li id="@("u" + user.Id)">
                 <p>@user.Email</p>
                 <p>@user.Year</p>
                 <p class="centering">
@@ -37,11 +37,11 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <h6>Удалить пользователя </h6>
+                    <h6 data-text="Удалить пользователя "></h6>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                    <form method="post" asp-action="DeleteUser">
+                    <button type="button" class="btn btn-secondary close-modal" data-dismiss="modal">Закрыть</button>
+                    <form method="post" asp-action="DeleteUser" class="user-delete">
                         <input type="hidden" name="id">
                         <button type="submit" class="btn btn-danger">Удалить</button>
                     </form>

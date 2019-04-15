@@ -19,7 +19,7 @@
                 {
                     <li>
                         <form action="~/Home/RemoveProductCart" method="post">
-                            <input type="hidden" name="id" value="@element.Product.Id">
+                            <input type="hidden" name="id" value="@element.Product.Id" id="@("hidden" + element.Product.Id)">
                             <div class="im-in-cart">
                                 <img src="@element.Product.ImgPath" alt="">
                             </div>
@@ -29,11 +29,11 @@
                             <div class="quantity">
                                 <span>Количество:</span>
                                 <input type="hidden" value="@element.Product.Price" class="hidden">
-                                <input type="number" value="@element.Count" min="1" name="count" class="form-control q"><br>
-                                <span>На складе: </span><span>@element.Product.Count</span>
+                                <input type="number" value="@element.Count" min="1" name="count" class="form-control q" data-id="@element.Product.Id"><br>
+                                <span>На складе: </span><span id="@("count" + element.Product.Id)">@element.Product.Count</span>
                             </div>
                             <p class="price-in-cart">
-                                <span>@element.Product.Price</span> р.
+                                <span id="@("price" + element.Product.Id)">@element.Product.Price</span> р.
                             </p>
                             <div>
                                 <button type="submit" name="delfromcart" class="btn btn-primary newicon"><i class="far fa-trash-alt"></i></button>
