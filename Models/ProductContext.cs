@@ -14,10 +14,12 @@ namespace vladandartem.Models
         public DbSet<CartProduct> CartProduct { get; set; }
         public DbSet<Section> Sections { get; set; }
         public DbSet<Cart> Cart { get; set; }
+        public DbSet<Definition> Definitions { get; set; }
+        public DbSet<DetailField> DetailFields { get; set; }
+        public DbSet<ProductDetailField> ProductDetailFields { get; set; }
 
         public ProductContext(DbContextOptions<ProductContext> options) : base(options)
         {
-            //Database.EnsureDeleted();
             Database.EnsureCreated();
         }
     }

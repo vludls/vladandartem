@@ -16,9 +16,11 @@ using vladandartem.Models;
 using vladandartem.ClassHelpers;
 using vladandartem.ViewModels.PersonalArea;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace vladandartem.Controllers
 {
+    [Authorize]
     public class PersonalAreaController : Controller
     {
         private readonly ProductContext myDb;

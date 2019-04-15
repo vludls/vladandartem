@@ -1,0 +1,20 @@
+﻿@model vladandartem.Models.Product
+
+@{
+    ViewData["Title"] = "Product";
+}
+
+Картинка продукта:
+<img src="@Model?.ImgPath" class="addimg" alt="">
+Название продукта: <span>@Model.Name</span>
+Цена продукта: <span>@Model.Price</span>
+Производитель: <span>@Model.Manufacturer</span>
+Категория: <span>@Model.Category.Name</span>
+На складе: <span>@Model.Count</span>
+
+Детальная информация:
+@foreach (var productDetailField in Model.ProductDetailFields)
+{
+    @productDetailField.DetailField.Name @(productDetailField.DetailField.Definitions.First(n => n.Id == productDetailField.DefinitionId).Name)
+}
+

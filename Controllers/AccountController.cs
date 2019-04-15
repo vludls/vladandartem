@@ -11,11 +11,13 @@ namespace vladandartem.Controllers
     {
         private readonly ProductContext context;
         private readonly UserManager<User> userManager;
+        private readonly RoleManager<IdentityRole<int>> roleManager;
         private readonly SignInManager<User> signInManager;
-        public AccountController(ProductContext context, UserManager<User> userManager, SignInManager<User> signInManager)
+        public AccountController(ProductContext context, UserManager<User> userManager, RoleManager<IdentityRole<int>> roleManager, SignInManager<User> signInManager)
         {
             this.context = context;
             this.userManager = userManager;
+            this.roleManager = roleManager;
             this.signInManager = signInManager;
         }
 
@@ -34,7 +36,7 @@ namespace vladandartem.Controllers
                 User user = new User {
                     Email = rvm.Email,
                     UserName = rvm.Email, 
-                    Year = rvm.Year 
+                    Year = rvm.Year
                 };
 
                 var result = await userManager.CreateAsync(user, rvm.Password);
@@ -46,6 +48,9 @@ namespace vladandartem.Controllers
                     context.Cart.Add(cart);
 
                     context.SaveChanges();
+
+                    await userManager.AddToRoleAsync(user, "user");
+                    
 
                     await signInManager.SignInAsync(user, false);
 
@@ -60,8 +65,6 @@ namespace vladandartem.Controllers
                         return Content(err);
                     }
                 }
-
-                return Content("123");
             }
 
             return View(rvm);

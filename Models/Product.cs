@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace vladandartem.Models
@@ -32,6 +33,9 @@ namespace vladandartem.Models
 
         [JsonIgnore]
         public Category Category { get; set; }
+
+        public List<ProductDetailField> ProductDetailFields { get; set; }
+
         public int Count { get; set; }
     }
 }

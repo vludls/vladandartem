@@ -15,20 +15,22 @@ using vladandartem.Models;
 using vladandartem.ClassHelpers;
 using vladandartem.ViewModels.Home;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 
 namespace vladandartem.Controllers
 {
     public class HomeController : Controller
     {
-        private ProductContext myDb;
+        private ProductContext context;
         private readonly IHostingEnvironment HostEnv;
 
         private UserManager<User> userManager;
 
         public HomeController(ProductContext context, IHostingEnvironment HostEnv, UserManager<User> userManager)
         {
-            myDb = context;
+            this.context = context;
 
             this.HostEnv = HostEnv;
             this.userManager = userManager;
@@ -48,7 +50,7 @@ namespace vladandartem.Controllers
             {
                 // Заносит продукт в массив, если строка в поиске совпадает на 50%
                 // и более с названием товара
-                products = myDb.Products.Where(n =>
+                products = context.Products.Where(n =>
                     CompareTwoString(searchArgument, n.Name) >= 50.0 ||
                     CompareTwoString(searchArgument, n.Manufacturer) >= 50.0
                 );
@@ -57,7 +59,7 @@ namespace vladandartem.Controllers
             else
             {
                 // Берем элементов на 5 страниц
-                products = myDb.Products.Take(4 * 5);
+                products = context.Products.Take(4 * 5);
             }
 
             productCounted = products.Count();
@@ -73,12 +75,6 @@ namespace vladandartem.Controllers
             };
 
             return View(ivm);
-        }
-
-        [HttpGet]
-        public IActionResult PersArea()
-        {
-            return View();
         }
 
         [HttpPost]
@@ -106,10 +102,10 @@ namespace vladandartem.Controllers
             }
 
             await userManager.UpdateAsync(buff);
-            //user.Cart.CartProducts.Add(new CartProduct { Product = myDb.Products.Find(id), Count = 1});
+            //user.Cart.CartProducts.Add(new CartProduct { Product = context.Products.Find(id), Count = 1});
 
-            myDb.SaveChanges();
-            //Cart cart = myDb.Users.FirstOrDefault(u => u.Cart.UserId == user.Id);
+            context.SaveChanges();
+            //Cart cart = context.Users.FirstOrDefault(u => u.Cart.UserId == user.Id);
 
             /*Cart cart = new Cart(HttpContext.Session, "cart");
 
@@ -144,18 +140,75 @@ namespace vladandartem.Controllers
             return Redirect("~/Home/Cart");
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public IActionResult Edit(int id)
         {
             EditViewModel evm = new EditViewModel
             {
-                product = myDb.Products.Find(id),
-                categories = myDb.Categories.ToList()
+                Product = context.Products.Include(n => n.ProductDetailFields).ThenInclude(n => n.DetailField)
+                .ThenInclude(n => n.Definitions).FirstOrDefault(n => n.Id == id),
+                Categories = context.Categories.ToList(),
+                DetailFields = context.DetailFields.Include(n => n.Definitions).ToList()
             };
 
             return View(evm);
         }
+        [HttpPost]
+        public IActionResult EditAddDetailField([Required]int ProductId, [Required]int DetailFieldId)
+        {
+            if (ModelState.IsValid)
+            {
+                if (context.Products.FirstOrDefault(n => n.Id == ProductId) != null &&
+                context.DetailFields.FirstOrDefault(n => n.Id == DetailFieldId) != null)
+                {
+                    context.ProductDetailFields.Add(new ProductDetailField { ProductId = ProductId, DetailFieldId = DetailFieldId });
 
+                    context.SaveChanges();
+                }
+            }
+
+            return new EmptyResult();
+        }
+        [HttpPost]
+        public IActionResult EditDeleteDetailField([Required]int ProductDetailFieldId)
+        {
+            if (ModelState.IsValid)
+            {
+                ProductDetailField productDetailField = context.ProductDetailFields.FirstOrDefault(n => n.Id == ProductDetailFieldId);
+                if (productDetailField != null)
+                {
+                    context.ProductDetailFields.Remove(productDetailField);
+
+                    context.SaveChanges();
+                }
+            }
+
+            return new EmptyResult();
+        }
+
+        [HttpPost]
+        public IActionResult EditEditDetailField(int ProductDetailFieldId, int DefinitionId)
+        {
+            ProductDetailField productDetailField = context.ProductDetailFields.First(n => n.Id == ProductDetailFieldId);
+
+            productDetailField.DefinitionId = DefinitionId;
+
+            context.ProductDetailFields.Update(productDetailField);
+
+            context.SaveChanges();
+
+            return new EmptyResult();
+        }
+
+        [HttpGet]
+        public IActionResult Product(int ProductId)
+        {
+            return View(context.Products.Include(n => n.ProductDetailFields).ThenInclude(n => n.DetailField)
+                .ThenInclude(n => n.Definitions).Include(n => n.Category).FirstOrDefault(n => n.Id == ProductId));
+        }
+
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public IActionResult Edit(EditViewModel evm, IFormFile fileImg)
         {
@@ -168,24 +221,27 @@ namespace vladandartem.Controllers
                         FileMode.Create)
                     );
 
-                    evm.product.ImgPath = $"/images/Products/{fileImg.FileName}";
+                    evm.Product.ImgPath = $"/images/Products/{fileImg.FileName}";
                 }
 
-                myDb.Products.Update(evm.product);
+                context.Products.Update(evm.Product);
 
-                myDb.SaveChanges();
+                context.SaveChanges();
             }
 
-            evm.categories = myDb.Categories.ToList();
+            evm.Categories = context.Categories.ToList();
 
             return View(evm);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public IActionResult Add()
         {
-            return View(new AddViewModel { product = null, fileImg = null, categories = myDb.Categories.ToList() });
+            return View(new AddViewModel { product = null, fileImg = null, categories = context.Categories.ToList() });
         }
+
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public IActionResult Add(AddViewModel avm)
         {
@@ -203,14 +259,14 @@ namespace vladandartem.Controllers
 
                 avm.product.ImgPath = $"/images/Products/{avm.fileImg.FileName}";
 
-                myDb.Products.Add(avm.product);
+                context.Products.Add(avm.product);
 
-                myDb.SaveChanges();
+                context.SaveChanges();
 
                 return Redirect("~/Home/Index");
             }
 
-            avm.categories = myDb.Categories.ToList();
+            avm.categories = context.Categories.ToList();
 
             return View(avm);
         }
@@ -218,9 +274,9 @@ namespace vladandartem.Controllers
         [HttpPost]
         public IActionResult RemoveProduct(int id)
         {
-            myDb.Products.Remove(myDb.Products.Find(id));
+            context.Products.Remove(context.Products.Find(id));
 
-            myDb.SaveChanges();
+            context.SaveChanges();
 
             //return Redirect("~/Home/Index");
 
@@ -304,7 +360,7 @@ namespace vladandartem.Controllers
             cart.Edit(id, count);
             cart.Save();
             */
-            //Product product = myDb.Products.Find(id);
+            //Product product = context.Products.Find(id);
 
             return new JsonResult(Convert.ToString(cartProduct.Product.Count));
         }

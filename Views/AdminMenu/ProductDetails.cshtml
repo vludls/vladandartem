@@ -1,0 +1,63 @@
+﻿@model List<vladandartem.Models.DetailField>
+
+@{
+    ViewData["Title"] = "ProductDetails";
+}
+
+@Html.Partial("_GetTabs", new vladandartem.ViewModels.AdminMenu.GetTabsViewModel { SectionId = 5 })
+
+<form asp-action="ProductDetailsFieldAdd" method="post">
+    <input type="text" name="DetailFieldName"/>
+    <input type="submit" value="Добавить"/>
+</form>
+
+<hr />
+
+<form asp-action="ProductDetailsDefinitionAdd" method="post">
+    <select name="DetailFieldId">
+        <option value="0">Выберите поле</option>
+        @foreach (var detailField in Model)
+        {
+            <option value="@detailField.Id">@detailField.Name</option>
+        }
+    </select>
+
+    <input type="text" name="DefinitionName" />
+    <input type="submit" value="Прикрепить"/>
+</form>
+<hr />
+
+<table>
+    @foreach (var detailField in Model)
+    {
+        <tr>
+            <td>@detailField.Name</td>
+
+            <td>
+                <form asp-action="ProductDetailsDefinitionDelete" method="post">
+                    <select name="DefinitionId">
+                        <option value="0">Выберите определение</option>
+                        @foreach (var definition in detailField.Definitions)
+                        {
+                            <option value="@definition.Id">@definition.Name</option>
+                        }
+                    </select>
+                    <input type="submit" value="Удалить" />
+                </form>
+        </tr>
+    }
+</table>
+
+<hr />
+
+<form asp-action="ProductDetailsFieldDelete" method="post">
+    <select name="DetailFieldId">
+        <option value="0">Выберите поле</option>
+        @foreach (var field in Model)
+        {
+            <option value="@field.Id">@field.Name</option>
+        }
+    </select>
+    <input type="submit" value="Удалить" />
+</form>
+
