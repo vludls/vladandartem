@@ -129,8 +129,8 @@ namespace vladandartem.Controllers
                 return NotFound();
             }
 
-            var buff = userManager.Users.Where(u => u.Id == user.Id).Include(u => u.Cart)
-                .ThenInclude(u => u.CartProducts).ThenInclude(u => u.Product).FirstOrDefault();
+            var buff = userManager.Users.Include(u => u.Cart)
+                .ThenInclude(u => u.CartProducts).ThenInclude(u => u.Product).FirstOrDefault(u => u.Id == user.Id);
 
             var order = new Order
             {
