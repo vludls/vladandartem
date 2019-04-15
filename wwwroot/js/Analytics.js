@@ -51,7 +51,7 @@ function analitic (form) {
         type: "POST",
         data: form.serialize(),
         success: function (data) {
-            $('.result > ul').show();          
+            $('.result > ul').show();
             var result = JSON.parse(data);
             for (var i = 0; i < result.length; i++) {
                 $('.result > ul').append('<li class="products-in-analytics"><div class="name-in-analitics"><h4>' + result[i]["Product"]["Name"] +'</h4><div class="open-order"><i class="fas fa-chevron-circle-down"></i></div></div><div class="toggle"><h5 class="overall">В сумме продано: ' + result[i]["Sales"] + ', выручка: ' + result[i]["Revenue"] + '</h5><ul class="months"></ul></div></li>');

@@ -26,7 +26,8 @@ namespace vladandartem
                 try
                 {
                     var context = services.GetRequiredService<ProductContext>();
-                    Db.Initialize(context);
+                    var passwordHasher = services.GetRequiredService<Microsoft.AspNetCore.Identity.IPasswordHasher<User>>();
+                    Db.Initialize(context, passwordHasher);
                 }
                 catch (Exception ex)
                 {

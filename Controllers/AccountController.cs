@@ -50,7 +50,6 @@ namespace vladandartem.Controllers
                     context.SaveChanges();
 
                     await userManager.AddToRoleAsync(user, "user");
-                    
 
                     await signInManager.SignInAsync(user, false);
 

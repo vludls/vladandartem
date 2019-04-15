@@ -340,8 +340,6 @@ namespace vladandartem.Controllers
                 );
             }
 
-            products = products.Skip(model.LastItemId).Take(10);
-
             // Если выбрана конкретная категория, то фильтруем по ней
             if (model.CategoryId != 0)
             {
@@ -420,7 +418,7 @@ namespace vladandartem.Controllers
                 }
             }
 
-            return Content(JsonConvert.SerializeObject(productAnalytics));
+            return Content(JsonConvert.SerializeObject(productAnalytics.Skip(model.LastItemId).Take(10)));
         }
 
         /* Ниже идет раздел связанный с секциями */
