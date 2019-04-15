@@ -7,9 +7,9 @@ namespace vladandartem.ViewModels.Home
     public class EditViewModel
     {
         [Required]
-        public Product product { get; set; }
+        public Product Product { get; set; }
 
-        public IEnumerable<Category> categories { get; set; }
+        public List<Category> Categories { get; set; }
 
         public List<DetailField> DetailFields { get; set; }
     }

@@ -9,7 +9,7 @@ namespace vladandartem.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-
-        public List<DetailFieldDefinition> DetailFieldDefinitions { get; set; }
+        public int DetailFieldId { get; set; }
+        public DetailField DetailField { get; set; }
     }
 }

@@ -475,7 +475,7 @@ namespace vladandartem.Controllers
         [HttpGet]
         public IActionResult ProductDetails()
         {
-            List<DetailField> model = context.DetailFields.Include(n => n.DetailFieldDefinitions).ThenInclude(n => n.Definition).ToList();
+            List<DetailField> model = context.DetailFields.Include(n => n.Definitions).ToList();
 
             return View(model);
         }
@@ -518,12 +518,12 @@ namespace vladandartem.Controllers
             {
                 if (context.DetailFields.Find(DetailFieldId) != null)
                 {
-                    Definition Definition = new Definition { Name = DefinitionName };
+                    Definition Definition = new Definition { Name = DefinitionName, DetailFieldId = DetailFieldId };
                     context.Definitions.Add(Definition);
 
                     context.SaveChanges();
 
-                    context.DetailFieldDefinitions.Add(new DetailFieldDefinition { DetailFieldId = DetailFieldId, DefinitionId = Definition.Id });
+                    //context.Definition.Add(new DetailFieldDefinition { DetailFieldId = DetailFieldId, DefinitionId = Definition.Id });
 
                     context.SaveChanges();
                 }

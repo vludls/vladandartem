@@ -8,11 +8,11 @@
 }
 
     <main class="container redact">
-        <div class="imgProd"><img src="@Model?.product?.ImgPath" class="addimg" alt=""></div>
+        <div class="imgProd"><img src="@Model?.Product?.ImgPath" class="addimg" alt=""></div>
 
         <form action="~/Home/Edit" class="addandedit" method="post" enctype="multipart/form-data">
-            <input type="hidden" name="product.id" value="@Model?.product?.Id">
-            <input type="hidden" name="product.imgpath" value="@Model?.product?.ImgPath">
+            <input type="hidden" name="product.id" value="@Model?.Product?.Id">
+            <input type="hidden" name="product.imgpath" value="@Model?.Product?.ImgPath">
 
             <div class="custom-file label">
                 <input type="file" name="fileimg" class="custom-file-input file" id="eimg">
@@ -20,24 +20,24 @@
             </div>
             <div class="form-group">
                 <label for="name-id">Название товара</label>
-                <input type="text" class="form-control" id="name-id" name="product.name" value="@Model?.product?.Name">
-                <span asp-validation-for="product.Name"></span>
+                <input type="text" class="form-control" id="name-id" name="product.name" value="@Model?.Product?.Name">
+                <span asp-validation-for="Product.Name"></span>
             </div>
             <div class="form-group">
                 <label for="Price">Цена</label>
-                <input type="number" min="1" name="product.price" class="form-control" id="Price" value="@Model?.product?.Price">
+                <input type="number" min="1" name="product.price" class="form-control" id="Price" value="@Model?.Product?.Price">
             </div>
             <div class="form-group">
                 <label for="Manufacturer">Производитель</label>
-                <input type="text" class="form-control" id="Manufacturer" name="product.Manufacturer" value="@Model?.product?.Manufacturer">
-                <span asp-validation-for="product.Manufacturer"></span>
+                <input type="text" class="form-control" id="Manufacturer" name="product.Manufacturer" value="@Model?.Product?.Manufacturer">
+                <span asp-validation-for="Product.Manufacturer"></span>
             </div>
             <label for="select">Категория</label>
             <select name="product.categoryId" class="form-control select" id="select">
-                <span asp-validation-for="product.CategoryId"></span>
-                @foreach (var category in Model?.categories)
+                <span asp-validation-for="Product.CategoryId"></span>
+                @foreach (var category in Model?.Categories)
                 {
-                    if (Model?.product.CategoryId == category.Id)
+                    if (Model?.Product.CategoryId == category.Id)
                     {
                         <option value="@category.Id" selected>@category.Name</option>
                     }
@@ -49,58 +49,54 @@
             </select>
             <div class="form-group">
                 <label for="q-id">Количество на складе</label>
-                <input type="number" class="form-control" id="q-id" min="0" name="product.count" value="@Model?.product?.Count">
+                <input type="number" class="form-control" id="q-id" min="0" name="product.count" value="@Model?.Product?.Count">
             </div>
             <button type="submit" class="btn btn-primary">Изменить</button>
 
         </form>
         <hr />
-        <form method="post">
-            <input type="hidden" name="ProductId" value="@Model.product.Id" />
-            <select>
-                @foreach (var field in Model.DetailFields)
+        <form asp-action="EditAddDetailField" method="post">
+            <input type="hidden" name="ProductId" value="@Model.Product.Id" />
+            <select name="DetailFieldId">
+                <option value="0">Выберите поле</option>
+                @foreach (var detailField in Model.DetailFields)
                 {
-                    <option value="@field.Id">@field.Name</option>
+                    <option value="@detailField.Id">@detailField.Name</option>
                 }
             </select>
             <input type="submit" value="Добавить" />
         </form>
 
         <hr />
+        <form asp-action="EditDeleteDetailField" method="post">
+            <select name="ProductDetailFieldId">
+                <option value="0">Выберите поле</option>
+                @foreach (var productDetailField in Model.Product.ProductDetailFields)
+                {
+                    <option value="@productDetailField.Id">@productDetailField.DetailField.Name</option>
+                }
+            </select>
+            <input type="submit" value="Удалить" />
+        </form>
+        <hr />
         <table>
-            @*@@foreach (var field in Model.product.ProductDetailFieldDefinition)
-        {
-            <tr>
-                <td>@field.Name</td>
-                <td>
-                    <form action="EditEditDetailField" method="post">
-                        <input type="hidden" name="ProductId" value="@Model.product.Id" />
-                        <input type="hidden" name="DetailFieldId" value="@Model.product.Id" />
-                        <select name="DefinitionId">
-                            @foreach (var detailFieldDefinition in field.DetailFieldDefinitions)
-                            {
-                                <option value="@detailFieldDefinition.Definition.Id">@detailFieldDefinition.Definition.Name</option>
-                            }
-                        </select>
-                        <input type="submit" value="Сохранить" />
-                    </form>
-                </td>
-            </tr>
-        }*@
-            @foreach (var productDetailFieldDefinition in Model.product.ProductDetailFieldDefinition)
+            @foreach (var productDetailField in Model.Product.ProductDetailFields)
             {
                 <tr>
-                    <td>@productDetailFieldDefinition.DetailFieldDefinition.DetailField.Name</td>
+                    <td>@productDetailField.DetailField.Name</td>
                     <td>
-                        <form action="EditEditDetailField" method="post">
-                            <input type="hidden" value="@productDetailFieldDefinition.Id" />
-                            <!--<input type="hidden" name="ProductId" value="@Model.product.Id" />-->
-                            <input type="hidden" name="DetailFieldId" value="@productDetailFieldDefinition.DetailFieldDefinition.DetailField" />
+                        <form asp-action="EditEditDetailField" method="post">
+                            <input type="hidden" name="ProductDetailFieldId" value="@productDetailField.Id" />
                             <select name="DefinitionId">
-                                @foreach (var field in Model.DetailFields)
+                                @foreach (var definition in productDetailField.DetailField.Definitions)
                                 {
-                                    @foreach (var definition in field.DetailFieldDefinitions)
+                                    if (definition.Id == productDetailField.DefinitionId)
                                     {
+                                        <option value="@definition.Id" selected>@definition.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@definition.Id">@definition.Name</option>
                                     }
                                 }
                             </select>
@@ -110,4 +106,4 @@
                 </tr>
             }
         </table>
-</main>    
+    </main>    

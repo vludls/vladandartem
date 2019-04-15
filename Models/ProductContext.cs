@@ -16,8 +16,7 @@ namespace vladandartem.Models
         public DbSet<Cart> Cart { get; set; }
         public DbSet<Definition> Definitions { get; set; }
         public DbSet<DetailField> DetailFields { get; set; }
-        public DbSet<DetailFieldDefinition> DetailFieldDefinitions { get; set; }
-        public DbSet<ProductDetailFieldDefinition> ProductDetailFieldDefinitions { get; set; }
+        public DbSet<ProductDetailField> ProductDetailFields { get; set; }
 
         public ProductContext(DbContextOptions<ProductContext> options) : base(options)
         {

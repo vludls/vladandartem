@@ -16,6 +16,7 @@ using vladandartem.ClassHelpers;
 using vladandartem.ViewModels.Home;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 
 namespace vladandartem.Controllers
@@ -29,7 +30,7 @@ namespace vladandartem.Controllers
 
         public HomeController(ProductContext context, IHostingEnvironment HostEnv, UserManager<User> userManager)
         {
-            context = context;
+            this.context = context;
 
             this.HostEnv = HostEnv;
             this.userManager = userManager;
@@ -145,40 +146,66 @@ namespace vladandartem.Controllers
         {
             EditViewModel evm = new EditViewModel
             {
-                product = context.Products.Include(n => n.ProductDetailFieldDefinition)
-                .ThenInclude(n => n.DetailFieldDefinition).First(n => n.Id == id),
-                categories = context.Categories.ToList(),
-                DetailFields = context.DetailFields.Include(n => n.DetailFieldDefinitions).ThenInclude(n => n.Definition).ToList()
+                Product = context.Products.Include(n => n.ProductDetailFields).ThenInclude(n => n.DetailField)
+                .ThenInclude(n => n.Definitions).FirstOrDefault(n => n.Id == id),
+                Categories = context.Categories.ToList(),
+                DetailFields = context.DetailFields.Include(n => n.Definitions).ToList()
             };
 
             return View(evm);
         }
         [HttpPost]
-        public IActionResult EditAddDetailField(int ProductId, int DetailFieldId)
+        public IActionResult EditAddDetailField([Required]int ProductId, [Required]int DetailFieldId)
         {
-           DetailFieldDefinition detailFieldDefinition = context.DetailFieldDefinitions.First(n => n.DetailFieldId == DetailFieldId);
+            if (ModelState.IsValid)
+            {
+                if (context.Products.FirstOrDefault(n => n.Id == ProductId) != null &&
+                context.DetailFields.FirstOrDefault(n => n.Id == DetailFieldId) != null)
+                {
+                    context.ProductDetailFields.Add(new ProductDetailField { ProductId = ProductId, DetailFieldId = DetailFieldId });
 
-            context.ProductDetailFieldDefinitions.Add(new ProductDetailFieldDefinition {
-                ProductId = ProductId,
-                DetailFieldDefinitionId = detailFieldDefinition.Id
-            });
+                    context.SaveChanges();
+                }
+            }
 
             return new EmptyResult();
         }
         [HttpPost]
-        public IActionResult EditEditDetailField(int ProductId, int DetailFieldDefinitionId, int DetailFieldId, int DefinitionId)
+        public IActionResult EditDeleteDetailField([Required]int ProductDetailFieldId)
         {
-            DetailFieldDefinition detailFieldDefinition = context.
-                DetailFieldDefinitions.First(n => n.DetailFieldId == DetailFieldId && n.DefinitionId == DefinitionId);
-
-
-            context.ProductDetailFieldDefinitions.Add(new ProductDetailFieldDefinition
+            if (ModelState.IsValid)
             {
-                ProductId = ProductId,
-                DetailFieldDefinitionId = detailFieldDefinition.Id
-            });
+                ProductDetailField productDetailField = context.ProductDetailFields.FirstOrDefault(n => n.Id == ProductDetailFieldId);
+                if (productDetailField != null)
+                {
+                    context.ProductDetailFields.Remove(productDetailField);
+
+                    context.SaveChanges();
+                }
+            }
 
             return new EmptyResult();
+        }
+
+        [HttpPost]
+        public IActionResult EditEditDetailField(int ProductDetailFieldId, int DefinitionId)
+        {
+            ProductDetailField productDetailField = context.ProductDetailFields.First(n => n.Id == ProductDetailFieldId);
+
+            productDetailField.DefinitionId = DefinitionId;
+
+            context.ProductDetailFields.Update(productDetailField);
+
+            context.SaveChanges();
+
+            return new EmptyResult();
+        }
+
+        [HttpGet]
+        public IActionResult Product(int ProductId)
+        {
+            return View(context.Products.Include(n => n.ProductDetailFields).ThenInclude(n => n.DetailField)
+                .ThenInclude(n => n.Definitions).Include(n => n.Category).FirstOrDefault(n => n.Id == ProductId));
         }
 
         [Authorize(Roles = "admin")]
@@ -194,15 +221,15 @@ namespace vladandartem.Controllers
                         FileMode.Create)
                     );
 
-                    evm.product.ImgPath = $"/images/Products/{fileImg.FileName}";
+                    evm.Product.ImgPath = $"/images/Products/{fileImg.FileName}";
                 }
 
-                context.Products.Update(evm.product);
+                context.Products.Update(evm.Product);
 
                 context.SaveChanges();
             }
 
-            evm.categories = context.Categories.ToList();
+            evm.Categories = context.Categories.ToList();
 
             return View(evm);
         }

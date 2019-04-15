@@ -16,9 +16,9 @@
 <form asp-action="ProductDetailsDefinitionAdd" method="post">
     <select name="DetailFieldId">
         <option value="0">Выберите поле</option>
-        @foreach (var field in Model)
+        @foreach (var detailField in Model)
         {
-            <option value="@field.Id">@field.Name</option>
+            <option value="@detailField.Id">@detailField.Name</option>
         }
     </select>
 
@@ -28,18 +28,18 @@
 <hr />
 
 <table>
-    @foreach (var field in Model)
+    @foreach (var detailField in Model)
     {
         <tr>
-            <td>@field.Name</td>
+            <td>@detailField.Name</td>
 
             <td>
                 <form asp-action="ProductDetailsDefinitionDelete" method="post">
                     <select name="DefinitionId">
                         <option value="0">Выберите определение</option>
-                        @foreach (var definition in field.DetailFieldDefinitions)
+                        @foreach (var definition in detailField.Definitions)
                         {
-                            <option value="@definition.Definition.Id">@definition.Definition.Name</option>
+                            <option value="@definition.Id">@definition.Name</option>
                         }
                     </select>
                     <input type="submit" value="Удалить" />

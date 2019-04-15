@@ -34,7 +34,7 @@ namespace vladandartem.Models
         [JsonIgnore]
         public Category Category { get; set; }
 
-        public List<ProductDetailFieldDefinition> ProductDetailFieldDefinition { get; set; }
+        public List<ProductDetailField> ProductDetailFields { get; set; }
 
         public int Count { get; set; }
     }

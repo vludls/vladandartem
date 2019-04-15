@@ -56,30 +56,32 @@ ViewData["Title"] = "Shop";
         @foreach (var product in Model.products)
         {
             <li>
-                <div class="img">
-                    <img src="@product.ImgPath" alt="">
-                </div>
-                <p class="name">
-                    @product.Name
-                </p>
-                <p class="price">
-                    @product.Price р.
-                </p>
-                <div class="links">
-                    <form asp-action="AddCookie" method="post">
-                        <input type="hidden" name="id" value="@product.Id">
-                        <input value="@(@product.Count <= 0 ? "нет в наличии" : "в корзину")" class="btn btn-primary" type="submit" @(@product.Count <= 0 ? " disabled=\"disabled\"" : "")>
-                    </form>
-
-                    @if (User.IsInRole("admin"))
-                    {
-                        <a href="/home/Edit?id=@product.Id" class="btn btn-primary newicon"><i class="fas fa-pen"></i></a>
-                        <form action="~/Home/RemoveProduct" method="post" class="delete-products">
+                <a href="~/Home/Product?ProductId=@product.Id">
+                    <div class="img">
+                        <img src="@product.ImgPath" alt="">
+                    </div>
+                    <p class="name">
+                        @product.Name
+                    </p>
+                    <p class="price">
+                        @product.Price р.
+                    </p>
+                    <div class="links">
+                        <form asp-action="AddCookie" method="post">
                             <input type="hidden" name="id" value="@product.Id">
-                            <button type="submit" class="btn btn-primary newicon"><i class="far fa-trash-alt"></i></button>
+                            <input value="@(@product.Count <= 0 ? "нет в наличии" : "в корзину")" class="btn btn-primary" type="submit" @(@product.Count <= 0 ? " disabled=\"disabled\"" : "")>
                         </form>
-                    }
-                </div>
+
+                        @if (User.IsInRole("admin"))
+                        {
+                            <a href="/home/Edit?id=@product.Id" class="btn btn-primary newicon"><i class="fas fa-pen"></i></a>
+                            <form action="~/Home/RemoveProduct" method="post" class="delete-products">
+                                <input type="hidden" name="id" value="@product.Id">
+                                <button type="submit" class="btn btn-primary newicon"><i class="far fa-trash-alt"></i></button>
+                            </form>
+                        }
+                    </div>
+                </a>
             </li>
         }
         @if (User.IsInRole("admin"))
