@@ -142,12 +142,12 @@ namespace vladandartem.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpGet]
-        public IActionResult Edit(int id)
+        public IActionResult Edit(int Id)
         {
             EditViewModel evm = new EditViewModel
             {
                 Product = context.Products.Include(n => n.ProductDetailFields).ThenInclude(n => n.DetailField)
-                .ThenInclude(n => n.Definitions).FirstOrDefault(n => n.Id == id),
+                .ThenInclude(n => n.Definitions).FirstOrDefault(n => n.Id == Id),
                 Categories = context.Categories.ToList(),
                 DetailFields = context.DetailFields.Include(n => n.Definitions).ToList()
             };
@@ -210,7 +210,7 @@ namespace vladandartem.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public IActionResult Edit(EditViewModel evm, IFormFile fileImg)
+        public IActionResult EditSave(EditViewModel evm, IFormFile fileImg)
         {
             if (ModelState.IsValid)
             {
@@ -229,9 +229,9 @@ namespace vladandartem.Controllers
                 context.SaveChanges();
             }
 
-            evm.Categories = context.Categories.ToList();
+            //evm.Categories = context.Categories.ToList();
 
-            return View(evm);
+            return RedirectToAction("Edit", "Home", new { Id = evm.Product.Id });
         }
 
         [Authorize(Roles = "admin")]

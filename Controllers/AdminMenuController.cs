@@ -506,6 +506,8 @@ namespace vladandartem.Controllers
                     context.DetailFields.Remove(detailField);
 
                     context.SaveChanges();
+
+                    return Content(Convert.ToString(DetailFieldId));
                 }
             }
 
@@ -519,14 +521,13 @@ namespace vladandartem.Controllers
             {
                 if (context.DetailFields.Find(DetailFieldId) != null)
                 {
-                    Definition Definition = new Definition { Name = DefinitionName, DetailFieldId = DetailFieldId };
-                    context.Definitions.Add(Definition);
+                    Definition definition = new Definition { Name = DefinitionName, DetailFieldId = DetailFieldId };
+                    context.Definitions.Add(definition);
 
                     context.SaveChanges();
 
+                    return Content(JsonConvert.SerializeObject(new { DetailFieldId = DetailFieldId, DefinitionId = definition.Id, DefinitionName = definition.Name }));
                     //context.Definition.Add(new DetailFieldDefinition { DetailFieldId = DetailFieldId, DefinitionId = Definition.Id });
-
-                    context.SaveChanges();
                 }
             }
 
