@@ -483,9 +483,12 @@ namespace vladandartem.Controllers
         {
             if (ModelState.IsValid)
             {
-                context.DetailFields.Add(new DetailField { Name = DetailFieldName });
+                DetailField detailField = new DetailField { Name = DetailFieldName };
+                context.DetailFields.Add(detailField);
 
                 context.SaveChanges();
+
+                return Content(Convert.ToString(detailField.Id));
             }
 
             return new EmptyResult();
