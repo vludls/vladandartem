@@ -124,7 +124,7 @@ namespace vladandartem.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> EditUser(int id)
+        public async Task<IActionResult> EditUser([Required]int id)
         {
             User user = await userManager.FindByIdAsync(id.ToString());
 
@@ -132,22 +132,28 @@ namespace vladandartem.Controllers
             {
                 return NotFound();
             }
+            
 
-            EditUserViewModel euvm = new EditUserViewModel { Email = user.Email, Year = user.Year };
+            EditUserViewModel euvm = new EditUserViewModel {
+                Email = user.Email,
+                Year = user.Year,
+                UserRoles = await userManager.GetRolesAsync(user),
+                Roles = roleManager.Roles.ToList()
+            };
 
             return View(euvm);
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditUser(EditUserViewModel euvm)
+        public async Task<IActionResult> EditUser([Required]int Id, [Required]string Email, [Required]string Date, List<string> Roles)
         {
-            User user = await userManager.FindByIdAsync(euvm.Id);
+            User user = await userManager.FindByIdAsync(Id.ToString());
 
             if (user != null)
             {
-                user.Email = euvm.Email;
-                user.UserName = euvm.Email;
-                user.Year = euvm.Year;
+                user.Email = Email;
+                user.UserName = Email;
+                user.Year = Date;
 
                 var result = await userManager.UpdateAsync(user);
 
@@ -164,7 +170,7 @@ namespace vladandartem.Controllers
                 }
             }
 
-            return View(euvm);
+            return Content("Такого юзера не существует");
         }
 
         [HttpPost]
@@ -483,12 +489,15 @@ namespace vladandartem.Controllers
         {
             if (ModelState.IsValid)
             {
-                DetailField detailField = new DetailField { Name = DetailFieldName };
-                context.DetailFields.Add(detailField);
+                if (!context.DetailFields.Any(n => n.Name == DetailFieldName))
+                {
+                    DetailField detailField = new DetailField { Name = DetailFieldName };
+                    context.DetailFields.Add(detailField);
 
-                context.SaveChanges();
+                    context.SaveChanges();
 
-                return Content(Convert.ToString(detailField.Id));
+                    return Content(Convert.ToString(detailField.Id));
+                }
             }
 
             return new EmptyResult();
@@ -545,6 +554,8 @@ namespace vladandartem.Controllers
                     context.Definitions.Remove(definition);
 
                     context.SaveChanges();
+
+                    return Content(Convert.ToString(DefinitionId));
                 }
             }
 

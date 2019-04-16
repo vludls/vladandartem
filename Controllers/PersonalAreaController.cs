@@ -124,13 +124,19 @@ namespace vladandartem.Controllers
         {
             User user = await userManager.GetUserAsync(HttpContext.User);
 
-            if (user == null)
-            {
-                return NotFound();
-            }
-
             var buff = userManager.Users.Include(u => u.Cart)
                 .ThenInclude(u => u.CartProducts).ThenInclude(u => u.Product).FirstOrDefault(u => u.Id == user.Id);
+
+            foreach (var cartProduct in buff.Cart.CartProducts)
+            {
+                if(cartProduct.Count > cartProduct.Product.Count)
+                    ModelState.AddModelError(string.Empty, $"{cartProduct.Product.Name}: на складе есть только лишь {cartProduct.Product.Count} шт. товара, в заказе указано {cartProduct.Count}");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
 
             var order = new Order
             {
@@ -138,13 +144,14 @@ namespace vladandartem.Controllers
                 Number = (myDb.Orders.Any() ? myDb.Orders.OrderBy(n => n.Number).Last().Number + 1 : 1),
                 SummaryPrice = buff.Cart.CartProducts.Sum(n => n.Product.Price * n.Count)
             };
+
             myDb.Orders.Add(order);
 
             myDb.SaveChanges();
 
             foreach (var cp in buff.Cart.CartProducts)
             {
-                cp.Product.Count--;
+                cp.Product.Count -= cp.Count;
                 cp.CartId = null;
                 cp.OrderId = order.Id;
             }
@@ -152,42 +159,7 @@ namespace vladandartem.Controllers
             //buff.Cart.CartProducts.Remove(buff.Cart.CartProducts.Find(n => n.ProductId == id));
 
             await userManager.UpdateAsync(buff);
-            /*Cart cart = new Cart(HttpContext.Session, "cart");
 
-            List<CartProduct> cartData = cart.Decode();
-
-            var errors = from element in cartData
-                        let product = myDb.Products.Find(element.ProductId)
-                        where element.ProductCount > product.Count
-                        select $"Ќедопустимое количество товара: {product.Name}";
-
-            if(errors.Any()) return View(errors);
-
-            Cart cartPaid = new Cart(HttpContext.Session, "paid");
-
-            cartPaid.Decode();
-            
-            if(cartData != null)
-            {
-                foreach(var element in cartData)
-                {
-                    cartPaid.Add(element.ProductId, element.ProductCount);
-
-                    Product product = myDb.Products.Find(element.ProductId);
-
-                    product.Count -= element.ProductCount;
-
-                    myDb.Products.Update(product);
-
-                    myDb.SaveChanges();
-                }
-
-                cartData.Clear();
-            }
-
-            cart.Save();
-            cartPaid.Save();
-            */
             return RedirectToAction("PaidProducts", "PersonalArea");
         }
     }
