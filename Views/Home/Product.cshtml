@@ -14,13 +14,13 @@
             <img src="@Model?.ImgPath" class="addimg" alt="">
         </div>
         <div class="main-info">
-            <h2>@Model.Price р.</h2>
+            
             <form asp-action="AddCookie" class="add-to-cart" method="post">
+                <h2>@Model.Price р.</h2>
                 <input type="hidden" name="id" value="@Model.Id">
-                <input value="@(Model.Count <= 0 ? "нет в наличии" : "в корзину")" class="btn btn-primary" type="submit" @(Model.Count <= 0 ? " disabled=\"disabled\"" : "")>
+                <input value="@(Model.Count <= 0 ? "нет в наличии" : "Добавить в корзину")" class="btn btn-primary btn-lg btn-block" type="submit" @(Model.Count <= 0 ? " disabled=\"disabled\"" : "")>
+                <h5 class="on-stock">На складе: <span class="badge badge-success">@Model.Count</span></h5>
             </form>
-            <!--<button type="button" class="btn btn-primary btn-lg btn-block">Добавить в корзину</button>-->
-            <h5 class="on-stock">На складе: <span class="badge badge-success">@Model.Count</span></h5>
         </div>
     </div>
     <h1 class="header-specifications">Характеристики</h1>

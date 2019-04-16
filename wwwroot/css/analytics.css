@@ -10,10 +10,8 @@
     .analytics .margin {
         margin-top: 24px;
     }
-    label.margin:hover {
-        background: #fff;
-        color: #007bff;
-        cursor: pointer;
+    .center-check {
+        padding-top: 30px;
     }
 .result {
     flex-direction: column;

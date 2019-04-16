@@ -11,7 +11,32 @@ $(document).ready(function (){
                 $('.add-new-field-1').append('<option value="' + data + '" id="odel' + data + '">' + $('#DetailFieldName').val() + '</option>');
                 //$('.list-detail-fields:last:child').clone().appendTo($('.list-of-fields'));
                 //$('.list-of-fields:last-child').children('.field-name').text($('#DetailFieldName').val());
-                $('.list-of-fields').append('<li id="li' + data + '"><p class="field-name">' + $('#DetailFieldName').val() + '</p><form asp-action="ProductDetailsDefinitionDelete" method="post"><div class="select-value"><select name="DefinitionId" class="form-control" id="d' + data + '"><option value="0">Выберите значение</option></select></div><div class="last-column"><button type="button" class="btn btn-danger">Удалить</button></div></form></li>');
+                $('.list-of-fields').append('<li id="li' + data + '"><p class="field-name">' + $('#DetailFieldName').val() + '</p><form asp-action="ProductDetailsDefinitionDelete" method="post"><div class="select-value"><select name="DefinitionId" class="form-control" id="d' + data + '"><option value="0">Выберите значение</option></select></div><div class="last-column"><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#m' + data + '" id="id' + data + '">Удалить</button></div></form></li>');
+                $('#id' + data).click(function() {
+                    //alert($(this).attr('data-target'));
+                    //alert('!');
+                    
+                    var definsub = $(this);
+                    $('.for-del-def').attr('id', $(this).attr('data-target').substr(1));
+                    $('.delete-def').click(function() {
+                        $(definsub).closest('form').submit(function (e) {
+                            var deldef = $(this);
+                            $.ajax({
+                                url: "/AdminMenu/ProductDetailsDefinitionDelete",
+                                type: "POST",
+                                data: deldef.serialize(),
+                                success: function (data) {
+                                    //$(deldef + ' button').attr('data-target', '#' + data);
+                                    $('#def' + data).remove();  
+                                }
+                            });
+                            e.preventDefault();
+                        });
+                        $(definsub).closest('form').trigger('submit');
+                        $(this).prev().trigger('click');
+                    })
+                });
+                $('#DetailFieldName').val('');
             }
         });
         e.preventDefault();
@@ -26,7 +51,7 @@ $(document).ready(function (){
                 //alert(data);
                 var ids = JSON.parse(data);
                 $('#d' + ids["DetailFieldId"]).append('<option value="' + ids["DefinitionId"] + '" id="def' + ids["DefinitionId"] + '">' + ids["DefinitionName"] + '</option>');
-                
+                $('#DefinitionName').val('');
             }
         });
         e.preventDefault();
@@ -56,28 +81,32 @@ $(document).ready(function (){
         })
     });
 
-    $('.delete-defininion').submit(function (e) {
-        var deldef = $(this);
-        $.ajax({
-            url: "/AdminMenu/ProductDetailsDefinitionDelete",
-            type: "POST",
-            data: deldef.serialize(),
-            success: function (data) {
-                alert(data);
-                $('#def' + data).remove();
-                
-            }
+    $('.delete-defininion').each(function() {
+        $(this).submit(function (e) {
+            var deldef = $(this);
+            $.ajax({
+                url: "/AdminMenu/ProductDetailsDefinitionDelete",
+                type: "POST",
+                data: deldef.serialize(),
+                success: function (data) {
+                    //$(deldef + ' button').attr('data-target', '#' + data);
+                    $('#def' + data).remove();  
+                }
+            });
+            e.preventDefault();
         });
-        e.preventDefault();
-    });
+    })
+    
 
-    $('.last-column > button').click(function() {
-        var defsub = $(this);
-        $(this).attr('data-target', '#del-def');
-        $('.for-del-def').attr('id', $(this).attr('data-target').substr(1));
-        $('.delete-def').click(function() {
-            $('.delete-defininion').trigger('submit');
-            $(this).prev().trigger('click');
-        })
+    $('.last-column > button').each(function () {
+        $(this).click(function() {
+            var defsub = $(this);
+            //$(this).attr('data-target', '#del-def');
+            $('.for-del-def').attr('id', $(this).attr('data-target').substr(1));
+            $('.delete-def').click(function() {
+                $(defsub).closest('form').trigger('submit');
+                $(this).prev().trigger('click');
+            })
+        });
     });
 })
