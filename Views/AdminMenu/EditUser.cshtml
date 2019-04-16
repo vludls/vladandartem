@@ -3,7 +3,7 @@
     ViewBag.Title = "Редактирование пользователя";
 }
 <main class="container">
-    <form class="regist" asp-action="Edit" asp-controller="Users">
+    <form class="regist" asp-action="EditUserSave" asp-controller="AdminMenu" method="post">
         <div asp-validation-summary="All"></div>
         <div>
             <input type="hidden" asp-for="Id">
