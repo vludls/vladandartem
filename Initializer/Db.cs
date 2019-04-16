@@ -130,15 +130,9 @@ namespace vladandartem.Initializer
                         .ThenInclude(u => u.CartProducts).ThenInclude(u => u.Product)
                         .FirstOrDefault(u => u.Id == 1);
 
-                    context.CartProduct.Add(
-                        new CartProduct { ProductId = 1, Count = 4, CartId = buff.Cart.Id }
-                    );
-
-                    context.CartProduct.Add(
-                        new CartProduct { ProductId = 2, Count = 5, CartId = buff.Cart.Id }
-                    );
-
-                    context.CartProduct.Add(
+                    context.CartProduct.AddRange(
+                        new CartProduct { ProductId = 1, Count = 4, CartId = buff.Cart.Id },
+                        new CartProduct { ProductId = 2, Count = 5, CartId = buff.Cart.Id },
                         new CartProduct { ProductId = 3, Count = 6, CartId = buff.Cart.Id }
                     );
                     
