@@ -145,15 +145,27 @@ namespace vladandartem.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditUser([Required]int Id, [Required]string Email, [Required]string Date, List<string> Roles)
+        public async Task<IActionResult> EditUserSave([Required]int id, [Required]string email, [Required]string year, List<string> roles)
         {
-            User user = await userManager.FindByIdAsync(Id.ToString());
+            User user = await userManager.FindByIdAsync(id.ToString());
 
             if (user != null)
             {
-                user.Email = Email;
-                user.UserName = Email;
-                user.Year = Date;
+                user.Email = email;
+                user.UserName = email;
+                user.Year = year;
+
+                // получем список ролей пользователя
+                var userRoles = await userManager.GetRolesAsync(user);
+
+                // получаем все роли
+                var allRoles = roleManager.Roles.ToList();
+
+                var addedRoles = roles.Except(userRoles);
+                var removedRoles = userRoles.Except(roles);
+
+                await userManager.AddToRolesAsync(user, addedRoles);
+                await userManager.RemoveFromRolesAsync(user, removedRoles);
 
                 var result = await userManager.UpdateAsync(user);
 
