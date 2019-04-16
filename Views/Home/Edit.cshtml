@@ -10,7 +10,7 @@
     <main class="container redact">
         <div class="imgProd"><img src="@Model?.Product?.ImgPath" class="addimg" alt=""></div>
 
-        <form action="~/Home/Edit" class="addandedit" method="post" enctype="multipart/form-data">
+        <form asp-action="EditSave" class="addandedit" method="post" enctype="multipart/form-data">
             <input type="hidden" name="product.id" value="@Model?.Product?.Id">
             <input type="hidden" name="product.imgpath" value="@Model?.Product?.ImgPath">
 
@@ -33,11 +33,11 @@
                 <span asp-validation-for="Product.Manufacturer"></span>
             </div>
             <label for="select">Категория</label>
+            <span asp-validation-for="Product.CategoryId"></span>
             <select name="product.categoryId" class="form-control select" id="select">
-                <span asp-validation-for="Product.CategoryId"></span>
-                @foreach (var category in Model?.Categories)
+                @foreach (var category in Model.Categories)
                 {
-                    if (Model?.Product.CategoryId == category.Id)
+                    if (Model.Product.CategoryId == category.Id)
                     {
                         <option value="@category.Id" selected>@category.Name</option>
                     }
@@ -59,9 +59,12 @@
             <input type="hidden" name="ProductId" value="@Model.Product.Id" />
             <select name="DetailFieldId">
                 <option value="0">Выберите поле</option>
-                @foreach (var detailField in Model.DetailFields)
+                @if (Model.DetailFields != null)
                 {
-                    <option value="@detailField.Id">@detailField.Name</option>
+                    @foreach (var detailField in Model.DetailFields)
+                    {
+                        <option value="@detailField.Id">@detailField.Name</option>
+                    }
                 }
             </select>
             <input type="submit" value="Добавить" />
@@ -71,9 +74,12 @@
         <form asp-action="EditDeleteDetailField" method="post">
             <select name="ProductDetailFieldId">
                 <option value="0">Выберите поле</option>
-                @foreach (var productDetailField in Model.Product.ProductDetailFields)
+                @if (Model.Product.ProductDetailFields != null)
                 {
-                    <option value="@productDetailField.Id">@productDetailField.DetailField.Name</option>
+                    @foreach (var productDetailField in Model.Product.ProductDetailFields)
+                    {
+                        <option value="@productDetailField.Id">@productDetailField.DetailField.Name</option>
+                    }
                 }
             </select>
             <input type="submit" value="Удалить" />

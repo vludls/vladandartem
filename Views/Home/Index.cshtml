@@ -1,6 +1,6 @@
 @model vladandartem.ViewModels.Home.IndexViewModel
 @{
-ViewData["Title"] = "Shop";
+ViewData["Title"] = "Главная страница";
 }
 
 @section Scripts {
@@ -20,7 +20,6 @@ ViewData["Title"] = "Shop";
                 <li><a href="">Блог</a></li>
             </ul>
         </div>
-
         <div class="mainSlider">
             <ul class="slides">
                 <li>
@@ -36,7 +35,6 @@ ViewData["Title"] = "Shop";
                     <img src="~/images/slide4.jpg" alt="">
                 </li>
             </ul>
-
             <div class="buttons">
                 <div class="left">
                     <div class="arrowleft"></div>
@@ -45,7 +43,6 @@ ViewData["Title"] = "Shop";
                     <div class="arrowright"></div>
                 </div>
             </div>
-	
         </div>
     </div>
 </div>
@@ -56,33 +53,30 @@ ViewData["Title"] = "Shop";
         @foreach (var product in Model.products)
         {
             <li>
-                
-                    <div class="img">
-                        <img src="@product.ImgPath" alt="">
-                        <a href="~/Home/Product?ProductId=@product.Id"></a>
-                    </div>
-                    <p class="name">
-                        <a href="~/Home/Product?ProductId=@product.Id">@product.Name</a>
-                    </p>
-                    <p class="price">
-                        @product.Price р.
-                    </p>
-                    <div class="links">
-                        <form asp-action="AddCookie" method="post">
+                <div class="img">
+                    <img src="@product.ImgPath" alt="">
+                    <a href="~/Home/Product?ProductId=@product.Id"></a>
+                </div>
+                <p class="name">
+                    <a href="~/Home/Product?ProductId=@product.Id">@product.Name</a>
+                </p>
+                <p class="price">
+                    @product.Price р.
+                </p>
+                <div class="links">
+                    <form asp-action="AddCookie" method="post">
+                        <input type="hidden" name="id" value="@product.Id">
+                        <input value="@(product.Count <= 0 ? "нет в наличии" : "в корзину")" class="btn btn-primary" type="submit" @(product.Count <= 0 ? " disabled=\"disabled\"" : "")>
+                    </form>
+                    @if (User.IsInRole("admin"))
+                    {
+                        <a href="/home/Edit?id=@product.Id" class="btn btn-primary newicon"><i class="fas fa-pen"></i></a>
+                        <form action="~/Home/RemoveProduct" method="post" class="delete-products">
                             <input type="hidden" name="id" value="@product.Id">
-                            <input value="@(@product.Count <= 0 ? "нет в наличии" : "в корзину")" class="btn btn-primary" type="submit" @(@product.Count <= 0 ? " disabled=\"disabled\"" : "")>
+                            <button type="submit" class="btn btn-primary newicon"><i class="far fa-trash-alt"></i></button>
                         </form>
-
-                        @if (User.IsInRole("admin"))
-                        {
-                            <a href="/home/Edit?id=@product.Id" class="btn btn-primary newicon"><i class="fas fa-pen"></i></a>
-                            <form action="~/Home/RemoveProduct" method="post" class="delete-products">
-                                <input type="hidden" name="id" value="@product.Id">
-                                <button type="submit" class="btn btn-primary newicon"><i class="far fa-trash-alt"></i></button>
-                            </form>
-                        }
-                    </div>
-                
+                    }
+                </div>
             </li>
         }
         @if (User.IsInRole("admin"))
@@ -92,8 +86,7 @@ ViewData["Title"] = "Shop";
                 <img src="~/images/plus.png" alt="">
             </li>
         }
-        </ul>
-
+    </ul>
     <ul class="container pagination pagin">
         @{  
             int i = 0;
@@ -105,8 +98,5 @@ ViewData["Title"] = "Shop";
 
             <li class="@(i == Model.page ? "page-item active" : "page-item")"><a class="page-link" href="~/Home/Index?Page=@i">@(i + 1)</a></li>
         }
-
-        
     </ul>
-    
 </main>
