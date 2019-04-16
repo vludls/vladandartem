@@ -187,7 +187,7 @@ namespace vladandartem.Controllers
             return new EmptyResult();
         }
 
-        [HttpPost]
+        /*[HttpPost]
         public IActionResult EditEditDetailField(int ProductDetailFieldId, int DefinitionId)
         {
             ProductDetailField productDetailField = context.ProductDetailFields.First(n => n.Id == ProductDetailFieldId);
@@ -199,7 +199,7 @@ namespace vladandartem.Controllers
             context.SaveChanges();
 
             return new EmptyResult();
-        }
+        }*/
 
         [HttpGet]
         public IActionResult Product(int ProductId)
@@ -210,7 +210,7 @@ namespace vladandartem.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public IActionResult EditSave(EditViewModel evm, IFormFile fileImg)
+        public IActionResult EditSave(EditSaveModel esm, IFormFile fileImg)
         {
             if (ModelState.IsValid)
             {
@@ -221,17 +221,22 @@ namespace vladandartem.Controllers
                         FileMode.Create)
                     );
 
-                    evm.Product.ImgPath = $"/images/Products/{fileImg.FileName}";
+                    esm.Product.ImgPath = $"/images/Products/{fileImg.FileName}";
                 }
 
-                context.Products.Update(evm.Product);
+                context.Products.Update(esm.Product);
+
+                /*foreach (var productDFDefinition in esm.ProductDFDefinitions)
+                {
+                    productDFDefinition.
+                }*/
 
                 context.SaveChanges();
             }
 
             //evm.Categories = context.Categories.ToList();
 
-            return RedirectToAction("Edit", "Home", new { Id = evm.Product.Id });
+            return RedirectToAction("Edit", "Home", new { Id = esm.Product.Id });
         }
 
         [Authorize(Roles = "admin")]
