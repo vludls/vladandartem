@@ -22,7 +22,7 @@
         <form asp-action="ProductDetailsDefinitionAdd" method="post">
             <div class="form-group">
                 <label for="DetailFieldId">Выбрать поле</label>
-                <select name="DetailFieldId" class="form-control select" id="DetailFieldId">
+                <select name="DetailFieldId" class="form-control select add-new-field" id="DetailFieldId">
                     <option value="0">Выберите поле</option>
                     @foreach (var detailField in Model)
                     {
@@ -34,10 +34,10 @@
             </div>
             <button type="submit" class="btn btn-primary">Прикрепить</button>
         </form>
-        <form asp-action="ProductDetailsFieldDelete" method="post">
+        <form asp-action="ProductDetailsFieldDelete" method="post" class="del-field">
             <div class="form-group">
                 <label for="DetailFieldId">Удалить поле</label>
-                <select name="DetailFieldId" class="form-control" id="DetailFieldId">
+                <select name="DetailFieldId" class="form-control add-new-field" id="DetailFieldId">
                 <option value="0">Выберите поле</option>
                 @foreach (var field in Model)
                 {
@@ -53,7 +53,7 @@
         <li><p class="field-name">Поле</p><p class="select-value">Значение</p><p class="last-column">Действие</p></li>
         @foreach (var detailField in Model)
         {
-        <li>
+        <li class="list-detail-fields">
             <p class="field-name">@detailField.Name</p>
             <form asp-action="ProductDetailsDefinitionDelete" method="post">
                 <div class="select-value">
