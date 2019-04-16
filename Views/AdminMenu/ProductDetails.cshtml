@@ -19,14 +19,14 @@
             </div>
             <button type="submit" class="btn btn-primary">Добавить</button>
         </form>
-        <form asp-action="ProductDetailsDefinitionAdd" method="post">
+        <form asp-action="ProductDetailsDefinitionAdd" method="post" class="definition-add">
             <div class="form-group">
                 <label for="DetailFieldId">Выбрать поле</label>
                 <select name="DetailFieldId" class="form-control select add-new-field" id="DetailFieldId">
                     <option value="0">Выберите поле</option>
                     @foreach (var detailField in Model)
                     {
-                        <option value="@detailField.Id">@detailField.Name</option>
+                        <option value="@detailField.Id" id="@("o" + detailField.Id)">@detailField.Name</option>
                     }
                 </select>
                 <label for="DefinitionName">Добавить значение</label>
@@ -36,16 +36,16 @@
         </form>
         <form asp-action="ProductDetailsFieldDelete" method="post" class="del-field">
             <div class="form-group">
-                <label for="DetailFieldId">Удалить поле</label>
-                <select name="DetailFieldId" class="form-control add-new-field" id="DetailFieldId">
+                <label for="DetailFieldId-del">Удалить поле</label>
+                <select name="DetailFieldId" class="form-control add-new-field-1" id="DetailFieldId-del">
                 <option value="0">Выберите поле</option>
                 @foreach (var field in Model)
                 {
-                    <option value="@field.Id">@field.Name</option>
+                    <option value="@field.Id" id="@("odel" + field.Id)">@field.Name</option>
                 }
                 </select>
             </div>
-            <button type="submit" class="btn btn-primary">Удалить</button>
+            <button type="button" class="btn btn-primary" data-toggle="modal">Удалить</button>
         </form>
     </div>
     
@@ -53,23 +53,65 @@
         <li><p class="field-name">Поле</p><p class="select-value">Значение</p><p class="last-column">Действие</p></li>
         @foreach (var detailField in Model)
         {
-        <li class="list-detail-fields">
+        <li id="@("li" + detailField.Id)">
             <p class="field-name">@detailField.Name</p>
-            <form asp-action="ProductDetailsDefinitionDelete" method="post">
+            <form asp-action="ProductDetailsDefinitionDelete" method="post" class="delete-defininion">
                 <div class="select-value">
-                    <select name="DefinitionId" class="form-control">
+                    <select name="DefinitionId" class="form-control" id="@("d" + detailField.Id)">
                         <option value="0">Выберите значение</option>
                         @foreach (var definition in detailField.Definitions)
                         {
-                            <option value="@definition.Id">@definition.Name</option>
+                            <option value="@definition.Id" id="@("def" + definition.Id)">@definition.Name</option>
                         }
                     </select>
                 </div>
                 <div class="last-column">
-                    <button type="submit" class="btn btn-danger">Удалить</button>
+                    <button type="button" class="btn btn-danger" data-toggle="modal">Удалить</button>
                 </div>
             </form>
         </li>
         }
     </ul>
+
+    <div class="modal fade for-del-field" id="" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title">Подтвердите действие</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h6 data-text="Удалить поле "></h6>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-danger delete-field">Удалить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade for-del-def" id="" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title">Подтвердите действие</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h6 data-text="Удалить значение "></h6>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-danger delete-def">Удалить</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
