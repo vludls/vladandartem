@@ -47,11 +47,11 @@ namespace vladandartem.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddCategory([Required]int SectionId, [Required]string CategoryName)
+        public IActionResult AddCategory([Required]int sectionId, [Required]string categoryName)
         {
-            if (context.Sections.Find(SectionId) != null)
+            if (context.Sections.Find(sectionId) != null)
             {
-                Category category = new Category { Name = CategoryName, SectionId = SectionId };
+                Category category = new Category { Name = categoryName, SectionId = sectionId };
 
                 context.Categories.Add(category);
 
@@ -446,11 +446,11 @@ namespace vladandartem.Controllers
             return View(context.Sections.ToList());
         }
         [HttpPost]
-        public IActionResult SectionAdd([Required]string SectionName)
+        public IActionResult SectionAdd([Required]string sectionName)
         {
             if (ModelState.IsValid)
             {
-                Section section = new Section { Name = SectionName };
+                Section section = new Section { Name = sectionName };
 
                 context.Sections.Add(section);
 
@@ -462,11 +462,11 @@ namespace vladandartem.Controllers
             return new EmptyResult();
         }
         [HttpPost]
-        public IActionResult SectionDelete([Required]int SectionId)
+        public IActionResult SectionDelete([Required]int sectionId)
         {
             if (ModelState.IsValid)
             {
-                Section section = context.Sections.Find(SectionId);
+                Section section = context.Sections.Find(sectionId);
 
                 if (section != null)
                 {
@@ -474,7 +474,7 @@ namespace vladandartem.Controllers
 
                     context.SaveChanges();
 
-                    return Content(Convert.ToString(SectionId));
+                    return Content(Convert.ToString(sectionId));
                 }
             }
 
@@ -497,13 +497,13 @@ namespace vladandartem.Controllers
         }
 
         [HttpPost]
-        public IActionResult ProductDetailsFieldAdd([Required]string DetailFieldName)
+        public IActionResult ProductDetailsFieldAdd([Required]string detailFieldName)
         {
             if (ModelState.IsValid)
             {
-                if (!context.DetailFields.Any(n => n.Name == DetailFieldName))
+                if (!context.DetailFields.Any(n => n.Name == detailFieldName))
                 {
-                    DetailField detailField = new DetailField { Name = DetailFieldName };
+                    DetailField detailField = new DetailField { Name = detailFieldName };
                     context.DetailFields.Add(detailField);
 
                     context.SaveChanges();
@@ -516,11 +516,11 @@ namespace vladandartem.Controllers
         }
 
         [HttpPost]
-        public IActionResult ProductDetailsFieldDelete([Required]int DetailFieldId)
+        public IActionResult ProductDetailsFieldDelete([Required]int detailFieldId)
         {
             if (ModelState.IsValid)
             {
-                DetailField detailField = context.DetailFields.Find(DetailFieldId);
+                DetailField detailField = context.DetailFields.Find(detailFieldId);
 
                 if (detailField != null)
                 {
@@ -528,7 +528,7 @@ namespace vladandartem.Controllers
 
                     context.SaveChanges();
 
-                    return Content(Convert.ToString(DetailFieldId));
+                    return Content(Convert.ToString(detailFieldId));
                 }
             }
 
@@ -536,18 +536,24 @@ namespace vladandartem.Controllers
         }
 
         [HttpPost]
-        public IActionResult ProductDetailsDefinitionAdd([Required]int DetailFieldId, [Required]string DefinitionName)
+        public IActionResult ProductDetailsDefinitionAdd([Required]int detailFieldId, [Required]string definitionName)
         {
             if (ModelState.IsValid)
             {
-                if (context.DetailFields.Find(DetailFieldId) != null)
+                DetailField detailField = context.DetailFields.Include(n => n.Definitions).FirstOrDefault(n => n.Id == detailFieldId);
+
+                if (detailField != null)
                 {
-                    Definition definition = new Definition { Name = DefinitionName, DetailFieldId = DetailFieldId };
-                    context.Definitions.Add(definition);
+                    if (!detailField.Definitions.Any(n => n.Name == definitionName))
+                    {
+                        Definition definition = new Definition { Name = definitionName, DetailFieldId = detailFieldId };
+                        context.Definitions.Add(definition);
 
-                    context.SaveChanges();
+                        context.SaveChanges();
 
-                    return Content(JsonConvert.SerializeObject(new { DetailFieldId = DetailFieldId, DefinitionId = definition.Id, DefinitionName = definition.Name }));
+                        return Content(JsonConvert.SerializeObject(new { DetailFieldId = detailFieldId, DefinitionId = definition.Id, DefinitionName = definition.Name }));
+                    }
+                    
                     //context.Definition.Add(new DetailFieldDefinition { DetailFieldId = DetailFieldId, DefinitionId = Definition.Id });
                 }
             }
@@ -555,11 +561,11 @@ namespace vladandartem.Controllers
             return new EmptyResult();
         }
         [HttpPost]
-        public IActionResult ProductDetailsDefinitionDelete([Required]int DefinitionId)
+        public IActionResult ProductDetailsDefinitionDelete([Required]int definitionId)
         {
             if (ModelState.IsValid)
             {
-                Definition definition = context.Definitions.Find(DefinitionId);
+                Definition definition = context.Definitions.Find(definitionId);
 
                 if (definition != null)
                 {
@@ -567,7 +573,7 @@ namespace vladandartem.Controllers
 
                     context.SaveChanges();
 
-                    return Content(Convert.ToString(DefinitionId));
+                    return Content(Convert.ToString(definitionId));
                 }
             }
 
