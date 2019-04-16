@@ -16,6 +16,13 @@
             <label asp-for="Year"></label>
             <input asp-for="Year" class="form-control datepicker">
         </div>
+
+        <label asp-for="Roles"></label><br />
+        @foreach (var role in Model.Roles)
+        {
+            <input type="checkbox" name="Roles" value="@role.Name" @(Model.UserRoles.Contains(role.Name) ? "checked=\"checked\"": "")/> @role.Name<br />
+        }
+
         <button type="submit" class="btn btn-primary">Сохранить</button>
     </form>
 </main>
