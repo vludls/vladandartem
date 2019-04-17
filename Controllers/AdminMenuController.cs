@@ -590,6 +590,13 @@ namespace vladandartem.Controllers
 
                 if (definition != null)
                 {
+                    var productDetailFields = context.ProductDetailFields.Where(n => n.DefinitionId == definitionId);
+
+                    foreach (var productDetailField in productDetailFields)
+                    {
+                        productDetailField.DefinitionId = null;
+                    }
+
                     context.Definitions.Remove(definition);
 
                     context.SaveChanges();

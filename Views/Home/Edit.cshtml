@@ -52,7 +52,31 @@
                 <input type="number" class="form-control" id="q-id" min="0" name="product.count" value="@Model?.Product?.Count">
             </div>
             <button type="submit" class="btn btn-primary">Изменить</button>
-
+            <table>
+                @foreach (var productDetailField in Model.Product.ProductDetailFields)
+                {
+                    <tr>
+                        <td>@productDetailField.DetailField.Name</td>
+                        <td>
+                            <input type="hidden" name="ProductDetailFieldId" value="@productDetailField.Id" />
+                            <select name="DefinitionId">
+                                <option value="" selected>Пусто</option>
+                                @foreach (var definition in productDetailField.DetailField.Definitions)
+                                {
+                                    if (definition.Id == productDetailField.DefinitionId)
+                                    {
+                                        <option value="@definition.Id" selected>@definition.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@definition.Id">@definition.Name</option>
+                                    }
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                }
+            </table>
         </form>
         <hr />
         <form asp-action="EditAddDetailField" method="post">
@@ -85,31 +109,4 @@
             <input type="submit" value="Удалить" />
         </form>
         <hr />
-        <table>
-            @foreach (var productDetailField in Model.Product.ProductDetailFields)
-            {
-                <tr>
-                    <td>@productDetailField.DetailField.Name</td>
-                    <td>
-                        <form asp-action="EditEditDetailField" method="post">
-                            <input type="hidden" name="ProductDetailFieldId" value="@productDetailField.Id" />
-                            <select name="DefinitionId">
-                                @foreach (var definition in productDetailField.DetailField.Definitions)
-                                {
-                                    if (definition.Id == productDetailField.DefinitionId)
-                                    {
-                                        <option value="@definition.Id" selected>@definition.Name</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@definition.Id">@definition.Name</option>
-                                    }
-                                }
-                            </select>
-                            <input type="submit" value="Сохранить" />
-                        </form>
-                    </td>
-                </tr>
-            }
-        </table>
     </main>    

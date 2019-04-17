@@ -12,7 +12,7 @@ namespace vladandartem.Models
         public int ProductId { get; set; }
         public Product Product { get; set; }
 
-        public int DefinitionId { get; set; }
+        public int? DefinitionId { get; set; }
 
         public int DetailFieldId { get; set; }
         public DetailField DetailField { get; set; }

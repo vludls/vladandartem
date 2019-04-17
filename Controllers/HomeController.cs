@@ -224,12 +224,26 @@ namespace vladandartem.Controllers
                     esm.Product.ImgPath = $"/images/Products/{fileImg.FileName}";
                 }
 
-                context.Products.Update(esm.Product);
-
-                /*foreach (var productDFDefinition in esm.ProductDFDefinitions)
+                if (esm.ProductDetailFieldId != null)
                 {
-                    productDFDefinition.
-                }*/
+                    int fieldsCount = esm.ProductDetailFieldId.Count();
+
+                    // Проходим каждое добавленное поле и его определение
+                    for (int i = 0; i < fieldsCount; i++)
+                    {
+                        ProductDetailField productDetailField = context.ProductDetailFields
+                            .FirstOrDefault(n => n.Id == esm.ProductDetailFieldId[i]);
+
+                        if (productDetailField != null)
+                        {
+                            productDetailField.DefinitionId = esm.DefinitionId[i];
+
+                            context.ProductDetailFields.Update(productDetailField);
+                        }
+                    }
+                }
+
+                context.Products.Update(esm.Product);
 
                 context.SaveChanges();
             }
@@ -375,5 +389,18 @@ namespace vladandartem.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+    }
+
+    public class EditSaveModel
+    {
+        [Required]
+        public Product Product { get; set; }
+
+        public List<Category> Categories { get; set; }
+
+        public List<DetailField> DetailFields { get; set; }
+
+        public List<int> ProductDetailFieldId { get; set; }
+        public List<int?> DefinitionId { get; set; }
     }
 }

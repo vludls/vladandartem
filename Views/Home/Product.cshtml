@@ -29,7 +29,7 @@
         {
             <tr>
                 <td>@productDetailField.DetailField.Name</td>
-                <td>@(productDetailField.DetailField.Definitions.First(n => n.Id == productDetailField.DefinitionId).Name)</td>
+                <td>@(productDetailField.DefinitionId != null ? productDetailField.DetailField.Definitions.FirstOrDefault(n => n.Id == productDetailField.DefinitionId).Name : "Пусто")</td>
             </tr>
         }
     </table>
