@@ -1,6 +1,9 @@
 form.addandedit {
     
-    width: 300px;
+    width: 270px;
+}
+.for-add-fields > form {
+    margin-bottom: 10px;
 } 
 .imgProd {
     height: 500px;

@@ -6,36 +6,32 @@ $(document).ready(function (){
             type: "POST",
             data: form.serialize(),
             success: function (data) {
-                //alert(data);
-                $('.add-new-field').append('<option value="' + data + '" id="o' + data + '">' + $('#DetailFieldName').val() + '</option>');
-                $('.add-new-field-1').append('<option value="' + data + '" id="odel' + data + '">' + $('#DetailFieldName').val() + '</option>');
-                //$('.list-detail-fields:last:child').clone().appendTo($('.list-of-fields'));
-                //$('.list-of-fields:last-child').children('.field-name').text($('#DetailFieldName').val());
-                $('.list-of-fields').append('<li id="li' + data + '"><p class="field-name">' + $('#DetailFieldName').val() + '</p><form asp-action="ProductDetailsDefinitionDelete" method="post"><div class="select-value"><select name="DefinitionId" class="form-control" id="d' + data + '"><option value="0">Выберите значение</option></select></div><div class="last-column"><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#m' + data + '" id="id' + data + '">Удалить</button></div></form></li>');
-                $('#id' + data).click(function() {
-                    //alert($(this).attr('data-target'));
-                    //alert('!');
-                    
-                    var definsub = $(this);
-                    $('.for-del-def').attr('id', $(this).attr('data-target').substr(1));
-                    $('.delete-def').click(function() {
-                        $(definsub).closest('form').submit(function (e) {
-                            var deldef = $(this);
-                            $.ajax({
-                                url: "/AdminMenu/ProductDetailsDefinitionDelete",
-                                type: "POST",
-                                data: deldef.serialize(),
-                                success: function (data) {
-                                    //$(deldef + ' button').attr('data-target', '#' + data);
-                                    $('#def' + data).remove();  
-                                }
+                if (data.length != 0) {
+                    $('.add-new-field').append('<option value="' + data + '" id="o' + data + '">' + $('#DetailFieldName').val() + '</option>');
+                    $('.add-new-field-1').append('<option value="' + data + '" id="odel' + data + '">' + $('#DetailFieldName').val() + '</option>');
+                    $('.list-of-fields').append('<li id="li' + data + '"><p class="field-name">' + $('#DetailFieldName').val() + '</p><form asp-action="ProductDetailsDefinitionDelete" method="post"><div class="select-value"><select name="DefinitionId" class="form-control" id="d' + data + '"><option value="0">Выберите значение</option></select></div><div class="last-column"><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#m' + data + '" id="id' + data + '">Удалить</button></div></form></li>');
+                    $('#id' + data).click(function() {                
+                        var definsub = $(this);
+                        $('.for-del-def').attr('id', $(this).attr('data-target').substr(1));
+                        $('.delete-def').click(function() {
+                            $(definsub).closest('form').submit(function (e) {
+                                var deldef = $(this);
+                                $.ajax({
+                                    url: "/AdminMenu/ProductDetailsDefinitionDelete",
+                                    type: "POST",
+                                    data: deldef.serialize(),
+                                    success: function (data) {
+                                        $('#def' + data).remove();  
+                                    }
+                                });
+                                e.preventDefault();
                             });
-                            e.preventDefault();
-                        });
-                        $(definsub).closest('form').trigger('submit');
-                        $(this).prev().trigger('click');
-                    })
-                });
+                            $(definsub).closest('form').trigger('submit');
+                            $(this).prev().trigger('click');
+                        })
+                    });
+                    
+                };
                 $('#DetailFieldName').val('');
             }
         });
@@ -48,7 +44,6 @@ $(document).ready(function (){
             type: "POST",
             data: defform.serialize(),
             success: function (data) {
-                //alert(data);
                 var ids = JSON.parse(data);
                 $('#d' + ids["DetailFieldId"]).append('<option value="' + ids["DefinitionId"] + '" id="def' + ids["DefinitionId"] + '">' + ids["DefinitionName"] + '</option>');
                 $('#DefinitionName').val('');
@@ -63,7 +58,6 @@ $(document).ready(function (){
             type: "POST",
             data: delfield.serialize(),
             success: function (data) {
-                //alert(data);
                 $('#o' + data).remove();
                 $('#odel' + data).remove();
                 $('#li' + data).remove();
@@ -89,7 +83,6 @@ $(document).ready(function (){
                 type: "POST",
                 data: deldef.serialize(),
                 success: function (data) {
-                    //$(deldef + ' button').attr('data-target', '#' + data);
                     $('#def' + data).remove();  
                 }
             });
@@ -101,7 +94,6 @@ $(document).ready(function (){
     $('.last-column > button').each(function () {
         $(this).click(function() {
             var defsub = $(this);
-            //$(this).attr('data-target', '#del-def');
             $('.for-del-def').attr('id', $(this).attr('data-target').substr(1));
             $('.delete-def').click(function() {
                 $(defsub).closest('form').trigger('submit');

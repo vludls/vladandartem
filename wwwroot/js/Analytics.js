@@ -2,6 +2,22 @@ $(document).ready(function () {
     let date = new Date()
     let offset = -date.getTimezoneOffset() / 60;
 
+    $('#select-category').on('change', function() {
+        var categ = $(this);
+        $.ajax({
+            url: "/AdminMenu/AnalyticsLoadProductsOfChoosedCategory",
+            type: "POST",
+            data: { categoryId: $(categ).val() },
+            success: function (data) {
+                var products = JSON.parse(data);  
+                $('#select-product-name > option:first-child').siblings().remove();
+                for (var i = 0; i < $(products).length; i++) {
+                    $('#select-product-name').append('<option value="' + products[i]["CategoryId"] + '">' + products[i]["Name"] + '</option>');
+                }
+            }
+        });
+    });
+
     $("#first-input-hidden").val(offset);
     $('.result > ul').hide();
     $('.analytics > form').submit(function (e) {
