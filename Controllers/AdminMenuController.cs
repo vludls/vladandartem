@@ -223,6 +223,27 @@ namespace vladandartem.Controllers
 
             return View(model);
         }
+        [HttpGet]
+        public IActionResult AnalyticsLoadProductsOfChoosedCategory([Required]int categoryId)
+        {
+            if (ModelState.IsValid)
+            {
+                if (context.Categories.Any(n => n.Id == categoryId))
+                {
+                    Category category = context.Categories.Include(n => n.Products)
+                        .FirstOrDefault(n => n.Id == categoryId);
+
+                    return Content(JsonConvert.SerializeObject(category.Products));
+                }
+                else
+                {
+                    return Content(JsonConvert.SerializeObject(context.Products.ToList()));
+                }
+            }
+            
+            return new EmptyResult();
+        }
+
         [HttpPost]
         public IActionResult LoadGeneralAnalytics(LoadAnalytics model)
         {
