@@ -51,62 +51,58 @@
                 <label for="q-id">Количество на складе</label>
                 <input type="number" class="form-control" id="q-id" min="0" name="product.count" value="@Model?.Product?.Count">
             </div>
-            <button type="submit" class="btn btn-primary">Изменить</button>
-            <table>
+            <div class="form-group">
                 @foreach (var productDetailField in Model.Product.ProductDetailFields)
-                {
-                    <tr>
-                        <td>@productDetailField.DetailField.Name</td>
-                        <td>
-                            <input type="hidden" name="ProductDetailFieldId" value="@productDetailField.Id" />
-                            <select name="DefinitionId">
-                                <option value="" selected>Пусто</option>
-                                @foreach (var definition in productDetailField.DetailField.Definitions)
-                                {
-                                    if (definition.Id == productDetailField.DefinitionId)
-                                    {
-                                        <option value="@definition.Id" selected>@definition.Name</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@definition.Id">@definition.Name</option>
-                                    }
-                                }
-                            </select>
-                        </td>
-                    </tr>
+                {    
+                    <input type="hidden" name="ProductDetailFieldId" value="@productDetailField.Id" />
+                    <label for="@("ed" + productDetailField.Id)">@productDetailField.DetailField.Name</label>
+                    <select name="DefinitionId" class="form-control select" id="@("ed" + productDetailField.Id)">
+                        <option value="" selected>Пусто</option>
+                        @foreach (var definition in productDetailField.DetailField.Definitions)
+                        {
+                            if (definition.Id == productDetailField.DefinitionId)
+                            {
+                                <option value="@definition.Id" selected>@definition.Name</option>
+                            }
+                            else
+                            {
+                                <option value="@definition.Id">@definition.Name</option>
+                            }
+                        }
+                    </select>  
                 }
-            </table>
-        </form>
-        <hr />
-        <form asp-action="EditAddDetailField" method="post">
-            <input type="hidden" name="ProductId" value="@Model.Product.Id" />
-            <select name="DetailFieldId">
-                <option value="0">Выберите поле</option>
-                @if (Model.DetailFields != null)
-                {
-                    @foreach (var detailField in Model.DetailFields)
-                    {
-                        <option value="@detailField.Id">@detailField.Name</option>
-                    }
-                }
-            </select>
-            <input type="submit" value="Добавить" />
+            </div>
+            <button type="submit" class="btn btn-primary">Изменить</button>
         </form>
 
-        <hr />
-        <form asp-action="EditDeleteDetailField" method="post">
-            <select name="ProductDetailFieldId">
-                <option value="0">Выберите поле</option>
-                @if (Model.Product.ProductDetailFields != null)
-                {
-                    @foreach (var productDetailField in Model.Product.ProductDetailFields)
+        <div class="for-add-fields">
+            <form asp-action="EditAddDetailField" method="post" class="addandedit">
+                <input type="hidden" name="ProductId" value="@Model.Product.Id" />
+                <select name="DetailFieldId" class="form-control select">
+                    <option value="0">Выберите поле</option>
+                    @if (Model.DetailFields != null)
                     {
-                        <option value="@productDetailField.Id">@productDetailField.DetailField.Name</option>
+                        @foreach (var detailField in Model.DetailFields)
+                        {
+                            <option value="@detailField.Id">@detailField.Name</option>
+                        }
                     }
-                }
-            </select>
-            <input type="submit" value="Удалить" />
-        </form>
-        <hr />
+                </select>
+                <button type="submit" class="btn btn-primary">Добавить</button>
+            </form>
+
+            <form asp-action="EditDeleteDetailField" method="post">
+                <select name="ProductDetailFieldId" class="form-control select">
+                    <option value="0">Выберите поле</option>
+                    @if (Model.Product.ProductDetailFields != null)
+                    {
+                        @foreach (var productDetailField in Model.Product.ProductDetailFields)
+                        {
+                            <option value="@productDetailField.Id">@productDetailField.DetailField.Name</option>
+                        }
+                    }
+                </select>
+                <button type="submit" class="btn btn-primary">Удалить</button>
+            </form>
+        </div>
     </main>    

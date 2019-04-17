@@ -223,7 +223,7 @@ namespace vladandartem.Controllers
 
             return View(model);
         }
-        [HttpGet]
+        [HttpPost]
         public IActionResult AnalyticsLoadProductsOfChoosedCategory([Required]int categoryId)
         {
             if (ModelState.IsValid)
