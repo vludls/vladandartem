@@ -80,6 +80,7 @@ namespace vladandartem.ClassHelpers
         public int Id { get; set; }
         public int? CartId { get; set; }
         [ForeignKey("CartId")]
+        [JsonIgnore]
         public Cart Cart { get; set; }
 
         public int? OrderId { get; set; }

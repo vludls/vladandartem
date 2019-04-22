@@ -1,0 +1,55 @@
+@model List<vladandartem.ClassHelpers.CartProduct>
+@{
+    ViewData["Title"] = "Shop";
+}
+
+@section Scripts {
+    <!--<script src="~/js/cart.js"></script>-->
+    <script src="~/js/cart-vue.js"></script>
+}
+
+@Html.Partial("_GetTabs", new vladandartem.ViewModels.PersonalArea.GetTabsViewModel { SectionId = 2 })
+
+<main class="container lop" id="cart">
+    <div class="list">
+        @if (Model.Count() > 0)
+        {
+            <ul>
+                @foreach (var element in Model)
+                {
+                    <li>
+                        <form action="~/Home/RemoveProductCart" method="post">
+                            <input type="hidden" name="id" value="@element.Product.Id" id="@("hidden" + element.Product.Id)">
+                            <div class="im-in-cart">
+                                <img src="@element.Product.ImgPath" alt="">
+                            </div>
+                            <p class="name-in-cart">
+                                @element.Product.Name
+                            </p>
+                            <div class="quantity">
+                                <span>Количество:</span>
+                                <input type="hidden" value="@element.Product.Price" class="hidden">
+                                <input type="number" value="@element.Count" min="1" name="count" class="form-control q" data-id="@element.Product.Id"><br>
+                                <span>На складе: </span><span id="@("count" + element.Product.Id)">@element.Product.Count</span>
+                            </div>
+                            <p class="price-in-cart">
+                                <span id="@("price" + element.Product.Id)">@element.Product.Price</span> р.
+                            </p>
+                            <div>
+                                <button type="submit" name="delfromcart" class="btn btn-primary newicon"><i class="far fa-trash-alt"></i></button>
+                            </div>
+                        </form>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <h1 class="empty">Корзина пуста</h1>
+        }
+    </div>
+    <form asp-action="CartOrder" method="post" class="continue">
+        <p class="total">Итоговая сумма: <span class="total-price"></span><span>р.</span></p>
+        <input type="submit" value="Заказать" class="btn btn-primary btn-lg btn-block">
+    </form>
+</main>

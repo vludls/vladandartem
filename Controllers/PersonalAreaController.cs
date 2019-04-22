@@ -82,7 +82,12 @@ namespace vladandartem.Controllers
             return View(buff.Order.OrderByDescending(n => n.Number).ToList());
         }
         [HttpGet]
-        public async Task<IActionResult> Cart()
+        public IActionResult Cart()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> CartGetCartProducts()
         {
             //myDb.Categories.Include
             User user = await userManager.GetUserAsync(HttpContext.User);
@@ -101,24 +106,9 @@ namespace vladandartem.Controllers
             {
                 return NotFound();
             }
-            //var orders = myDb.Orders.Where(order => order.UserId == user.Id);
-
-            //List<CartProduct> cartProduct =
-            //JsonConvert.DeserializeObject<List<CartProduct>>(user.CartJSON);
-            /*
-            Cart cart = new Cart(HttpContext.Session, "cart");
-
-            var products = from element in cart.Decode()
-                        let buff = myDb.Products.Find(element.ProductId)
-                        where buff != null
-                        select new CartProduct {
-                            ProductId = element.ProductId,
-                            product = buff,
-                            ProductCount = element.ProductCount
-                        };
-            */
-            return View(buff.Cart.CartProducts);
+            return Content(JsonConvert.SerializeObject(buff.Cart.CartProducts));
         }
+
         [HttpPost]
         public async Task<IActionResult> CartOrder()
         {
@@ -130,7 +120,7 @@ namespace vladandartem.Controllers
             foreach (var cartProduct in buff.Cart.CartProducts)
             {
                 if(cartProduct.Count > cartProduct.Product.Count)
-                    ModelState.AddModelError(string.Empty, $"{cartProduct.Product.Name}: на складе есть только лишь {cartProduct.Product.Count} шт. товара, в заказе указано {cartProduct.Count}");
+                    ModelState.AddModelError(string.Empty, $"{cartProduct.Product.Name}: пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ {cartProduct.Product.Count} пїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ {cartProduct.Count}");
             }
 
             if (!ModelState.IsValid)
