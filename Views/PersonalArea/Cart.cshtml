@@ -14,7 +14,7 @@
     <div>{{ products }}</div>
     <div class="list">
         <ul>
-            <li v-for="product in products">
+            <li v-for="(product, index) in products">
                 <form action="~/Home/RemoveProductCart" method="post">
                     <div class="im-in-cart">
                         <img :src="product.Product.ImgPath" alt="">
@@ -24,12 +24,12 @@
                     </p>
                     <div class="quantity">
                         <span>Количество:</span>
-                        <input type="hidden" v-model="priceOfUnit" class="hidden">
-                        <input type="number" v-model="quantity" min="1" name="count" class="form-control q"><br>
+                        <input type="number" v-model="product.Count" min="1" name="count" class="form-control q"><br>
                         <span>На складе: </span><span> {{ product.Product.Count }} </span>
                     </div>
                     <p class="price-in-cart">
-                        <span ref="price">{{ product.Product.Price }}</span> р.
+                        <span>{{ product.Product.Price * product.Count }}</span> р.
+                        <input type="hidden">
                     </p>
                     <div>
                         <button type="submit" name="delfromcart" class="btn btn-primary newicon"><i class="far fa-trash-alt"></i></button>
