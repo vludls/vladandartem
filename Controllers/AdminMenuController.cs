@@ -132,9 +132,10 @@ namespace vladandartem.Controllers
             {
                 return NotFound();
             }
-            
 
-            EditUserViewModel euvm = new EditUserViewModel {
+
+            EditUserViewModel euvm = new EditUserViewModel
+            {
                 Email = user.Email,
                 Year = user.Year,
                 UserRoles = await userManager.GetRolesAsync(user),
@@ -240,7 +241,7 @@ namespace vladandartem.Controllers
                     return Content(JsonConvert.SerializeObject(context.Products.ToList()));
                 }
             }
-            
+
             return new EmptyResult();
         }
 
@@ -439,22 +440,15 @@ namespace vladandartem.Controllers
                 {
                     day = new DayState(datePostBuff);
 
-                    day.Sales += product.Count;
-                    day.Revenue += product.Count * product.Product.Price;
-
-                    lavmItem.Sales += product.Count;
-                    lavmItem.Revenue += product.Count * product.Product.Price;
-
                     month.Days.Add(day);
                 }
-                else
-                {
-                    day.Sales += product.Count;
-                    day.Revenue += product.Count * product.Product.Price;
 
-                    lavmItem.Sales += product.Count;
-                    lavmItem.Revenue += product.Count * product.Product.Price;
-                }
+                day.Sales += product.Count;
+                day.Revenue += product.Count * product.Product.Price;
+
+                lavmItem.Sales += product.Count;
+                lavmItem.Revenue += product.Count * product.Product.Price;
+
             }
 
             return Content(JsonConvert.SerializeObject(productAnalytics.Skip(model.LastItemId).Take(10)));
@@ -539,21 +533,19 @@ namespace vladandartem.Controllers
         [HttpPost]
         public IActionResult ProductDetailsFieldDelete([Required]int detailFieldId)
         {
-            if (ModelState.IsValid)
-            {
-                DetailField detailField = context.DetailFields.Find(detailFieldId);
+            if (!ModelState.IsValid)
+                return new EmptyResult();
 
-                if (detailField != null)
-                {
-                    context.DetailFields.Remove(detailField);
+            DetailField detailField = context.DetailFields.Find(detailFieldId);
 
-                    context.SaveChanges();
+            if (detailField == null)
+                return new EmptyResult();
 
-                    return Content(Convert.ToString(detailFieldId));
-                }
-            }
+            context.DetailFields.Remove(detailField);
 
-            return new EmptyResult();
+            context.SaveChanges();
+
+            return Content(Convert.ToString(detailFieldId));
         }
 
         [HttpPost]
@@ -574,7 +566,7 @@ namespace vladandartem.Controllers
 
                         return Content(JsonConvert.SerializeObject(new { DetailFieldId = detailFieldId, DefinitionId = definition.Id, DefinitionName = definition.Name }));
                     }
-                    
+
                     //context.Definition.Add(new DetailFieldDefinition { DetailFieldId = DetailFieldId, DefinitionId = Definition.Id });
                 }
             }
