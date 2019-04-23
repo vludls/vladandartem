@@ -23,8 +23,7 @@ new Vue({
     },
     SaveQuantity: function (productId, productCount, productCountOnStore) {
       axios
-      .post("/Home/CartChangeProductNum",
-      null, { 
+      .post("/Home/CartChangeProductNum", null, { 
         params: {
           id: productId,
           count: productCount
