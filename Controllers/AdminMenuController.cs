@@ -84,8 +84,15 @@ namespace vladandartem.Controllers
         [HttpGet]
         public IActionResult Users()
         {
-            return View(userManager.Users.ToList());
+            return View();
         }
+
+        [HttpPost]
+        public IActionResult GetUsers()
+        {
+            return Content(JsonConvert.SerializeObject(userManager.Users.ToList()));
+        }
+
 
         [HttpGet]
         public IActionResult CreateUser()

@@ -11,38 +11,42 @@
 @Html.Partial("_GetTabs", new vladandartem.ViewModels.PersonalArea.GetTabsViewModel { SectionId = 2 })
 
 <main class="container lop" id="cart">
-    <div>{{ products }}</div>
-    <div class="list">
-        <ul>
-            <li v-for="(product, index) in products">
-                <form action="~/Home/RemoveProductCart" method="post">
-                    <div class="im-in-cart">
-                        <img :src="product.Product.ImgPath" alt="">
-                    </div>
-                    <p class="name-in-cart">
-                        {{ product.Product.Name }}
-                    </p>
-                    <div class="quantity">
-                        <span>Количество:</span>
-                        <input type="number" v-model="product.Count" min="1" name="count" class="form-control q"><br>
-                        <span>На складе: </span><span> {{ product.Product.Count }} </span>
-                    </div>
-                    <p class="price-in-cart">
-                        <span>{{ product.Product.Price * product.Count }}</span> р.
-                        <input type="hidden">
-                    </p>
-                    <div>
-                        <button type="submit" name="delfromcart" class="btn btn-primary newicon"><i class="far fa-trash-alt"></i></button>
-                    </div>
-                </form>
-            </li>
-        </ul>
-
-        <h1 class="empty">Корзина пуста</h1>
-        
-    </div>
-    <form asp-action="CartOrder" method="post" class="continue">
-        <p class="total">Итоговая сумма: <span class="total-price"></span><span>р.</span></p>
-        <input type="submit" value="Заказать" class="btn btn-primary btn-lg btn-block">
-    </form>
+    <!--<div>{{ products }}</div>-->
+    <template v-if="products.length != 0">
+        <div class="list">
+            <ul>
+                <li v-for="product in products">
+                    <form action="~/Home/RemoveProductCart" method="post">
+                        <div class="im-in-cart">
+                            <img :src="product.Product.ImgPath" alt="">
+                        </div>
+                        <p class="name-in-cart">
+                            {{ product.Product.Name }}
+                        </p>
+                        <div class="quantity">
+                            <span>Количество:</span>
+                            <input type="number" min="1" name="count" class="form-control q"
+                                v-on:input="SetTotalPrice" 
+                                v-on:change="SaveQuantity(product.Product.Id, product.Count, product.Product)" 
+                                v-model="product.Count"   
+                            >
+                            <br>
+                            <span>На складе: </span><span> {{ product.Product.Count }} </span>
+                        </div>
+                        <p class="price-in-cart">
+                            <span>{{ product.Product.Price * product.Count }}</span> р.
+                        </p>
+                        <div>
+                            <button type="submit" name="delfromcart" class="btn btn-primary newicon"><i class="far fa-trash-alt"></i></button>
+                        </div>
+                    </form>
+                </li>
+            </ul>   
+        </div>
+        <form asp-action="CartOrder" method="post" class="continue">
+            <p class="total">Итоговая сумма: <span class="total-price">{{ totalPrice }}</span><span>р.</span></p>
+            <input type="submit" value="Заказать" class="btn btn-primary btn-lg btn-block">
+        </form>
+    </template>
+    <h1 class="empty" v-else>Корзина пуста</h1>
 </main>
