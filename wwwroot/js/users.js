@@ -1,4 +1,4 @@
-$(document).ready(modalForDelete);
+/*$(document).ready(modalForDelete);
 function modalForDelete() {
     $('.centering > button').each(forAddCategory);
 };
@@ -15,4 +15,18 @@ $('.user-delete').submit(function (e) {
         }
     });
     e.preventDefault();
+})*/
+new Vue ({
+    el: '#users',
+    data: {
+        users: []
+    },
+    mounted: function () {
+        axios
+            .post('/AdminMenu/GetUsers')
+            .then(response => {
+                this.users = response.data;
+                
+            });
+      },
 })

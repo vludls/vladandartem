@@ -6,24 +6,24 @@
 
 @Html.Partial("_GetTabs", new vladandartem.ViewModels.AdminMenu.GetTabsViewModel { SectionId = 2 })
 
-<main class="container admin">
+<main class="container admin" id="users">
+    <div>{{ users }}</div>
     <ul class="users">
         <li><p>E-mail</p><p>Дата рождения</p><p>Редактирование</p><p>Удаление</p></li>
-        @foreach (var user in Model)
-        {
-            <li id="@("u" + user.Id)">
-                <p>@user.Email</p>
-                <p>@user.Year</p>
-                <p class="centering">
-                    <a asp-action="EditUser" asp-route-id="@user.Id" class="btn btn-primary">Изменить</a>
-                </p>
-                <div class="centering">
-                    <button type="submit" class="btn btn-danger delete-user" data-toggle="modal" data-route-id="@user.Id" data-target="@("#a" + user.Id)">
-                        Удалить
-                    </button>
-                </div>
-            </li>
-        }
+        
+        <li v-for="user in users">
+            <p>{{ user.UserName }}</p>
+            <p>{{ user.Year }}</p>
+            <p class="centering">
+                <a href="~/AdminMenu/EditUser?id=" class="btn btn-primary">Изменить</a>
+            </p>
+            <div class="centering">
+                <button type="submit" class="btn btn-danger delete-user" data-toggle="modal" data-target="">
+                    Удалить
+                </button>
+            </div>
+        </li>
+        
     </ul>
 
     <div class="modal fade" id="" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
@@ -41,7 +41,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary close-modal" data-dismiss="modal">Закрыть</button>
-                    <form method="post" asp-action="DeleteUser" class="user-delete">
+                    <form method="post" action="~/AdminMenu/EditUser" class="user-delete">
                         <input type="hidden" name="id">
                         <button type="submit" class="btn btn-danger">Удалить</button>
                     </form>
