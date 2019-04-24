@@ -200,7 +200,7 @@ namespace vladandartem.Controllers
 
             User findedUser = await _userManager.FindByIdAsync(Convert.ToString(id));
 
-            if (findedUser != null || mainUser != findedUser)
+            if (findedUser != null || mainUser == findedUser)
                 return Content(JsonConvert.SerializeObject(new { UserId = 0 }));
 
             findedUser = _userManager.Users.Where(u => u.Id == findedUser.Id)
