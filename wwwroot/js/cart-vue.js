@@ -3,6 +3,10 @@ new Vue({
   data: {
     products: [],
     totalPrice: 0,
+    modalId: 'id',
+    id: '',
+    selectProduct: '',
+    ProductId: []
   },
   mounted: function () {
     axios
@@ -32,6 +36,28 @@ new Vue({
       .then(response => {
         productCountOnStore.Count = response.data;
       });
+    },
+    activateModal: function (productId, productName) {
+      this.modalId = 'id';
+      this.modalId += productId;
+      this.selectProduct = '';
+      this.selectProduct += productName;
+      this.id = '';
+      this.id += productId
+    },
+    deleteUser: function (event) {
+      const data = new FormData(document.querySelector('.product-delete'));
+      data.append('id', this.id);
+      axios
+      .post('/Home/RemoveProductCart', data 
+      )
+      .then(response => {
+          this.ProductId.push(response.data.CartProductId);
+      });
+      event.preventDefault();
+      },
+    closeModal: function() {
+        $('.close-modal').trigger('click');
     }
   }
 })
