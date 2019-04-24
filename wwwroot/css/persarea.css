@@ -18,6 +18,10 @@
         display: flex;
         justify-content: space-between;
     }
+    .hide-order {
+        height: 0;
+        overflow: hidden;
+    }
         .status {
             transform: translateX(210px);
             width: 165px;

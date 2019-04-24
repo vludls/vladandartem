@@ -10,34 +10,30 @@
 @Html.Partial("_GetTabs", new vladandartem.ViewModels.PersonalArea.GetTabsViewModel { SectionId = 3 })
 
 <main class="container pa" id="paid-products">
-    <div>{{ orders }}</div>
-    <div class="list-of-orders">
+    <div class="list-of-orders" v-scroll="scrolling">
         <ul>
             <li class="order" v-for="order in orders">
                 <div class="header-of-order">
                     <p>Заказ № {{ order.Number }}</p>
                     <div class="status">
-                        
-                            <span class="btn btn-success">Оплачено</span>
-                        
-                            <span class="btn btn-warning">Ожидается оплата</span>
-                        
+                        <span class="btn btn-success" v-if="order.IsPaid">Оплачено</span>
+                        <span class="btn btn-warning" v-else>Ожидается оплата</span>
                     </div>
                     <div class="open-order"><i class="fas fa-chevron-circle-down"></i></div>
                 </div>
                 <div>
                     <ul>
                         <li><p>Товар</p><p>Цена</p><p>Количество</p><p>Стоимость</p></li>
-                        <li><p>Название</p><p>3500 р.</p><p>5</p><p>3500 * 5 р.</p></li>
+                        <li v-for="product in order.CartProducts"><p>{{ product.Product.Name }}</p><p>{{ product.Product.Price }} р.</p><p>{{ product.Count }}</p><p>{{ product.Product.Price * product.Count }} р.</p></li>
                     </ul>
                     <div class="order-cost">
                         <div class="buy">
-                                <form method="post" action="PayOrder">
+                                <form method="post" action="PayOrder" v-if="!order.IsPaid">
                                     <button type="submit" class="btn btn-success">Оплатить</button>
                                 </form>
                         </div>
                         <div class="cost-of-order">
-                            <span>Cтоимость заказа: 7000 р.</span>
+                            <span>Cтоимость заказа: {{ order.SummaryPrice }} р.</span>
                         </div>
                     </div>
                 </div>
