@@ -11,14 +11,14 @@
     <ul class="users">
         <li><p>E-mail</p><p>Дата рождения</p><p>Редактирование</p><p>Удаление</p></li>
         
-        <li v-for="user in users">
+        <li v-for="user in users" :id="user.Id" v-if="user.Id != UserId">
             <p>{{ user.UserName }}</p>
             <p>{{ user.Year }}</p>
             <p class="centering">
-                <a href="~/AdminMenu/EditUser?id=" class="btn btn-primary">Изменить</a>
+                <a v-on:click="setLink(user.Id)" :href="editUser" class="btn btn-primary">Изменить</a>
             </p>
             <div class="centering">
-                <button type="submit" class="btn btn-danger delete-user" data-toggle="modal" data-target="">
+                <button v-on:click="activateModal(user.Id, user.UserName)" type="submit" class="btn btn-danger delete-user" data-toggle="modal" :data-target="'#' + modalId">
                     Удалить
                 </button>
             </div>
@@ -26,7 +26,7 @@
         
     </ul>
 
-    <div class="modal fade" id="" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    <div class="modal fade" :id="modalId" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -37,12 +37,12 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <h6 data-text="Удалить пользователя "></h6>
+                    <h6 data-text="Удалить пользователя ">Удалить пользователя {{ user }}?</h6>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary close-modal" data-dismiss="modal">Закрыть</button>
-                    <form method="post" action="~/AdminMenu/EditUser" class="user-delete">
-                        <input type="hidden" name="id">
+                    <form v-on:submit="deleteUser($event)" method="post" action="~/AdminMenu/DeleteUser" class="user-delete" ref="userDelete">
+                        <input type="hidden" name="id" :value="id" ref="userDelete">
                         <button type="submit" class="btn btn-danger">Удалить</button>
                     </form>
                 </div>
