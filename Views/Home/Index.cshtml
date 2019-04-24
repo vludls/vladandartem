@@ -50,7 +50,7 @@ ViewData["Title"] = "Главная страница";
 
 <main>
     <ul class="container products">
-        @foreach (var product in Model.products)
+        @foreach (var product in Model.Products)
         {
             <li>
                 <div class="img">
@@ -90,13 +90,13 @@ ViewData["Title"] = "Главная страница";
     <ul class="container pagination pagin">
         @{  
             int i = 0;
-            i = (Model.page >= 4 ? i - 2 : i);
+            i = (Model.Page >= 4 ? i - 2 : i);
         }
-        @for (int j = 1; i < Model.pagesCount; i++, j++)
+        @for (int j = 1; i < Model.PagesCount; i++, j++)
         { 
             if(j > 5) { break; }
 
-            <li class="@(i == Model.page ? "page-item active" : "page-item")"><a class="page-link" href="~/Home/Index?Page=@i">@(i + 1)</a></li>
+            <li class="@(i == Model.Page ? "page-item active" : "page-item")"><a class="page-link" href="~/Home/Index?Page=@i&searchArgument=@Model.SearchArgument">@(i + 1)</a></li>
         }
     </ul>
 </main>

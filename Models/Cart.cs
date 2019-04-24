@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using vladandartem.ClassHelpers;
+using Microsoft.AspNetCore;
 using Newtonsoft.Json;
 
 namespace vladandartem.Models

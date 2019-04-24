@@ -8,10 +8,10 @@ namespace vladandartem.ViewModels.Home
     public class AddViewModel
     {
         [Required]
-        public Product product { get; set; }
+        public Product Product { get; set; }
 
         [Required(ErrorMessage = "Добавьте изображение!")]
-        public IFormFile fileImg { get; set;}
-        public IEnumerable<Category> categories { get; set; }
+        public IFormFile FileImg { get; set;}
+        public List<Category> Categories { get; set; }
     }
 }
