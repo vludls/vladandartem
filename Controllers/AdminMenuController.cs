@@ -200,22 +200,22 @@ namespace vladandartem.Controllers
 
             User findedUser = await _userManager.FindByIdAsync(Convert.ToString(id));
 
-            if (findedUser != null && mainUser != findedUser)
-            {
-                var buff = _userManager.Users.Where(u => u.Id == findedUser.Id)
-                    .Include(u => u.Cart)
-                    .ThenInclude(u => u.CartProducts)
-                    .ThenInclude(u => u.Product)
-                    .FirstOrDefault();
+            if (findedUser != null || mainUser != findedUser)
+                return Content(JsonConvert.SerializeObject(new { UserId = 0 }));
 
-                _context.Cart.Remove(buff.Cart);
+            findedUser = _userManager.Users.Where(u => u.Id == findedUser.Id)
+                .Include(u => u.Cart)
+                .ThenInclude(u => u.CartProducts)
+                .ThenInclude(u => u.Product)
+                .FirstOrDefault();
 
-                _context.SaveChanges();
+            _context.Cart.Remove(findedUser.Cart);
 
-                await _userManager.DeleteAsync(findedUser);
-            }
+            _context.SaveChanges();
 
-            return Content(Convert.ToString(id));
+            await _userManager.DeleteAsync(findedUser);
+
+            return Content(JsonConvert.SerializeObject(new { UserId = id }));
         }
 
         /* Ниже идет раздел связанный с аналитикой */

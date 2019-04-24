@@ -23,101 +23,75 @@ namespace vladandartem.Controllers
     [Authorize]
     public class PersonalAreaController : Controller
     {
-        private readonly ProductContext myDb;
-        private readonly UserManager<User> userManager;
+        private readonly ProductContext _context;
+        private readonly UserManager<User> _userManager;
 
         public PersonalAreaController(ProductContext context, UserManager<User> userManager)
         {
-            myDb = context;
-            this.userManager = userManager;
+            _context = context;
+            _userManager = userManager;
         }
 
         [HttpGet]
-        public IActionResult Main()
+        public ViewResult Main()
         {
             return View();
         }
         [HttpPost]
-        public IActionResult PayOrder(int id)
+        public RedirectToActionResult PayOrder(int id)
         {
-            Order order = myDb.Orders.Find(id);
+            Order order = _context.Orders.Find(id);
 
             order.IsPaid = true;
 
             order.OrderTime = DateTime.UtcNow;
 
-            myDb.SaveChanges();
+            _context.SaveChanges();
 
             return RedirectToAction("PaidProducts");
         }
         [HttpGet]
-        public async Task<IActionResult> PaidProducts()
+        public async Task<ViewResult> PaidProducts()
         {
-            User user = await userManager.GetUserAsync(HttpContext.User);
+            User user = await _userManager.GetUserAsync(HttpContext.User);
 
-            var buff = userManager.Users.Include(u => u.Order)
+            user = _userManager.Users.Include(u => u.Order)
             .ThenInclude(u => u.CartProducts)
             .ThenInclude(u => u.Product)
             .FirstOrDefault(u => u.Id == user.Id);
 
-            if (buff == null)
-                return NotFound();
-
-            /*Cart cart = new Cart(HttpContext.Session, "cart");
-
-            var cartProducts = from product in cart.Decode()
-                    let buff = myDb.Products.Find(product.ProductId)
-                    where buff != null
-                    select buff;
-
-            Cart cartPaid = new Cart(HttpContext.Session, "paid");
-
-            var paidProducts = from product in cartPaid.Decode()
-                    let buff = myDb.Products.Find(product.ProductId)
-                    where buff != null
-                    select new CartProduct { ProductId = product.ProductId, product = buff, ProductCount = product.ProductCount };
-            
-            MainViewModel mvm = new MainViewModel{ paidProducts = paidProducts };
-            */
-            return View(buff.Order.OrderByDescending(n => n.Number).ToList());
+            return View(user.Order.OrderByDescending(n => n.Number).ToList());
         }
         [HttpGet]
-        public IActionResult Cart()
+        public ViewResult Cart()
         {
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> CartGetCartProducts()
+        public async Task<ContentResult> CartGetCartProducts()
         {
-            //myDb.Categories.Include
-            User user = await userManager.GetUserAsync(HttpContext.User);
+            User user = await _userManager.GetUserAsync(HttpContext.User);
 
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            var buff = userManager.Users.Where(u => u.Id == user.Id).Include(u => u.Cart)
+            user = _userManager.Users.Where(u => u.Id == user.Id).Include(u => u.Cart)
                 .ThenInclude(u => u.CartProducts)
                 .ThenInclude(g => g.Product)
-                .ThenInclude(u => u.Category).FirstOrDefault();
-
-            if (buff == null)
-            {
-                return NotFound();
-            }
-            return Content(JsonConvert.SerializeObject(buff.Cart.CartProducts));
+                .ThenInclude(u => u.Category)
+                .FirstOrDefault();
+            
+            return Content(JsonConvert.SerializeObject(user.Cart.CartProducts));
         }
 
         [HttpPost]
         public async Task<IActionResult> CartOrder()
         {
-            User user = await userManager.GetUserAsync(HttpContext.User);
+            User user = await _userManager.GetUserAsync(HttpContext.User);
 
-            var buff = userManager.Users.Include(u => u.Cart)
-                .ThenInclude(u => u.CartProducts).ThenInclude(u => u.Product).FirstOrDefault(u => u.Id == user.Id);
+            user = _userManager.Users.Include(u => u.Cart)
+                .ThenInclude(u => u.CartProducts)
+                .ThenInclude(u => u.Product)
+                .FirstOrDefault(u => u.Id == user.Id);
 
-            foreach (var cartProduct in buff.Cart.CartProducts)
+            foreach (var cartProduct in user.Cart.CartProducts)
             {
                 if(cartProduct.Count > cartProduct.Product.Count)
                     ModelState.AddModelError(string.Empty, $"{cartProduct.Product.Name}: �� ������ ���� ������ ���� {cartProduct.Product.Count} ��. ������, � ������ ������� {cartProduct.Count}");
@@ -131,26 +105,44 @@ namespace vladandartem.Controllers
             var order = new Order
             {
                 UserId = user.Id,
-                Number = (myDb.Orders.Any() ? myDb.Orders.OrderBy(n => n.Number).Last().Number + 1 : 1),
-                SummaryPrice = buff.Cart.CartProducts.Sum(n => n.Product.Price * n.Count)
+                Number = (_context.Orders.Any() ? _context.Orders.OrderBy(n => n.Number).Last().Number + 1 : 1),
+                SummaryPrice = user.Cart.CartProducts.Sum(n => n.Product.Price * n.Count)
             };
 
-            myDb.Orders.Add(order);
+            _context.Orders.Add(order);
 
-            myDb.SaveChanges();
+            _context.SaveChanges();
 
-            foreach (var cp in buff.Cart.CartProducts)
+            foreach (var cp in user.Cart.CartProducts)
             {
                 cp.Product.Count -= cp.Count;
                 cp.CartId = null;
                 cp.OrderId = order.Id;
             }
 
-            //buff.Cart.CartProducts.Remove(buff.Cart.CartProducts.Find(n => n.ProductId == id));
-
-            await userManager.UpdateAsync(buff);
+            await _userManager.UpdateAsync(user);
 
             return RedirectToAction("PaidProducts", "PersonalArea");
+        }
+
+        [HttpPost]
+        public IActionResult RejectOrder(int orderId)
+        {
+            Order order = _context.Orders.Include(o => o.CartProducts)
+                .ThenInclude(cp => cp.Product)
+                .FirstOrDefault(o => o.Id == orderId);
+
+            if (order == null || order.IsPaid)
+                return new EmptyResult();
+
+            foreach (var cartProduct in order.CartProducts)
+            {
+                cartProduct.Product.Count += cartProduct.Count;
+            }
+
+            _context.Orders.Remove(order);
+
+            return Content(JsonConvert.SerializeObject(new { OrderId = order.Id }));
         }
     }
 }
