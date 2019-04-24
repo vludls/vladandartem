@@ -77,11 +77,11 @@ namespace vladandartem.Controllers
         {
             User user = await _userManager.GetUserAsync(HttpContext.User);
 
-            user = _userManager.Users.Where(u => u.Id == user.Id).Include(u => u.Cart)
+            user = _userManager.Users.Include(u => u.Cart)
                 .ThenInclude(u => u.CartProducts)
                 .ThenInclude(g => g.Product)
                 .ThenInclude(u => u.Category)
-                .FirstOrDefault();
+                .FirstOrDefault(u => u.Id == user.Id);
             
             return Content(JsonConvert.SerializeObject(user.Cart.CartProducts));
         }
