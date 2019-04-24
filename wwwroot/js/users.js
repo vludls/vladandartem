@@ -52,7 +52,8 @@ new Vue ({
             .post('/AdminMenu/DeleteUser', data 
             )
             .then(response => {
-                this.UserId.push(response.data); 
+                this.UserId.push(response.data);
+                alert(response.data.UserId)
             });
             event.preventDefault();
         },
