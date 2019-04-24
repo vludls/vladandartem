@@ -41,6 +41,7 @@ namespace vladandartem.Controllers
         public ViewResult Index(int page = 0, string searchArgument = "")
         {
             IEnumerable<Product> products;
+            IQueryable<Product> produ;
 
             // Если в поиск введено значение
             if (searchArgument != "" && searchArgument != null)
@@ -99,7 +100,7 @@ namespace vladandartem.Controllers
             user = _userManager.Users.Include(u => u.Cart)
                 .ThenInclude(u => u.CartProducts).FirstOrDefault(u => u.Id == user.Id);
 
-            CartProduct cartProduct = user.Cart.CartProducts.FirstOrDefault(n => n.ProductId == cartProductId);
+            CartProduct cartProduct = user.Cart.CartProducts.FirstOrDefault(n => n.Id == cartProductId);
 
 
             if (cartProduct == null)
@@ -191,10 +192,7 @@ namespace vladandartem.Controllers
                 if (model.FileImg != null)
                 {
                     // Заливаем ее на сервер
-                    model.FileImg.CopyTo(new FileStream(
-                        $"{_hostEnv.WebRootPath}/images/Products/{model.FileImg.FileName}",
-                        FileMode.Create)
-                    );
+                    model.FileImg.CopyTo(new FileStream($"{_hostEnv.WebRootPath}/images/Products/{model.FileImg.FileName}", FileMode.Create));
 
                     // Меняем на новый путь
                     model.Product.ImgPath = $"/images/Products/{model.FileImg.FileName}";
@@ -247,11 +245,7 @@ namespace vladandartem.Controllers
 
                 fileName = $"{_hostEnv.WebRootPath}/images/Products/{avm.FileImg.FileName}";
 
-                avm.FileImg.CopyTo(new FileStream(
-                    $"{_hostEnv.WebRootPath}/images/Products/{avm.FileImg.FileName}",
-                    FileMode.Create
-                    )
-                );
+                avm.FileImg.CopyTo(new FileStream($"{_hostEnv.WebRootPath}/images/Products/{avm.FileImg.FileName}", FileMode.Create));
 
                 avm.Product.ImgPath = $"/images/Products/{avm.FileImg.FileName}";
 
@@ -296,9 +290,11 @@ namespace vladandartem.Controllers
             User user = await _userManager.GetUserAsync(HttpContext.User);
 
             user = _userManager.Users.Where(u => u.Id == user.Id).Include(u => u.Cart)
-                .ThenInclude(u => u.CartProducts).ThenInclude(u => u.Product).FirstOrDefault();
+                .ThenInclude(u => u.CartProducts)
+                .ThenInclude(u => u.Product)
+                .FirstOrDefault();
 
-            CartProduct cartProduct = user.Cart.CartProducts.Find(n => n.ProductId == id);
+            CartProduct cartProduct = user.Cart.CartProducts.FirstOrDefault(n => n.ProductId == id);
 
             cartProduct.Count = count;
 
