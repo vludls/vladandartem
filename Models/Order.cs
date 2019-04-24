@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace vladandartem.Models
 {
+    [Serializable]
     public class Order
     {
         public int? Id { get; set; }
