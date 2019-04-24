@@ -1,5 +1,5 @@
 //выкатывание продуктов
-$(document).ready(function () {
+/*$(document).ready(function () {
     $('.order > div:not(:first-child)').hide();
     $('.open-order').each(function () {
         $(this).on('click', function () {
@@ -8,5 +8,20 @@ $(document).ready(function () {
             $(this).parent().next().slideToggle();
         })
     })
-})
+})*/
 //выкатывание продуктов
+
+new Vue ({
+    el: '#paid-products',
+    data: {
+        orders: []
+    },
+    mounted: function () {
+        axios
+            .post('/PersonalArea/GetPaidProducts')
+            .then(response => {
+                this.orders = response.data;
+                
+            });
+    }
+})

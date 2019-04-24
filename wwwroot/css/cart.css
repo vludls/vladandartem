@@ -14,10 +14,8 @@
         margin-bottom: 10px;
         height: 100px;
         border: 2px solid #e1e1d1;
-    }
-    .list li > form {
         display: flex;    
-        padding: 10px;    
+        padding: 10px;
     }
         .im-in-cart {
             width: 110px;
@@ -27,7 +25,7 @@
                 max-width: 110px;
                 max-height: 80px;
             }
-            .q {
+            .set-quantity {
                 width: 65px;
                 padding: 10px;
                 background: #F3F3F3;

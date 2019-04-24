@@ -65,7 +65,7 @@ namespace vladandartem.Controllers
                 .ThenInclude(u => u.Product)
                 .FirstOrDefault(u => u.Id == user.Id);
 
-            return Content(JsonConvert.SerializeObject(user.Order.OrderByDescending(n => n.Number).ToList()));
+            return Content(JsonConvert.SerializeObject(user.Order.OrderByDescending(n => n.Number)).ToList());
         }
         [HttpGet]
         public ViewResult Cart()

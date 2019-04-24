@@ -11,13 +11,11 @@
 @Html.Partial("_GetTabs", new vladandartem.ViewModels.PersonalArea.GetTabsViewModel { SectionId = 2 })
 
 <main class="container lop" id="cart">
-    <!--<div>{{ products }}</div>-->
-    <template v-if="products.length != 0">
-        <div>{{ products }}</div>
+    <template v-if="products.length != ProductId.length">
         <div class="list">
             <ul>
                 <li v-for="product in products" :id="product.Id" v-if="ProductId.indexOf(product.Id) == -1">
-                    <form>
+                    
                         <div class="im-in-cart">
                             <img :src="product.Product.ImgPath" alt="">
                         </div>
@@ -26,7 +24,7 @@
                         </p>
                         <div class="quantity">
                             <span>Количество:</span>
-                            <input type="number" min="1" name="count" class="form-control q"
+                            <input type="number" min="1" name="count" class="form-control set-quantity"
                                 v-on:input="SetTotalPrice" 
                                 v-on:change="SaveQuantity(product.Product.Id, product.Count, product.Product)" 
                                 v-model="product.Count"   
@@ -46,7 +44,7 @@
                                 <i class="far fa-trash-alt"></i>
                             </button>
                         </div>
-                    </form>
+                    
                 </li>
             </ul>
 
