@@ -7,11 +7,9 @@
 @Html.Partial("_GetTabs", new vladandartem.ViewModels.AdminMenu.GetTabsViewModel { SectionId = 2 })
 
 <main class="container admin" id="users">
-    <div>{{ users }}</div>
     <ul class="users">
         <li><p>E-mail</p><p>Дата рождения</p><p>Редактирование</p><p>Удаление</p></li>
-        
-        <li v-for="user in users" :id="user.Id" v-if="user.Id != UserId">
+        <li v-for="user in users" :id="user.Id" v-if="UserId.indexOf(user.Id) == -1">
             <p>{{ user.UserName }}</p>
             <p>{{ user.Year }}</p>
             <p class="centering">
@@ -43,7 +41,7 @@
                     <button type="button" class="btn btn-secondary close-modal" data-dismiss="modal">Закрыть</button>
                     <form v-on:submit="deleteUser($event)" method="post" action="~/AdminMenu/DeleteUser" class="user-delete" ref="userDelete">
                         <input type="hidden" name="id" :value="id" ref="userDelete">
-                        <button type="submit" class="btn btn-danger">Удалить</button>
+                        <button v-on:click="closeModal" type="submit" class="btn btn-danger">Удалить</button>
                     </form>
                 </div>
             </div>

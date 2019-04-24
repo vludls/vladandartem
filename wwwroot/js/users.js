@@ -24,7 +24,7 @@ new Vue ({
         modalId: 'id',
         id: '',
         user: '',
-        UserId: ''
+        UserId: []
     },
     mounted: function () {
         axios
@@ -52,11 +52,12 @@ new Vue ({
             .post('/AdminMenu/DeleteUser', data 
             )
             .then(response => {
-                //this.users = response.data;
-                this.UserId = response.data;
-                
+                this.UserId.push(response.data); 
             });
             event.preventDefault();
+        },
+        closeModal: function() {
+            $('.close-modal').trigger('click');
         }
     }
 })
