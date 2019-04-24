@@ -51,16 +51,21 @@ namespace vladandartem.Controllers
             return RedirectToAction("PaidProducts");
         }
         [HttpGet]
-        public async Task<ViewResult> PaidProducts()
+        public ViewResult PaidProducts()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<ContentResult> GetPaidProducts()
         {
             User user = await _userManager.GetUserAsync(HttpContext.User);
 
             user = _userManager.Users.Include(u => u.Order)
-            .ThenInclude(u => u.CartProducts)
-            .ThenInclude(u => u.Product)
-            .FirstOrDefault(u => u.Id == user.Id);
+                .ThenInclude(u => u.CartProducts)
+                .ThenInclude(u => u.Product)
+                .FirstOrDefault(u => u.Id == user.Id);
 
-            return View(user.Order.OrderByDescending(n => n.Number).ToList());
+            return Content(JsonConvert.SerializeObject(user.Order.OrderByDescending(n => n.Number).ToList()));
         }
         [HttpGet]
         public ViewResult Cart()
