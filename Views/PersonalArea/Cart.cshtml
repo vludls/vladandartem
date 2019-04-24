@@ -13,10 +13,12 @@
 <main class="container lop" id="cart">
     <!--<div>{{ products }}</div>-->
     <template v-if="products.length != 0">
+        <div>{{ products }}</div>
         <div class="list">
             <ul>
                 <li v-for="product in products">
                     <form action="~/Home/RemoveProductCart" method="post">
+                        <input type="hidden" name="id" :value="product.Id">
                         <div class="im-in-cart">
                             <img :src="product.Product.ImgPath" alt="">
                         </div>
