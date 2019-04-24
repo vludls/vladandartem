@@ -13,9 +13,9 @@
     <div>{{ orders }}</div>
     <div class="list-of-orders">
         <ul>
-            <li class="order">
+            <li class="order" v-for="order in orders">
                 <div class="header-of-order">
-                    <p>Заказ № 345</p>
+                    <p>Заказ № {{ order.Number }}</p>
                     <div class="status">
                         
                             <span class="btn btn-success">Оплачено</span>

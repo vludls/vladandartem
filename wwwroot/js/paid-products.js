@@ -18,7 +18,11 @@ new Vue ({
     },
     mounted: function () {
         axios
-            .post('/PersonalArea/GetPaidProducts', null, { params: { start: 0 } })
+            .post('/PersonalArea/GetPaidProducts', null, {
+                params: {
+                    start: 0
+                } 
+            })
             .then(response => {
                 this.orders = response.data;
                 
