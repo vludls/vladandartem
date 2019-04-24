@@ -92,7 +92,7 @@ namespace vladandartem.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<RedirectToActionResult> RemoveProductCart(int id)
+        public async Task<ContentResult> RemoveProductCart(int cartProductId)
         {
             User user = await _userManager.GetUserAsync(HttpContext.User);
 
@@ -101,12 +101,15 @@ namespace vladandartem.Controllers
 
             CartProduct cartProduct = user.Cart.CartProducts.FirstOrDefault(n => n.ProductId == id);
 
-            if(cartProduct != null)
-                user.Cart.CartProducts.Remove(cartProduct);
+
+            if (cartProduct == null)
+                return Content(JsonConvert.SerializeObject(new { CartProductId = 0 }));
+
+            user.Cart.CartProducts.Remove(cartProduct);
 
             await _userManager.UpdateAsync(user);
 
-            return RedirectToAction("Cart");
+            return Content(JsonConvert.SerializeObject(new { CartProductId = cartProductId }));
         }
 
         [Authorize(Roles = "admin")]
