@@ -87,7 +87,7 @@
                         }
                         <form class="form-inline my-2 my-lg-0 search-form" action="~/Home/Index" method="get">
                             <input type="hidden" name="isSearch" value="true">
-                            <input class="form-control mr-sm-2" type="search" placeholder="Поиск" name="searchArgument" aria-label="Search" value="@(Model is vladandartem.ViewModels.Home.IndexViewModel ? Model?.searchArgument : "")">
+                            <input class="form-control mr-sm-2" type="search" placeholder="Поиск" name="SearchArgument" aria-label="Search" value="@(Model is vladandartem.ViewModels.Home.IndexViewModel ? Model.SearchArgument : "")">
                             <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Найти</button>
                         </form>
                     </div>

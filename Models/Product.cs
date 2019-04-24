@@ -3,6 +3,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace vladandartem.Models
 {
@@ -20,15 +21,18 @@ namespace vladandartem.Models
 
         [Required(ErrorMessage = "Введите название товара")]
         public string Name { get; set; }
+
         public int Price { get; set; }
 
         [Required(ErrorMessage = "Добавьте изображение")]
         public string ImgPath { get; set; }
 
         [Required(ErrorMessage = "Введите производителя")]
+
         public string Manufacturer { get; set; }
 
         [Required(ErrorMessage = "Выберите категорию")]
+
         public int CategoryId { get; set; }
 
         [JsonIgnore]
