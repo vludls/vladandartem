@@ -99,7 +99,7 @@ namespace vladandartem.Controllers
             user = _userManager.Users.Include(u => u.Cart)
                 .ThenInclude(u => u.CartProducts).FirstOrDefault(u => u.Id == user.Id);
 
-            CartProduct cartProduct = user.Cart.CartProducts.FirstOrDefault(n => n.ProductId == id);
+            CartProduct cartProduct = user.Cart.CartProducts.FirstOrDefault(n => n.ProductId == cartProductId);
 
 
             if (cartProduct == null)
