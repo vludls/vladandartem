@@ -56,7 +56,7 @@ namespace vladandartem.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<ContentResult> GetPaidProducts()
+        public async Task<ContentResult> GetPaidProducts(int start)
         {
             User user = await _userManager.GetUserAsync(HttpContext.User);
 
@@ -65,7 +65,7 @@ namespace vladandartem.Controllers
                 .ThenInclude(u => u.Product)
                 .FirstOrDefault(u => u.Id == user.Id);
 
-            return Content(JsonConvert.SerializeObject(user.Order.OrderByDescending(n => n.Number)).ToList());
+            return Content(JsonConvert.SerializeObject(user.Order.Skip(start).Take(20).OrderByDescending(n => n.Number)));
         }
         [HttpGet]
         public ViewResult Cart()

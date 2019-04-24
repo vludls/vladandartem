@@ -85,6 +85,7 @@ namespace vladandartem.ClassHelpers
 
         public int? OrderId { get; set; }
         [ForeignKey("OrderId")]
+        [JsonIgnore]
         public Order Order { get; set; }
 
         public int ProductId { get; set; }
