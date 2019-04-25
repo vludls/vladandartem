@@ -542,8 +542,7 @@ namespace vladandartem.Controllers
             _context.Sections.Remove(section);
             _context.SaveChanges();
 
-                return Content(JsonConvert.SerializeObject(new { SectionId = sectionId }));
-            }
+            return Content(JsonConvert.SerializeObject(new { SectionId = sectionId }));
         }
 
         /*******************************************
