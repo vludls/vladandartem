@@ -13,7 +13,7 @@
     <div>{{ orders[0] }}</div>
     <div class="list-of-orders" v-scroll="scrolling" v-if="orders.length != 0">
         <ul>
-            <li class="order" v-for="order in orders">
+            <li class="order" v-for="(order, index) in orders">
                 <div class="header-of-order">
                     <p>Заказ № {{ order.Number }}</p>
                     <div class="status">
@@ -29,7 +29,11 @@
                     </ul>
                     <div class="order-cost">
                         <div class="buy">
-                            <form method="post" action="PayOrder" v-if="!order.IsPaid">
+                            <form method="post" action="~/PersonalArea/RejectOrder" v-if="!order.IsPaid" v-on:submit="toRejectOrder(order.Id, index, $event)" class="to-reject-order">
+                                <input type="hidden" name="orderId" :value="order.Id">
+                                <button type="submit" class="btn btn-danger">Отменить</button>
+                            </form>
+                            <form method="post" action="~/PersonalArea/PayOrder" v-if="!order.IsPaid" v-on:submit="toPayOrder(order.Id, order, $event)" class="to-pay-order">
                                 <input type="hidden" name="orderId" :value="order.Id">
                                 <button type="submit" class="btn btn-success">Оплатить</button>
                             </form>

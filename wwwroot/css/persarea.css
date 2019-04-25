@@ -75,6 +75,12 @@
             display: flex;
             justify-content: space-between;
         }
+            .buy {
+                display: flex;
+            }
+                .buy > form {
+                    margin-right: 20px;
+                }
     .list-is-empty {
         padding-bottom: 30px;
     }

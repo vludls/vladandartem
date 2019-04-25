@@ -26,7 +26,8 @@ new Vue ({
     data: {
         orders: [],
         scroll: 0,
-        from: 0
+        from: 0,
+        orderId: 0
     },
     mounted: function () {
         axios
@@ -37,7 +38,6 @@ new Vue ({
             })
             .then(response => {
                 this.orders = response.data;
-                
             });
         this.scroll += 5000;
         this.from += 20
@@ -51,11 +51,9 @@ new Vue ({
                     } 
                 })
                 .then(response => {
-                    //this.orders = response.data;
                     for(var key in response.data) {
                         this.orders.push(response.data[key]);
                     }
-                    
                 });
             this.scroll += 5000;
             this.from += 20
@@ -64,6 +62,31 @@ new Vue ({
             if (window.scrollY > this.scroll) {
                 this.handleScroll()
             }
-        }
+        },
+        toPayOrder: function (orderId, order,event) {
+            this.orderId = orderId;
+            const data = new FormData(document.querySelector('.to-pay-order'));
+            data.append('orderId', this.orderId);
+            axios
+            .post('/PersonalArea/PayOrder', data
+            )
+            .then(response => {
+                order["IsPaid"] = response.data.IsPaid
+            });
+            event.preventDefault();
+        },
+        toRejectOrder: function (orderId, index, event) {
+            this.orderId = orderId;
+            const data = new FormData(document.querySelector('.to-reject-order'));
+            data.append('orderId', this.orderId);
+            axios
+            .post('/PersonalArea/RejectOrder', data
+            )
+            .then(response => {
+                alert(response.data.OrderId);
+                this.orders.splice(index, 1)
+            });
+            event.preventDefault();
+        },
     }
 })
