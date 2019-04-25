@@ -463,10 +463,17 @@ namespace vladandartem.Controllers
 
         /* Ниже идет раздел связанный с секциями */
         [HttpGet]
-        public IActionResult Section()
+        public ViewResult Section()
         {
-            return View(_context.Sections.ToList());
+            return View();
         }
+
+        [HttpPost]
+        public ContentResult GetSections()
+        {
+            return Content(JsonConvert.SerializeObject(_context.Sections.ToList()));
+        }
+
         [HttpPost]
         public IActionResult SectionAdd([Required]string sectionName)
         {
