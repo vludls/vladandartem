@@ -10,7 +10,8 @@
 @Html.Partial("_GetTabs", new vladandartem.ViewModels.PersonalArea.GetTabsViewModel { SectionId = 3 })
 
 <main class="container pa" id="paid-products">
-    <div class="list-of-orders" v-scroll="scrolling">
+    <div>{{ orders[0] }}</div>
+    <div class="list-of-orders" v-scroll="scrolling" v-if="orders.length != 0">
         <ul>
             <li class="order" v-for="order in orders">
                 <div class="header-of-order">
@@ -28,9 +29,10 @@
                     </ul>
                     <div class="order-cost">
                         <div class="buy">
-                                <form method="post" action="PayOrder" v-if="!order.IsPaid">
-                                    <button type="submit" class="btn btn-success">Оплатить</button>
-                                </form>
+                            <form method="post" action="PayOrder" v-if="!order.IsPaid">
+                                <input type="hidden" name="id" :value="order.Id">
+                                <button type="submit" class="btn btn-success">Оплатить</button>
+                            </form>
                         </div>
                         <div class="cost-of-order">
                             <span>Cтоимость заказа: {{ order.SummaryPrice }} р.</span>
@@ -39,7 +41,7 @@
                 </div>
             </li>
         </ul>
-
-        <h1>Список заказов пуст :(</h1>
     </div>
+
+    <h1 v-else class="list-is-empty">Список заказов пуст :(</h1>
 </main>

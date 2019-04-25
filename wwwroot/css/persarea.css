@@ -75,3 +75,6 @@
             display: flex;
             justify-content: space-between;
         }
+    .list-is-empty {
+        padding-bottom: 30px;
+    }
