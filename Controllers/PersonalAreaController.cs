@@ -150,6 +150,8 @@ namespace vladandartem.Controllers
 
             _context.Orders.Remove(order);
 
+            _context.SaveChanges();
+
             return Content(JsonConvert.SerializeObject(new { OrderId = order.Id }));
         }
     }
