@@ -11,23 +11,18 @@
 @Html.Partial("_GetTabs", new vladandartem.ViewModels.AdminMenu.GetTabsViewModel { SectionId = 3 })
 
 <main class="container admin admin-categories" id="sections">
-    <div>{{ sections }}</div>
     <ul class="users">
         <li><p>Раздел</p><p>Действие</p></li>
-        @foreach (var item in Model)
-        {
-            <li id="@("s" + item.Id)">
-                <p>@item.Name</p>
-                <div class="centering">
-                    <button type="submit" class="btn btn-danger delete-user" data-toggle="modal" data-route-id="@item.Id" data-target="@("#a" + item.Id)">
-                        Удалить
-                    </button>
-                </div>
-
-            </li>
-        }
+        <li v-for="(section, index) in sections">
+            <p>{{ section.Name }}</p>
+            <div class="centering">
+                <button v-on:click="activateModal(section.Id, section.Name, index)" type="button" class="btn btn-danger delete-user" data-toggle="modal" :data-target="'#' + modalId">
+                    Удалить
+                </button>
+            </div>
+        </li>
     </ul>
-    <div class="modal fade" id="" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    <div class="modal fade" :id="modalId" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -38,23 +33,23 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <h6 data-text="Удалить раздел "></h6>
+                    <h6>Удалить раздел {{ sectionName }}?</h6>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary close-modal" data-dismiss="modal">Закрыть</button>
-                    <form asp-action="SectionDelete" method="post" class="section-delete">
-                        <input type="hidden" name="SectionId">
-                        <button type="submit" class="btn btn-danger">Удалить</button>
+                    <form v-on:submit="deleteSection($event)" action="~/AdminMenu/SectionDelete" method="post" class="section-delete">
+                        <input type="hidden" name="SectionId" :value="sectionId">
+                        <button v-on:click="closeModal" type="submit" class="btn btn-danger">Удалить</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 
-    <form asp-action="SectionAdd" method="post" class="add-new-category">
+    <form v-on:submit="addSection($event)" asp-action="SectionAdd" method="post" class="add-new-category">
         <div class="form-group">
             <label for="add-section">Добавьте раздел</label>
-            <input type="text" name="SectionName" class="form-control add-category" id="add-section" placeholder="Название раздела">
+            <input type="text" name="sectionName" class="form-control add-category" id="add-section" placeholder="Название раздела" v-model="addSectionName">
         </div>
         <button type="submit" class="btn btn-primary">Добавить</button>
     </form>

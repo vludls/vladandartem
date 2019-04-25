@@ -9,14 +9,14 @@
 <main class="container admin" id="users">
     <ul class="users">
         <li><p>E-mail</p><p>Дата рождения</p><p>Редактирование</p><p>Удаление</p></li>
-        <li v-for="user in users" :id="user.Id" v-if="UserId.indexOf(user.Id) == -1">
+        <li v-for="(user, index) in users">
             <p>{{ user.UserName }}</p>
             <p>{{ user.Year }}</p>
             <p class="centering">
                 <a v-on:click="setLink(user.Id)" :href="editUser" class="btn btn-primary">Изменить</a>
             </p>
             <div class="centering">
-                <button v-on:click="activateModal(user.Id, user.UserName)" type="submit" class="btn btn-danger delete-user" data-toggle="modal" :data-target="'#' + modalId">
+                <button v-on:click="activateModal(user.Id, user.UserName, index)" type="submit" class="btn btn-danger delete-user" data-toggle="modal" :data-target="'#' + modalId">
                     Удалить
                 </button>
             </div>
@@ -35,12 +35,12 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <h6 data-text="Удалить пользователя ">Удалить пользователя {{ user }}?</h6>
+                    <h6 data-text="Удалить пользователя ">Удалить пользователя {{ userName }}?</h6>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary close-modal" data-dismiss="modal">Закрыть</button>
-                    <form v-on:submit="deleteUser($event)" method="post" action="~/AdminMenu/DeleteUser" class="user-delete" ref="userDelete">
-                        <input type="hidden" name="id" :value="id" ref="userDelete">
+                    <form v-on:submit="deleteUser($event)" method="post" action="~/AdminMenu/DeleteUser" class="user-delete">
+                        <input type="hidden" name="id" :value="userId">
                         <button v-on:click="closeModal" type="submit" class="btn btn-danger">Удалить</button>
                     </form>
                 </div>
