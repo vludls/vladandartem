@@ -30,7 +30,7 @@
                     <div class="order-cost">
                         <div class="buy">
                             <form method="post" action="PayOrder" v-if="!order.IsPaid">
-                                <input type="hidden" name="id" :value="order.Id">
+                                <input type="hidden" name="orderId" :value="order.Id">
                                 <button type="submit" class="btn btn-success">Оплатить</button>
                             </form>
                         </div>
