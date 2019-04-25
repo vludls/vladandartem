@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace vladandartem.Controllers
 {
+    [Route("AdminMenu")]
     [Authorize(Roles = "admin")]
     public class AdminMenuController : Controller
     {
@@ -33,7 +34,12 @@ namespace vladandartem.Controllers
             _roleManager = roleManager;
             _context = context;
         }
-        /* Ниже идет раздел связанный с управлением категориями */
+
+        /*******************************************
+         * Categories
+         *******************************************/
+
+        [Route("Categories")]
         [HttpGet]
         public IActionResult Main()
         {
@@ -46,6 +52,7 @@ namespace vladandartem.Controllers
             return View(mvm);
         }
 
+        [Route("Categories/Api/Add")]
         [HttpPost]
         public IActionResult AddCategory([Required]int sectionId, [Required]string categoryName)
         {
@@ -62,46 +69,83 @@ namespace vladandartem.Controllers
 
             return new EmptyResult();
         }
+
+        [Route("Categories/Api/Delete")]
         [HttpPost]
-        public IActionResult DeleteCategory([Required]int id)
+        public IActionResult DeleteCategory([Required]int categoryId)
         {
             if (ModelState.IsValid)
             {
-                Category SomeCategory = _context.Categories.Find(id);
+                Category category = _context.Categories.FirstOrDefault(c => c.Id == categoryId);
 
-                if (SomeCategory == null)
+                if (category == null)
                 {
-                    _context.Categories.Remove(SomeCategory);
+                    _context.Categories.Remove(category);
 
                     _context.SaveChanges();
                 }
+
+                return Content(JsonConvert.SerializeObject(new { CategoryId = categoryId }));
             }
 
-            return RedirectToAction("Main");
+            return new EmptyResult();
         }
 
-        /* Ниже идет раздел управления пользователями */
+        /*******************************************
+         * Users
+         *******************************************/
+
+        [Route("Users")]
         [HttpGet]
         public IActionResult Users()
         {
             return View();
         }
 
+        [Route("Users/Api/Get")]
         [HttpPost]
         public IActionResult GetUsers()
         {
             return Content(JsonConvert.SerializeObject(_userManager.Users.ToList()));
         }
 
+        /*******************************************
+         * User
+         *******************************************/
 
+        [Route("User")]
         [HttpGet]
         public IActionResult CreateUser()
         {
             return View();
         }
 
+        [Route("User/Edit")]
+        [HttpGet]
+        public async Task<IActionResult> EditUser([Required]int id)
+        {
+            User user = await _userManager.FindByIdAsync(id.ToString());
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+
+            EditUserViewModel euvm = new EditUserViewModel
+            {
+                Email = user.Email,
+                Year = user.Year,
+                UserRoles = await _userManager.GetRolesAsync(user),
+                Roles = _roleManager.Roles.ToList()
+            };
+
+            return View(euvm);
+        }
+
+        [Route("User/Api/Add")]
         [HttpPost]
-        public async Task<IActionResult> CreateUser(CreateUserViewModel cuvm)
+        public async Task<IActionResult> AddUser(CreateUserViewModel cuvm)
         {
             User user = new User { Email = cuvm.Email, UserName = cuvm.Email, Year = cuvm.Year, };
 
@@ -130,30 +174,9 @@ namespace vladandartem.Controllers
             return View(cuvm);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> EditUser([Required]int id)
-        {
-            User user = await _userManager.FindByIdAsync(id.ToString());
-
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-
-            EditUserViewModel euvm = new EditUserViewModel
-            {
-                Email = user.Email,
-                Year = user.Year,
-                UserRoles = await _userManager.GetRolesAsync(user),
-                Roles = _roleManager.Roles.ToList()
-            };
-
-            return View(euvm);
-        }
-
+        [Route("User/Api/Save")]
         [HttpPost]
-        public async Task<IActionResult> EditUserSave([Required]int id, [Required]string email, [Required]string year, List<string> roles)
+        public async Task<IActionResult> UserSave([Required]int id, [Required]string email, [Required]string year, List<string> roles)
         {
             User user = await _userManager.FindByIdAsync(id.ToString());
 
@@ -193,6 +216,7 @@ namespace vladandartem.Controllers
             return Content("Такого юзера не существует");
         }
 
+        [Route("User/Api/Delete")]
         [HttpPost]
         public async Task<IActionResult> DeleteUser(int id)
         {
@@ -218,7 +242,11 @@ namespace vladandartem.Controllers
             return Content(JsonConvert.SerializeObject(new { UserId = id }));
         }
 
-        /* Ниже идет раздел связанный с аналитикой */
+        /*******************************************
+         * Analytics
+         *******************************************/
+
+        [Route("Analytics")]
         [HttpGet]
         public IActionResult Analytics()
         {
@@ -231,6 +259,8 @@ namespace vladandartem.Controllers
 
             return View(model);
         }
+
+        [Route("Analytics/Api/GetCategoryProducts")]
         [HttpPost]
         public IActionResult AnalyticsLoadProductsOfChoosedCategory([Required]int categoryId)
         {
@@ -252,6 +282,7 @@ namespace vladandartem.Controllers
             return new EmptyResult();
         }
 
+        [Route("Analytics/Api/GetGeneralAnalytics")]
         [HttpPost]
         public IActionResult LoadGeneralAnalytics(LoadAnalytics model)
         {
@@ -353,6 +384,7 @@ namespace vladandartem.Controllers
             return Content(JsonConvert.SerializeObject(productAnalytics));
         }
 
+        [Route("Analytics/Api/GetAnalytics")]
         [HttpPost]
         public IActionResult LoadAnalytics(LoadAnalytics model)
         {
@@ -461,21 +493,27 @@ namespace vladandartem.Controllers
             return Content(JsonConvert.SerializeObject(productAnalytics.Skip(model.LastItemId).Take(10)));
         }
 
-        /* Ниже идет раздел связанный с секциями */
+        /*******************************************
+         * Section
+         *******************************************/
+
+        [Route("Section")]
         [HttpGet]
         public ViewResult Section()
         {
             return View();
         }
 
+        [Route("Section/Api/GetAll")]
         [HttpPost]
         public ContentResult GetSections()
         {
             return Content(JsonConvert.SerializeObject(_context.Sections.ToList()));
         }
 
+        [Route("Section/Api/Add")]
         [HttpPost]
-        public IActionResult SectionAdd([Required]string sectionName)
+        public IActionResult AddSection([Required]string sectionName)
         {
             if (ModelState.IsValid)
             {
@@ -490,6 +528,8 @@ namespace vladandartem.Controllers
 
             return new EmptyResult();
         }
+
+        [Route("Section/Api/Delete")]
         [HttpPost]
         public IActionResult SectionDelete([Required]int sectionId)
         {
@@ -511,23 +551,32 @@ namespace vladandartem.Controllers
             return new EmptyResult();
         }
 
+        /*******************************************
+         * Role
+         *******************************************/
+        [Route("Role")]
         [HttpGet]
         public IActionResult Role()
         {
             return View(_roleManager.Roles.ToList());
         }
 
-        /* Ниже идет раздел связанный с детальными полями у продуктов */
+        /*******************************************
+         * DetailField
+         *******************************************/
+
+        [Route("DetailField")]
         [HttpGet]
-        public IActionResult ProductDetails()
+        public IActionResult DetailField()
         {
             List<DetailField> model = _context.DetailFields.Include(n => n.Definitions).ToList();
 
             return View(model);
         }
 
+        [Route("DetailField/Api/Add")]
         [HttpPost]
-        public IActionResult ProductDetailsFieldAdd([Required]string detailFieldName)
+        public IActionResult DetailFieldAdd([Required]string detailFieldName)
         {
             if (ModelState.IsValid)
             {
@@ -538,15 +587,16 @@ namespace vladandartem.Controllers
 
                     _context.SaveChanges();
 
-                    return Content(Convert.ToString(detailField.Id));
+                    return Content(JsonConvert.SerializeObject(new { DetailFieldId = detailField.Id }));
                 }
             }
 
             return new EmptyResult();
         }
 
+        [Route("DetailField/Api/Delete")]
         [HttpPost]
-        public IActionResult ProductDetailsFieldDelete([Required]int detailFieldId)
+        public IActionResult DetailFieldDelete([Required]int detailFieldId)
         {
             if (!ModelState.IsValid)
                 return new EmptyResult();
@@ -560,11 +610,12 @@ namespace vladandartem.Controllers
 
             _context.SaveChanges();
 
-            return Content(Convert.ToString(detailFieldId));
+            return Content(JsonConvert.SerializeObject(new { DetailFieldId = detailFieldId }));
         }
 
+        [Route("DetailField/Definition/Api/Add")]
         [HttpPost]
-        public IActionResult ProductDetailsDefinitionAdd([Required]int detailFieldId, [Required]string definitionName)
+        public IActionResult DetailFieldDefinitionAdd([Required]int detailFieldId, [Required]string definitionName)
         {
             if (ModelState.IsValid)
             {
@@ -588,8 +639,10 @@ namespace vladandartem.Controllers
 
             return new EmptyResult();
         }
+
+        [Route("DetailField/Definition/Api/Delete")]
         [HttpPost]
-        public IActionResult ProductDetailsDefinitionDelete([Required]int definitionId)
+        public IActionResult DetailFieldDefinitionDelete([Required]int definitionId)
         {
             if (ModelState.IsValid)
             {
@@ -608,17 +661,19 @@ namespace vladandartem.Controllers
 
                     _context.SaveChanges();
 
-                    return Content(Convert.ToString(definitionId));
+                    return Content(JsonConvert.SerializeObject(new { DefinitionId = definitionId }));
                 }
             }
 
             return new EmptyResult();
         }
+
+        [Route("DetailField/Definition/Api/GetProducts")]
         [HttpPost]
-        public ContentResult GetProductsWithThisDefinition(int definitionId)
+        public ContentResult ProductsOfDefinition(int definitionId)
         {
             return Content(JsonConvert.SerializeObject(_context.ProductDetailFields.Include(pdf => pdf.Product)
-                .Where(pdf => pdf.DefinitionId == definitionId )
+                .Where(pdf => pdf.DefinitionId == definitionId)
                 .Select(pdf => new { Id = pdf.Product.Id, Name = pdf.Product.Name })));
         }
     }
