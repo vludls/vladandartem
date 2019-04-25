@@ -8,34 +8,32 @@
     <script src="~/js/product.js"></script>
 }
 
-<main class="container product-page">
+<main class="container product-page" id="product">
     <div class="header-product">
-        <h1>@Model.Name</h1>
-        <h3><span class="badge badge-success">@Model.Manufacturer</span></h3>
+        <h1>{{ product.Name }}</h1>
+        <h3><span class="badge badge-success">{{ product.Manufacturer }}</span></h3>
     </div>
     <div class="image-and-main">
         <div class="imgProd">
-            <img src="@Model?.ImgPath" class="addimg" alt="">
+            <img :src="product.ImgPath" class="addimg" alt="">
         </div>
         <div class="main-info">
             
             <form asp-action="AddCookie" class="add-to-cart" method="post">
-                <h2>@Model.Price р.</h2>
-                <input type="hidden" name="id" value="@Model.Id">
-                <input value="@(Model.Count <= 0 ? "нет в наличии" : "Добавить в корзину")" class="btn btn-primary btn-lg btn-block" type="submit" @(Model.Count <= 0 ? " disabled=\"disabled\"" : "")>
-                <h5 class="on-stock">На складе: <span class="badge badge-success">@Model.Count</span></h5>
+                <h2>{{ product.Price }} р.</h2>
+                <input type="hidden" name="id" :value="product.Id">
+                <input v-if="product.Count > 0" value="Добавить в корзину" class="btn btn-primary btn-lg btn-block" type="submit">
+                <input v-else value="Нет в наличии" class="btn btn-primary btn-lg btn-block" type="button" disabled>
+                <h5 class="on-stock">На складе: <span class="badge badge-success">{{ product.Count }}</span></h5>
             </form>
         </div>
     </div>
     <h1 class="header-specifications">Характеристики</h1>
     <table class="specifications" border="1">
-        @foreach (var productDetailField in Model.ProductDetailFields)
-        {
-            <tr>
-                <td>@productDetailField.DetailField.Name</td>
-                <td>@(productDetailField.DefinitionId != null ? productDetailField.DetailField.Definitions.FirstOrDefault(n => n.Id == productDetailField.DefinitionId).Name : "Пусто")</td>
+            <tr v-for="DetailField in product.ProductDetailFields">
+                <td>{{ DetailField.DetailField.Name }}</td>
+                <td>{{ DetailField.DetailField.Definitions[0].Name }}</td>
             </tr>
-        }
     </table>
 </main>
 

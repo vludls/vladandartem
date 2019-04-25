@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace vladandartem.Models
         public int Id { get; set; }
 
         public int ProductId { get; set; }
+        [JsonIgnore]
         public Product Product { get; set; }
 
         public int? DefinitionId { get; set; }
