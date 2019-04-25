@@ -5,13 +5,13 @@
 }
 
 @section Scripts {
-    <script src="~/js/users.js"></script>
     <script src="~/js/add-section.js"></script>
 }
 
 @Html.Partial("_GetTabs", new vladandartem.ViewModels.AdminMenu.GetTabsViewModel { SectionId = 3 })
 
-<main class="container admin admin-categories">
+<main class="container admin admin-categories" id="sections">
+    <div>{{ sections }}</div>
     <ul class="users">
         <li><p>Раздел</p><p>Действие</p></li>
         @foreach (var item in Model)

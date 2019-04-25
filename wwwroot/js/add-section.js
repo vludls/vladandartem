@@ -1,4 +1,4 @@
-$('.add-new-category').each(function() {
+/*$('.add-new-category').each(function() {
     $(this).submit(function (e) {
         var form = $(this);
         $.ajax({
@@ -29,4 +29,17 @@ $('.section-delete').submit(function (e) {
         }
     });
     e.preventDefault();
+})*/
+new Vue ({
+    el: '#sections',
+    data: {
+        sections: []
+    },
+    mounted: function () {
+        axios
+            .post('/AdminMenu/GetSections')
+            .then(response => {
+                this.sections = response.data;
+            });
+    },
 })
