@@ -46,7 +46,7 @@
         </div>
     </div>
 
-    <form v-on:submit="addSection($event)" asp-action="SectionAdd" method="post" class="add-new-category">
+    <form v-on:submit="addSection($event)" asp-action="AddSection" method="post" class="add-new-category">
         <div class="form-group">
             <label for="add-section">Добавьте раздел</label>
             <input type="text" name="sectionName" class="form-control add-category" id="add-section" placeholder="Название раздела" v-model="addSectionName">

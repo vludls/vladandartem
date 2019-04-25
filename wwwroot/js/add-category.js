@@ -1,4 +1,4 @@
-$('.add-new-category').each(function() {
+/*$('.add-new-category').each(function() {
     $(this).submit(function (e) {
         var form = $(this);
         $.ajax({
@@ -14,4 +14,17 @@ $('.add-new-category').each(function() {
         });
         e.preventDefault();
     });
+})*/
+new Vue ({
+    el: '#categories',
+    data: {
+
+    },
+    mounted: function () {
+        axios
+            .post('/AdminMenu/Categories/Api/Get')
+            .then(response => {
+                this.sections = response.data;
+            });
+    },
 })

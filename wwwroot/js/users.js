@@ -10,7 +10,7 @@ new Vue ({
     },
     mounted: function () {
         axios
-            .post('/AdminMenu/GetUsers')
+            .post('/AdminMenu/Users/Api/Get')
             .then(response => {
                 this.users = response.data;
             });

@@ -5,7 +5,7 @@
 
 @Html.Partial("_GetTabs", new vladandartem.ViewModels.AdminMenu.GetTabsViewModel { SectionId = 1 })
 
-<main class="container admin">
+<main class="container admin" id="categories">
     <ul class="users">
         <li><p>Категория</p><p>Действие</p></li>
         @foreach (var category in Model.Categories)

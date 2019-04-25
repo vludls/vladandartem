@@ -10,7 +10,7 @@ new Vue ({
     },
     mounted: function () {
         axios
-            .post('/AdminMenu/GetSections')
+            .post('/AdminMenu/Section/Api/GetAll')
             .then(response => {
                 this.sections = response.data;
             });
@@ -27,7 +27,7 @@ new Vue ({
             const data = new FormData(document.querySelector('.section-delete'));
             data.append('id', this.sectionId);
             axios
-            .post('/AdminMenu/SectionDelete', data 
+            .post('/AdminMenu/Section/Api/Delete', data 
             )
             .then(
                 this.sections.splice(this.index, 1)
@@ -41,7 +41,7 @@ new Vue ({
             const data = new FormData(document.querySelector('.add-new-category'));
             data.append('sectionName', this.addSectionName);
             axios
-            .post('/AdminMenu/SectionAdd', data
+            .post('/AdminMenu/Section/Api/Add', data
             )
             .then(response => {
                 this.sections.push(response.data);
