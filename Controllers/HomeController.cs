@@ -187,7 +187,7 @@ namespace vladandartem.Controllers
                 .ThenInclude(n => n.DetailField)
                 .ThenInclude(n => n.Definitions)
                 .Include(n => n.Category)
-                .FirstOrDefault(n => n.Id == productId));
+                .FirstOrDefault(n => n.Id == productId);
 
             if (product == null)
                 return new EmptyResult();

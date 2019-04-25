@@ -7,26 +7,30 @@ using vladandartem.Models;
 
 namespace vladandartem.Controllers
 {
+    [Route("Account")]
     public class AccountController : Controller
     {
-        private readonly ProductContext context;
-        private readonly UserManager<User> userManager;
-        private readonly RoleManager<IdentityRole<int>> roleManager;
-        private readonly SignInManager<User> signInManager;
+        private readonly ProductContext _context;
+        private readonly UserManager<User> _userManager;
+        private readonly RoleManager<IdentityRole<int>> _roleManager;
+        private readonly SignInManager<User> _signInManager;
+
         public AccountController(ProductContext context, UserManager<User> userManager, RoleManager<IdentityRole<int>> roleManager, SignInManager<User> signInManager)
         {
-            this.context = context;
-            this.userManager = userManager;
-            this.roleManager = roleManager;
-            this.signInManager = signInManager;
+            _context = context;
+            _userManager = userManager;
+            _roleManager = roleManager;
+            _signInManager = signInManager;
         }
 
+        [Route("Register")]
         [HttpGet]
         public IActionResult Register()
         {
-            return View();
+            return Content("123");
         }
 
+        [Route("Register")]
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel rvm)
         {
@@ -39,19 +43,19 @@ namespace vladandartem.Controllers
                     Year = rvm.Year
                 };
 
-                var result = await userManager.CreateAsync(user, rvm.Password);
+                var result = await _userManager.CreateAsync(user, rvm.Password);
 
                 if (result.Succeeded)
                 {
                     Cart cart = new Cart { UserId = user.Id };
 
-                    context.Cart.Add(cart);
+                    _context.Cart.Add(cart);
 
-                    context.SaveChanges();
+                    _context.SaveChanges();
 
-                    await userManager.AddToRoleAsync(user, "user");
+                    await _userManager.AddToRoleAsync(user, "user");
 
-                    await signInManager.SignInAsync(user, false);
+                    await _signInManager.SignInAsync(user, false);
 
                     return Redirect("~/PersonalArea/Main");
                 }
@@ -69,12 +73,14 @@ namespace vladandartem.Controllers
             return View(rvm);
         }
 
+        [Route("Login")]
         [HttpGet]
         public IActionResult Login(string returnUrl)
         {
             return View(new LoginViewModel{ ReturnUrl = returnUrl });
         }
 
+        [Route("Login")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel evm)
@@ -82,7 +88,7 @@ namespace vladandartem.Controllers
             if (ModelState.IsValid)
             {
                 var result = 
-                    await signInManager.PasswordSignInAsync(evm.Email, evm.Password, evm.RememberMe, false);
+                    await _signInManager.PasswordSignInAsync(evm.Email, evm.Password, evm.RememberMe, false);
                 if (result.Succeeded)
                 {
                     // проверяем, принадлежит ли URL приложению
@@ -103,12 +109,13 @@ namespace vladandartem.Controllers
             return View(evm);
         }
         
+        [Route("LogOff")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> LogOff()
         {
             // удаляем аутентификационные куки
-            await signInManager.SignOutAsync();
+            await _signInManager.SignOutAsync();
             
             return RedirectToAction("Index", "Home");
         }
