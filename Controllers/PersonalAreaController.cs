@@ -38,9 +38,12 @@ namespace vladandartem.Controllers
             return View();
         }
         [HttpPost]
-        public RedirectToActionResult PayOrder(int id)
+        public IActionResult PayOrder(int orderId)
         {
-            Order order = _context.Orders.Find(id);
+            Order order = _context.Orders.FirstOrDefault(o => o.Id == orderId);
+
+            if (order == null)
+                return new EmptyResult();
 
             order.IsPaid = true;
 
@@ -48,7 +51,7 @@ namespace vladandartem.Controllers
 
             _context.SaveChanges();
 
-            return RedirectToAction("PaidProducts");
+            return Content(JsonConvert.SerializeObject(new { OrderId = orderId, IsPaid = order.IsPaid }));
         }
         [HttpGet]
         public ViewResult PaidProducts()
