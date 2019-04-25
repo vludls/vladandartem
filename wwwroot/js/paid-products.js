@@ -83,7 +83,6 @@ new Vue ({
             .post('/PersonalArea/RejectOrder', data
             )
             .then(response => {
-                alert(response.data.OrderId);
                 this.orders.splice(index, 1)
             });
             event.preventDefault();

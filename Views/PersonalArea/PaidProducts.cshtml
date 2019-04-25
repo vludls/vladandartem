@@ -10,7 +10,6 @@
 @Html.Partial("_GetTabs", new vladandartem.ViewModels.PersonalArea.GetTabsViewModel { SectionId = 3 })
 
 <main class="container pa" id="paid-products">
-    <div>{{ orders[0] }}</div>
     <div class="list-of-orders" v-scroll="scrolling" v-if="orders.length != 0">
         <ul>
             <li class="order" v-for="(order, index) in orders">
