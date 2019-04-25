@@ -176,10 +176,23 @@ namespace vladandartem.Controllers
         }*/
 
         [HttpGet]
-        public IActionResult Product(int ProductId)
+        public ViewResult Product(int productId)
         {
-            return View(_context.Products.Include(n => n.ProductDetailFields).ThenInclude(n => n.DetailField)
-                .ThenInclude(n => n.Definitions).Include(n => n.Category).FirstOrDefault(n => n.Id == ProductId));
+            return View();
+        }
+        [HttpPost]
+        public IActionResult ProductGetInfo(int productId)
+        {
+            Product product = _context.Products.Include(n => n.ProductDetailFields)
+                .ThenInclude(n => n.DetailField)
+                .ThenInclude(n => n.Definitions)
+                .Include(n => n.Category)
+                .FirstOrDefault(n => n.Id == productId));
+
+            if (product == null)
+                return new EmptyResult();
+
+            return Content(JsonConvert.SerializeObject(product));
         }
 
         [Authorize(Roles = "admin")]
