@@ -41,54 +41,55 @@ namespace vladandartem.Controllers
 
         [Route("Categories")]
         [HttpGet]
-        public IActionResult Main()
+        public ViewResult Main()
         {
-            MainViewModel mvm = new MainViewModel
+            return View();
+        }
+
+        [Route("Categories/Api/Get")]
+        [HttpPost]
+        public ContentResult MainGet()
+        {
+            MainViewModel viewModel = new MainViewModel
             {
                 Sections = _context.Sections.ToList(),
                 Categories = _context.Categories.ToList()
             };
 
-            return View(mvm);
+            return Content(JsonConvert.SerializeObject(viewModel));
         }
 
         [Route("Categories/Api/Add")]
         [HttpPost]
         public IActionResult AddCategory([Required]int sectionId, [Required]string categoryName)
         {
-            if (_context.Sections.Find(sectionId) != null)
-            {
-                Category category = new Category { Name = categoryName, SectionId = sectionId };
+            if (_context.Sections.Find(sectionId) == null)
+                return new EmptyResult();
 
-                _context.Categories.Add(category);
+            Category category = new Category { Name = categoryName, SectionId = sectionId };
 
-                _context.SaveChanges();
+            _context.Categories.Add(category);
+            _context.SaveChanges();
 
-                return Content(JsonConvert.SerializeObject(category));
-            }
-
-            return new EmptyResult();
+            return Content(JsonConvert.SerializeObject(category));
         }
 
         [Route("Categories/Api/Delete")]
         [HttpPost]
         public IActionResult DeleteCategory([Required]int categoryId)
         {
-            if (ModelState.IsValid)
-            {
-                Category category = _context.Categories.FirstOrDefault(c => c.Id == categoryId);
+            if (!ModelState.IsValid)
+                return new EmptyResult();
 
-                if (category == null)
-                {
-                    _context.Categories.Remove(category);
+            Category category = _context.Categories.FirstOrDefault(c => c.Id == categoryId);
 
-                    _context.SaveChanges();
-                }
+            if (category == null)
+                return new EmptyResult();
 
-                return Content(JsonConvert.SerializeObject(new { CategoryId = categoryId }));
-            }
+            _context.Categories.Remove(category);
+            _context.SaveChanges();
 
-            return new EmptyResult();
+            return Content(JsonConvert.SerializeObject(new { CategoryId = categoryId }));
         }
 
         /*******************************************
@@ -127,12 +128,9 @@ namespace vladandartem.Controllers
             User user = await _userManager.FindByIdAsync(id.ToString());
 
             if (user == null)
-            {
                 return NotFound();
-            }
 
-
-            EditUserViewModel euvm = new EditUserViewModel
+            EditUserViewModel viewModel = new EditUserViewModel
             {
                 Email = user.Email,
                 Year = user.Year,
@@ -140,7 +138,7 @@ namespace vladandartem.Controllers
                 Roles = _roleManager.Roles.ToList()
             };
 
-            return View(euvm);
+            return View(viewModel);
         }
 
         [Route("User/Api/Add")]
@@ -158,7 +156,6 @@ namespace vladandartem.Controllers
                     Cart cart = new Cart { UserId = user.Id };
 
                     _context.Cart.Add(cart);
-
                     _context.SaveChanges();
 
                     return RedirectToAction("Users");
@@ -171,6 +168,7 @@ namespace vladandartem.Controllers
                     }
                 }
             }
+
             return View(cuvm);
         }
 
@@ -533,22 +531,19 @@ namespace vladandartem.Controllers
         [HttpPost]
         public IActionResult SectionDelete([Required]int sectionId)
         {
-            if (ModelState.IsValid)
-            {
-                Section section = _context.Sections.Find(sectionId);
+            if (!ModelState.IsValid)
+                return new EmptyResult();
 
-                if (section != null)
-                {
-                    _context.Sections.Remove(section);
+            Section section = _context.Sections.FirstOrDefault(s => s.Id == sectionId);
 
-                    _context.SaveChanges();
+            if (section == null)
+                return new EmptyResult();
 
-                    //return Content(Convert.ToString(sectionId));
-                    return new JsonResult(sectionId);
-                }
+            _context.Sections.Remove(section);
+            _context.SaveChanges();
+
+                return Content(JsonConvert.SerializeObject(new { SectionId = sectionId }));
             }
-
-            return new EmptyResult();
         }
 
         /*******************************************
@@ -578,20 +573,18 @@ namespace vladandartem.Controllers
         [HttpPost]
         public IActionResult DetailFieldAdd([Required]string detailFieldName)
         {
-            if (ModelState.IsValid)
-            {
-                if (!_context.DetailFields.Any(n => n.Name == detailFieldName))
-                {
-                    DetailField detailField = new DetailField { Name = detailFieldName };
-                    _context.DetailFields.Add(detailField);
+            if (!ModelState.IsValid)
+                return new EmptyResult();
 
-                    _context.SaveChanges();
+            if (_context.DetailFields.Any(n => n.Name == detailFieldName))
+                return new EmptyResult();
 
-                    return Content(JsonConvert.SerializeObject(new { DetailFieldId = detailField.Id }));
-                }
-            }
+            DetailField detailField = new DetailField { Name = detailFieldName };
+            _context.DetailFields.Add(detailField);
 
-            return new EmptyResult();
+            _context.SaveChanges();
+
+            return Content(JsonConvert.SerializeObject(new { DetailFieldId = detailField.Id }));
         }
 
         [Route("DetailField/Api/Delete")]
@@ -607,7 +600,6 @@ namespace vladandartem.Controllers
                 return new EmptyResult();
 
             _context.DetailFields.Remove(detailField);
-
             _context.SaveChanges();
 
             return Content(JsonConvert.SerializeObject(new { DetailFieldId = detailFieldId }));
@@ -617,55 +609,48 @@ namespace vladandartem.Controllers
         [HttpPost]
         public IActionResult DetailFieldDefinitionAdd([Required]int detailFieldId, [Required]string definitionName)
         {
-            if (ModelState.IsValid)
-            {
+            if (!ModelState.IsValid)
+                return new EmptyResult();
+
                 DetailField detailField = _context.DetailFields.Include(n => n.Definitions).FirstOrDefault(n => n.Id == detailFieldId);
 
-                if (detailField != null)
-                {
-                    if (!detailField.Definitions.Any(n => n.Name == definitionName))
-                    {
-                        Definition definition = new Definition { Name = definitionName, DetailFieldId = detailFieldId };
-                        _context.Definitions.Add(definition);
+            if (detailField == null)
+                return new EmptyResult();
 
-                        _context.SaveChanges();
+            if (detailField.Definitions.Any(n => n.Name == definitionName))
+                return new EmptyResult();
 
-                        return Content(JsonConvert.SerializeObject(new { DetailFieldId = detailFieldId, DefinitionId = definition.Id, DefinitionName = definition.Name }));
-                    }
+            Definition definition = new Definition { Name = definitionName, DetailFieldId = detailFieldId };
 
-                    //context.Definition.Add(new DetailFieldDefinition { DetailFieldId = DetailFieldId, DefinitionId = Definition.Id });
-                }
-            }
+            _context.Definitions.Add(definition);
+            _context.SaveChanges();
 
-            return new EmptyResult();
+            return Content(JsonConvert.SerializeObject(new { DetailFieldId = detailFieldId, DefinitionId = definition.Id, DefinitionName = definition.Name }));
         }
 
         [Route("DetailField/Definition/Api/Delete")]
         [HttpPost]
         public IActionResult DetailFieldDefinitionDelete([Required]int definitionId)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return new EmptyResult();
+
+            Definition definition = _context.Definitions.Find(definitionId);
+
+            if (definition == null)
+                return new EmptyResult();
+
+            var productDetailFields = _context.ProductDetailFields.Where(n => n.DefinitionId == definitionId);
+
+            foreach (var productDetailField in productDetailFields)
             {
-                Definition definition = _context.Definitions.Find(definitionId);
-
-                if (definition != null)
-                {
-                    var productDetailFields = _context.ProductDetailFields.Where(n => n.DefinitionId == definitionId);
-
-                    foreach (var productDetailField in productDetailFields)
-                    {
-                        productDetailField.DefinitionId = null;
-                    }
-
-                    _context.Definitions.Remove(definition);
-
-                    _context.SaveChanges();
-
-                    return Content(JsonConvert.SerializeObject(new { DefinitionId = definitionId }));
-                }
+                productDetailField.DefinitionId = null;
             }
 
-            return new EmptyResult();
+            _context.Definitions.Remove(definition);
+            _context.SaveChanges();
+
+            return Content(JsonConvert.SerializeObject(new { DefinitionId = definitionId }));
         }
 
         [Route("DetailField/Definition/Api/GetProducts")]
