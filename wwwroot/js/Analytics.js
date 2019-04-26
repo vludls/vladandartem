@@ -5,7 +5,7 @@ $(document).ready(function () {
     $('#select-category').on('change', function() {
         var categ = $(this);
         $.ajax({
-            url: "/AdminMenu/AnalyticsLoadProductsOfChoosedCategory",
+            url: "/AdminMenu/Analytics/Api/GetCategoryProducts",
             type: "POST",
             data: { categoryId: $(categ).val() },
             success: function (data) {
@@ -24,7 +24,7 @@ $(document).ready(function () {
         var form = $(this);
         if ($('.analytics > form #select-product-name').val() == 0) {
         $.ajax({
-            url: "/AdminMenu/LoadGeneralAnalytics",
+            url: "/AdminMenu/Analytics/Api/GetGeneralAnalytics",
             type: "POST",
             data: form.serialize(),
             success: function (data) {
@@ -63,7 +63,7 @@ function analitic (form) {
     $(form).attr('asp-action', 'LoadAnalytics');
     $(form).attr('action', '/AdminMenu/LoadAnalytics');
     $.ajax({
-        url: "/AdminMenu/LoadAnalytics",
+        url: "/AdminMenu/Analytics/Api/GetAnalytics",
         type: "POST",
         data: form.serialize(),
         success: function (data) {

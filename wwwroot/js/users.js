@@ -10,10 +10,10 @@ new Vue ({
     },
     mounted: function () {
         axios
-            .post('/AdminMenu/Users/Api/Get')
-            .then(response => {
-                this.users = response.data;
-            });
+        .post('/AdminMenu/Users/Api/Get')
+        .then(response => {
+            this.users = response.data;
+        });
     },
     methods: {
         setLink: function (userId) {
@@ -27,13 +27,13 @@ new Vue ({
             this.index = index
         },
         deleteUser: function (event) {
-            const data = new FormData(document.querySelector('.user-delete'));
-            data.append('id', this.userId);
             axios
-            .post('/AdminMenu/DeleteUser', data 
-            )
+            .post('/AdminMenu/DeleteUser', null, { 
+				params: {
+                    id: this.userId
+				}
+			})
             .then( response => {
-                //alert(response.data.UserId);
                 if (response.data.UserId != 0) {
                     this.users.splice(this.index, 1)
                 }

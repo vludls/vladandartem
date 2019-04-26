@@ -11,40 +11,38 @@
 @Html.Partial("_GetTabs", new vladandartem.ViewModels.PersonalArea.GetTabsViewModel { SectionId = 2 })
 
 <main class="container lop" id="cart">
-    <template v-if="products.length != ProductId.length">
+    <template v-if="products.length != 0">
         <div class="list">
             <ul>
-                <li v-for="product in products" :id="product.Id" v-if="ProductId.indexOf(product.Id) == -1">
-                    
-                        <div class="im-in-cart">
-                            <img :src="product.Product.ImgPath" alt="">
-                        </div>
-                        <p class="name-in-cart">
-                            {{ product.Product.Name }}
-                        </p>
-                        <div class="quantity">
-                            <span>Количество:</span>
-                            <input type="number" min="1" name="count" class="form-control set-quantity"
-                                v-on:input="SetTotalPrice" 
-                                v-on:change="SaveQuantity(product.Product.Id, product.Count, product.Product)" 
-                                v-model="product.Count"   
+                <li v-for="(product, index) in products">
+                    <div class="im-in-cart">
+                        <img :src="product.Product.ImgPath" alt="">
+                    </div>
+                    <p class="name-in-cart">
+                        {{ product.Product.Name }}
+                    </p>
+                    <div class="quantity">
+                        <span>Количество:</span>
+                        <input type="number" min="1" name="count" class="form-control set-quantity"
+                            v-on:input="SetTotalPrice" 
+                            v-on:change="SaveQuantity(product.Product.Id, product.Count, product.Product)" 
+                            v-model="product.Count"   
+                        >
+                        <br>
+                        <span>На складе: </span><span> {{ product.Product.Count }} </span>
+                    </div>
+                    <p class="price-in-cart">
+                        <span>{{ product.Product.Price * product.Count }}</span> р.
+                    </p>
+                    <div>
+                        <button type="button" name="delfromcart" class="btn btn-primary newicon"
+                            v-on:click="activateModal(product.Id, product.Product.Name, index)"
+                            data-toggle="modal" 
+                            :data-target="'#' + modalId"
                             >
-                            <br>
-                            <span>На складе: </span><span> {{ product.Product.Count }} </span>
-                        </div>
-                        <p class="price-in-cart">
-                            <span>{{ product.Product.Price * product.Count }}</span> р.
-                        </p>
-                        <div>
-                            <button type="button" name="delfromcart" class="btn btn-primary newicon"
-                                v-on:click="activateModal(product.Id, product.Product.Name)"
-                                data-toggle="modal" 
-                                :data-target="'#' + modalId"
-                                >
-                                <i class="far fa-trash-alt"></i>
-                            </button>
-                        </div>
-                    
+                            <i class="far fa-trash-alt"></i>
+                        </button>
+                    </div>
                 </li>
             </ul>
 
@@ -59,12 +57,12 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <h6 data-text="Удалить пользователя ">Удалить продукт {{ selectProduct }} из корзины?</h6>
+                            <h6>Удалить продукт {{ selectProduct }} из корзины?</h6>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary close-modal" data-dismiss="modal">Закрыть</button>
-                            <form v-on:submit="deleteUser($event)" action="~/Home/RemoveProductCart" method="post" class="product-delete">
-                                <input type="hidden" name="cartProductId" :value="id">
+                            <form v-on:submit="deleteProduct($event)" action="~/Home/RemoveProductCart" method="post">
+                                <input type="hidden" name="cartProductId" :value="productId">
                                 <button type="submit" class="btn btn-danger" v-on:click="closeModal">Удалить</button>
                             </form>
                         </div>

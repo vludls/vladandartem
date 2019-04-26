@@ -6,20 +6,16 @@
 @Html.Partial("_GetTabs", new vladandartem.ViewModels.AdminMenu.GetTabsViewModel { SectionId = 1 })
 
 <main class="container admin" id="categories">
-    <div>{{ categories }}</div>
     <ul class="users">
         <li><p>Категория</p><p>Действие</p></li>
-        
-            <li v-for="(category, index) in categories.Categories">
-                <p>{{ category.Name }}</p>
-                <div class="centering">
-                    <button v-on:click="activateModal(category.Id, category.Name, index)" type="submit" class="btn btn-danger delete-user" data-toggle="modal" data-target="#test">
-                        Удалить
-                    </button>
-                </div>
-
-            </li>
-        
+        <li v-for="(category, index) in categories.Categories">
+            <p>{{ category.Name }}</p>
+            <div class="centering">
+                <button v-on:click="activateModal(category.Id, category.Name, index)" type="submit" class="btn btn-danger delete-user" data-toggle="modal" data-target="#test">
+                    Удалить
+                </button>
+            </div>
+        </li>
     </ul>
     <div class="modal fade" id="test" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
          aria-hidden="true">
@@ -44,16 +40,16 @@
             </div>
         </div>
     </div>
-    <form action="~/AdminMenu/AddCategory" method="post" class="add-new-category">
+    <form v-on:submit="addCategory($event)" action="~/AdminMenu/AddCategory" method="post" class="add-new-category">
         <div class="form-group">
             <label for="select-section">Выберите раздел</label>
-            <select name="SectionId" class="form-control select" id="select-section">
+            <select v-model="sectionId" name="SectionId" class="form-control select" id="select-section">
                 <option v-for="sections in categories.Sections" :value="sections.Id">{{ sections.Name }}</option>
             </select>
         </div>
         <div class="form-group">
             <label for="add-category">Добавьте категорию</label>
-            <input type="text" name="CategoryName" class="form-control add-category" id="add-category" placeholder="Название категории">
+            <input type="text" name="CategoryName" v-model="addCategoryName" class="form-control add-category" id="add-category" placeholder="Название категории">
         </div>
         <button type="submit" class="btn btn-primary">Добавить</button>
     </form>

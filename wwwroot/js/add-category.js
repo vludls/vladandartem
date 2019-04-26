@@ -22,6 +22,7 @@ new Vue ({
         modalId: 'id',
         categoryId: '',
         categoryName: '',
+        sectionId: '',
         index: '',
         addCategoryName: ''
     },
@@ -34,20 +35,20 @@ new Vue ({
     },
     methods: {
         activateModal: function (categoryId, categoryName, index) {
-            this.modalId = 'id';
-            this.modalId += categoryId;
+            this.modalId = 'id' + categoryId;
             this.categoryName = categoryName;
             this.categoryId = categoryId;
-            this.index = index
+            this.index = index;
         },
         deleteCategory: function (event) {
-            const data = new FormData(document.querySelector('.delete-category'));
-            data.append('categoryId', this.categoryId);
             axios
-            .post('/AdminMenu/Categories/Api/Delete', data
-            )
+            .post('/AdminMenu/Categories/Api/Delete', null, { 
+                params: { 
+                    categoryId: this.categoryId
+                } 
+            })
             .then(
-                this.categories.Categories[0].splice(this.index, 1)
+                this.categories.Categories.splice(this.index, 1)
             );
             event.preventDefault();
         },
@@ -55,14 +56,17 @@ new Vue ({
             $('.close-modal').trigger('click');
         },
         addCategory: function (event) {
-            const data = new FormData(document.querySelector('.add-new-category'));
-            data.append('sectionName', this.addCategoryName);
             axios
-            .post('/AdminMenu/Categories/Api/Add', data
-            )
+            .post('/AdminMenu/Categories/Api/Add', null, { 
+                params: {
+                    sectionId: this.sectionId,
+                    categoryName: this.addCategoryName
+                } 
+            })
             .then(response => {
-                this.categories.push(response.data);
-                this.addCategoryName = ''
+                alert(response.data);
+                this.categories.Categories.push(response.data);
+                this.addCategoryName = '';
             });
             event.preventDefault();
         }
