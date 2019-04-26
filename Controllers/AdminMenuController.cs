@@ -63,7 +63,10 @@ namespace vladandartem.Controllers
         [HttpPost]
         public IActionResult AddCategory([Required]int sectionId, [Required]string categoryName)
         {
-            if (_context.Sections.Find(sectionId) == null)
+            if (!ModelState.IsValid)
+                return new EmptyResult();
+
+            if (_context.Sections.FirstOrDefault(s => s.Id == sectionId) == null)
                 return new EmptyResult();
 
             Category category = new Category { Name = categoryName, SectionId = sectionId };
@@ -246,7 +249,14 @@ namespace vladandartem.Controllers
 
         [Route("Analytics")]
         [HttpGet]
-        public IActionResult Analytics()
+        public ViewResult Analytics()
+        {
+            return View();
+        }
+
+        [Route("Analytics/Api/GetAnalyticsFields")]
+        [HttpPost]
+        public ContentResult GetAnalyticsField()
         {
             AnalyticsViewModel model = new AnalyticsViewModel
             {
@@ -255,7 +265,7 @@ namespace vladandartem.Controllers
                 Users = _context.Users.ToList()
             };
 
-            return View(model);
+            return Content(JsonConvert.SerializeObject(model));
         }
 
         [Route("Analytics/Api/GetCategoryProducts")]

@@ -33,7 +33,6 @@ namespace vladandartem.Controllers
         {
             _context = context;
             _userManager = userManager;
-
             _hostEnv = hostEnv;
         }
 
@@ -41,7 +40,6 @@ namespace vladandartem.Controllers
         public ViewResult Index(int page = 0, string searchArgument = "")
         {
             IEnumerable<Product> products;
-            IQueryable<Product> produ;
 
             // Если в поиск введено значение
             if (searchArgument != "" && searchArgument != null)
@@ -81,7 +79,8 @@ namespace vladandartem.Controllers
             User user = await _userManager.GetUserAsync(HttpContext.User);
             
             user = _userManager.Users.Include(u => u.Cart)
-                .ThenInclude(u => u.CartProducts).FirstOrDefault(u => u.Id == user.Id);
+                .ThenInclude(u => u.CartProducts)
+                .FirstOrDefault(u => u.Id == user.Id);
 
             if (!user.Cart.CartProducts.Any(p => p.ProductId == id))
                 user.Cart.CartProducts.Add(new CartProduct { ProductId = id, Count = 1 });
@@ -98,10 +97,10 @@ namespace vladandartem.Controllers
             User user = await _userManager.GetUserAsync(HttpContext.User);
 
             user = _userManager.Users.Include(u => u.Cart)
-                .ThenInclude(u => u.CartProducts).FirstOrDefault(u => u.Id == user.Id);
+                .ThenInclude(u => u.CartProducts)
+                .FirstOrDefault(u => u.Id == user.Id);
 
             CartProduct cartProduct = user.Cart.CartProducts.FirstOrDefault(n => n.Id == cartProductId);
-
 
             if (cartProduct == null)
                 return Content(JsonConvert.SerializeObject(new { CartProductId = 0 }));
@@ -136,7 +135,6 @@ namespace vladandartem.Controllers
                 _context.DetailFields.FirstOrDefault(n => n.Id == DetailFieldId) != null)
                 {
                     _context.ProductDetailFields.Add(new ProductDetailField { ProductId = ProductId, DetailFieldId = DetailFieldId });
-
                     _context.SaveChanges();
                 }
             }
@@ -153,7 +151,6 @@ namespace vladandartem.Controllers
                 if (productDetailField != null)
                 {
                     _context.ProductDetailFields.Remove(productDetailField);
-
                     _context.SaveChanges();
                 }
             }
@@ -234,7 +231,6 @@ namespace vladandartem.Controllers
                 }
 
                 _context.Products.Update(model.Product);
-
                 _context.SaveChanges();
             }
 
@@ -252,26 +248,21 @@ namespace vladandartem.Controllers
         [HttpPost]
         public IActionResult Add(AddViewModel avm)
         {
-            if (ModelState.IsValid)
-            {
-                string fileName;
+            if (!ModelState.IsValid)
+                return View(avm);
 
-                fileName = $"{_hostEnv.WebRootPath}/images/Products/{avm.FileImg.FileName}";
+            string fileName;
 
-                avm.FileImg.CopyTo(new FileStream($"{_hostEnv.WebRootPath}/images/Products/{avm.FileImg.FileName}", FileMode.Create));
+            fileName = $"{_hostEnv.WebRootPath}/images/Products/{avm.FileImg.FileName}";
 
-                avm.Product.ImgPath = $"/images/Products/{avm.FileImg.FileName}";
+            avm.FileImg.CopyTo(new FileStream($"{_hostEnv.WebRootPath}/images/Products/{avm.FileImg.FileName}", FileMode.Create));
 
-                _context.Products.Add(avm.Product);
+            avm.Product.ImgPath = $"/images/Products/{avm.FileImg.FileName}";
 
-                _context.SaveChanges();
+            _context.Products.Add(avm.Product);
+            _context.SaveChanges();
 
-                return RedirectToAction("Index");
-            }
-
-            avm.Categories = _context.Categories.ToList();
-
-            return View(avm);
+            return RedirectToAction("Index");
         }
 
         [Authorize(Roles = "admin")]
@@ -283,7 +274,6 @@ namespace vladandartem.Controllers
             if (product != null)
             {
                 _context.Products.Remove(product);
-
                 _context.SaveChanges();
             }
 

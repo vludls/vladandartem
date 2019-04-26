@@ -46,7 +46,6 @@ namespace vladandartem.Controllers
                 return new EmptyResult();
 
             order.IsPaid = true;
-
             order.OrderTime = DateTime.UtcNow;
 
             _context.SaveChanges();
