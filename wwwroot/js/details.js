@@ -2,7 +2,7 @@ $(document).ready(function (){
     $('.add-field').submit(function (e) {
         var form = $(this);
         $.ajax({
-            url: "/AdminMenu/ProductDetailsFieldAdd",
+            url: "/AdminMenu/DetailField/Api/Add",
             type: "POST",
             data: form.serialize(),
             success: function (data) {
@@ -40,7 +40,7 @@ $(document).ready(function (){
     $('.definition-add').submit(function (e) {
         var defform = $(this);
         $.ajax({
-            url: "/AdminMenu/ProductDetailsDefinitionAdd",
+            url: "/AdminMenu/DetailField/Definition/Api/Add",
             type: "POST",
             data: defform.serialize(),
             success: function (data) {
@@ -54,13 +54,13 @@ $(document).ready(function (){
     $('.del-field').submit(function (e) {
         var delfield = $(this);
         $.ajax({
-            url: "/AdminMenu/ProductDetailsFieldDelete",
+            url: "/AdminMenu/DetailField/Api/Delete",
             type: "POST",
             data: delfield.serialize(),
             success: function (data) {
-                $('#o' + data).remove();
-                $('#odel' + data).remove();
-                $('#li' + data).remove();
+                $('#o' + data.DetailFieldId).remove();
+                $('#odel' + data.DetailFieldId).remove();
+                $('#li' + data.DetailFieldId).remove();
             }
         });
         e.preventDefault();
@@ -79,7 +79,7 @@ $(document).ready(function (){
         $(this).submit(function (e) {
             var deldef = $(this);
             $.ajax({
-                url: "/AdminMenu/ProductDetailsDefinitionDelete",
+                url: "/AdminMenu/DetailField/Definition/Api/Delete",
                 type: "POST",
                 data: deldef.serialize(),
                 success: function (data) {

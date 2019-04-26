@@ -1,28 +1,27 @@
 @model vladandartem.ViewModels.AdminMenu.MainViewModel
 @section Scripts {
-    <script src="~/js/users.js"></script>
     <script src="~/js/add-category.js"></script>
 }
 
 @Html.Partial("_GetTabs", new vladandartem.ViewModels.AdminMenu.GetTabsViewModel { SectionId = 1 })
 
-<main class="container admin">
+<main class="container admin" id="categories">
+    <div>{{ categories }}</div>
     <ul class="users">
         <li><p>Категория</p><p>Действие</p></li>
-        @foreach (var category in Model.Categories)
-        {
-            <li>
-                <p>@category.Name</p>
+        
+            <li v-for="(category, index) in categories.Categories">
+                <p>{{ category.Name }}</p>
                 <div class="centering">
-                    <button type="submit" class="btn btn-danger delete-user" data-toggle="modal" data-route-id="@category.Id" data-target="@("#a" + category.Id)">
+                    <button v-on:click="activateModal(category.Id, category.Name, index)" type="submit" class="btn btn-danger delete-user" data-toggle="modal" data-target="#test">
                         Удалить
                     </button>
                 </div>
 
             </li>
-        }
+        
     </ul>
-    <div class="modal fade" id="" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    <div class="modal fade" id="test" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -33,13 +32,13 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <h6 data-text="Удалить категорию "></h6>
+                    <h6>Удалить категорию {{ categoryName }}?</h6>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                    <form method="post" asp-action="DeleteCategory">
-                        <input type="hidden" name="id">
-                        <button type="submit" class="btn btn-danger">Удалить</button>
+                    <button type="button" class="btn btn-secondary close-modal" data-dismiss="modal">Закрыть</button>
+                    <form v-on:submit="deleteCategory($event)" method="post" asp-action="DeleteCategory" class="delete-category">
+                        <input type="hidden" name="categoryId" :value="categoryId">
+                        <button v-on:click="closeModal" type="submit" class="btn btn-danger">Удалить</button>
                     </form>
                 </div>
             </div>
@@ -49,10 +48,7 @@
         <div class="form-group">
             <label for="select-section">Выберите раздел</label>
             <select name="SectionId" class="form-control select" id="select-section">
-                @foreach (var sec in Model.Sections)
-                {
-                    <option value="@sec.Id">@sec.Name</option>
-                }
+                <option v-for="sections in categories.Sections" :value="sections.Id">{{ sections.Name }}</option>
             </select>
         </div>
         <div class="form-group">
