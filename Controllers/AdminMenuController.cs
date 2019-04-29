@@ -653,9 +653,18 @@ namespace vladandartem.Controllers
         [HttpGet]
         public IActionResult DetailField()
         {
-            List<DetailField> model = _context.DetailFields.Include(n => n.Definitions).ToList();
+            return View();
+        }
 
-            return View(model);
+        /// <summary>
+        /// Получение всех детальных полей
+        /// </summary>
+        /// <returns></returns>
+        [Route("DetailField/GetAll")]
+        [HttpPost]
+        public IActionResult GetDetailFields()
+        {
+            return Content(JsonConvert.SerializeObject(_context.DetailFields.Include(n => n.Definitions).ToList()));
         }
 
         /// <summary>
