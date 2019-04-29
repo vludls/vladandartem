@@ -176,6 +176,9 @@ new Vue({
                     this.GetAnalytics
                 );
             event.preventDefault();
+        },
+        selectAllTime: function () {
+            !this.AllTime
         }
     }
 })
