@@ -1,4 +1,4 @@
-new Vue ({
+new Vue({
     el: '#sections',
     data: {
         sections: [],
@@ -24,14 +24,14 @@ new Vue ({
         },
         deleteSection: function (event) {
             axios
-            .post('/AdminMenu/Section/Api/Delete', null, { 
-                params: { 
-                    sectionId: this.sectionId
-                } 
-            })
-            .then(
-                this.sections.splice(this.index, 1)
-            );
+                .post('/AdminMenu/Section/Api/Delete', null, {
+                    params: {
+                        sectionId: this.sectionId
+                    }
+                })
+                .then(
+                    this.sections.splice(this.index, 1)
+                );
             event.preventDefault();
         },
         closeModal: function () {
@@ -39,15 +39,15 @@ new Vue ({
         },
         addSection: function (event) {
             axios
-            .post('/AdminMenu/Section/Api/Add', null, { 
-                params: { 
-                    sectionName: this.addSectionName
-                }
-            })
-            .then(response => {
-                this.sections.push(response.data);
-                this.addSectionName = ''
-            });
+                .post('/AdminMenu/Section/Api/Add', null, {
+                    params: {
+                        sectionName: this.addSectionName
+                    }
+                })
+                .then(response => {
+                    this.sections.push(response.data);
+                    this.addSectionName = ''
+                });
             event.preventDefault();
         }
     }

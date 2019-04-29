@@ -1,22 +1,6 @@
-$(document).ready(function () {
+/*$(document).ready(function () {
     let date = new Date()
     let offset = -date.getTimezoneOffset() / 60;
-
-    $('#select-category').on('change', function() {
-        var categ = $(this);
-        $.ajax({
-            url: "/AdminMenu/Analytics/Api/GetCategoryProducts",
-            type: "POST",
-            data: { categoryId: $(categ).val() },
-            success: function (data) {
-                var products = JSON.parse(data);  
-                $('#select-product-name > option:first-child').siblings().remove();
-                for (var i = 0; i < $(products).length; i++) {
-                    $('#select-product-name').append('<option value="' + products[i]["CategoryId"] + '">' + products[i]["Name"] + '</option>');
-                }
-            }
-        });
-    });
 
     $("#first-input-hidden").val(offset);
     $('.result > ul').hide();
@@ -94,4 +78,102 @@ function analitic (form) {
             })
         }
     });
-}
+}*/
+
+new Vue({
+    el: '#analytics',
+    data: {
+        categories: [],
+        products: [],
+        users: [],
+        categoryId: '',
+        productId: '',
+        userId: '',
+        test: [],
+        date: '',
+        offset: '',
+        DateFrom: '',
+        DateTo: '',
+        AllTime: 0,
+        LastItemId: 0,
+        productsAnalytics: [],
+        genAnalytics: [],
+        months: {
+            '01': 'Январь',
+            '02': 'Февраль',
+            '03': 'Март',
+            '04': 'Апрель',
+            '05': 'Май',
+            '06': 'Июнь',
+            '07': 'Июль',
+            '08': 'Август',
+            '09': 'Сентябрь',
+            '10': 'Октябрь',
+            '11': 'Ноябрь',
+            '12': 'Декабрь'
+        }
+    },
+    mounted: function () {
+        this.date = new Date();
+        this.offset = -this.date.getTimezoneOffset() / 60;
+        axios
+            .post('/AdminMenu/Analytics/Api/GetAnalyticsFields')
+            .then(response => {
+                this.categories = response.data.Categories;
+                this.products = response.data.Products;
+                this.users = response.data.Users
+            });
+    },
+    methods: {
+        showRelevantProducts: function () {
+            axios
+                .post('/AdminMenu/Analytics/Api/GetCategoryProducts', null, {
+                    params: {
+                        categoryId: this.categoryId
+                    }
+                })
+                .then(response => {
+                    this.products = response.data
+                });
+        },
+        GetAnalytics: function (event) {
+            axios
+                .post('/AdminMenu/Analytics/Api/GetAnalytics', null, {
+                    params: {
+                        TimeZoneOffset: this.offset,
+                        CategoryId: this.categoryId,
+                        ProductId: this.productId,
+                        UserId: this.userId,
+                        DateFrom: this.DateFrom,
+                        DateTo: this.DateTo,
+                        AllTime: this.AllTime,
+                        LastItemId: this.LastItemId
+                    }
+                })
+                .then(response => {
+                    this.productsAnalytics = response.data
+                });
+            event.preventDefault();
+        },
+        GetGeneralAnalytics: function (event) {
+            axios
+                .post('/AdminMenu/Analytics/Api/GetGeneralAnalytics', null, {
+                    params: {
+                        TimeZoneOffset: this.offset,
+                        CategoryId: this.categoryId,
+                        ProductId: this.productId,
+                        UserId: this.userId,
+                        DateFrom: this.DateFrom,
+                        DateTo: this.DateTo,
+                        AllTime: this.AllTime,
+                        LastItemId: this.LastItemId
+                    }
+                })
+                .then(response => {
+                    this.genAnalytics = response.data;
+                    this.GetAnalytics()
+                });
+            event.preventDefault();
+        }
+    }
+})

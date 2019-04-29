@@ -1,4 +1,4 @@
-new Vue ({
+new Vue({
     el: '#users',
     data: {
         users: [],
@@ -10,14 +10,14 @@ new Vue ({
     },
     mounted: function () {
         axios
-        .post('/AdminMenu/Users/Api/Get')
-        .then(response => {
-            this.users = response.data;
-        });
+            .post('/AdminMenu/Users/Api/Get')
+            .then(response => {
+                this.users = response.data;
+            });
     },
     methods: {
         setLink: function (userId) {
-           this.editUser += userId
+            this.editUser += userId
         },
         activateModal: function (userId, userName, index) {
             this.modalId = 'id';
@@ -28,19 +28,19 @@ new Vue ({
         },
         deleteUser: function (event) {
             axios
-            .post('/AdminMenu/DeleteUser', null, { 
-				params: {
-                    id: this.userId
-				}
-			})
-            .then( response => {
-                if (response.data.UserId != 0) {
-                    this.users.splice(this.index, 1)
-                }
-            });
+                .post('/AdminMenu/DeleteUser', null, {
+                    params: {
+                        id: this.userId
+                    }
+                })
+                .then(response => {
+                    if (response.data.UserId != 0) {
+                        this.users.splice(this.index, 1)
+                    }
+                });
             event.preventDefault();
         },
-        closeModal: function() {
+        closeModal: function () {
             $('.close-modal').trigger('click');
         }
     }

@@ -11,53 +11,47 @@
 
 
 </div>
-<div class="container analytics">
-    <form asp-action="LoadGeneralAnalytics" method="post">
-        <input id="first-input-hidden" type="hidden" name="TimeZoneOffset">
+<div class="container analytics" id="analytics">
+    <div>{{ genAnalytics }}</div>
+    <div>{{ productsAnalytics }}</div>
+    <!--<div>{{ productsAnalytics }}</div>-->
+    <form v-on:submit="[productId != 0 ? GetAnalytics($event) : GetGeneralAnalytics($event)]" :action="[productId == 0 ? '~/AdminMenu/Analytics/Api/GetAnalytics' : '~/AdminMenu/Analytics/Api/GetGeneralAnalytics']" method="post" id="analytics-form">
+        <input id="first-input-hidden" type="hidden" name="TimeZoneOffset" v-model="offset">
         <div class="form-group">
             <label for="select-category">Категория</label>
-            <select name="CategoryId" class="form-control select" id="select-category">
+            <select v-model="categoryId" v-on:change="showRelevantProducts" name="CategoryId" class="form-control select" id="select-category">
                 <option value="0">Все</option>
-                @foreach (var category in Model.Categories)
-                {
-                    <option value="@category.Id">@category.Name</option>
-                }
+                <option v-for="category in categories" :value="category.Id">{{ category.Name }}</option>
             </select>
         </div>
         <div class="form-group">
             <label for="select-product-name">Продукт(ы):</label>
-            <select name="ProductId" class="form-control select" id="select-product-name">
+            <select v-model="productId" name="ProductId" class="form-control select" id="select-product-name">
                 <option value="0">Все</option>
-                @foreach (var product in Model.Products)
-                {
-                    <option value="@product.Id">@product.Name</option>
-                }
+                <option v-for="product in products" :value="product.Id">{{ product.Name }}</option>
             </select>
         </div>
         <div id="test" class="form-group">
             <label for="select-email">Пользователь:</label>
-            <select name="UserId" class="form-control select" id="select-email">
+            <select v-model="userId" name="UserId" class="form-control select" id="select-email">
                 <option value="0">Все</option>
-                @foreach (var user in Model.Users)
-                {
-                    <option value="@user.Id">@user.Email</option>
-                }
+                <option v-for="user in users" :value="user.Id">{{ user.UserName }}</option>
             </select>
         </div>
 
         <div class="form-group">
             <label for="DateFrom">С:</label>
-            <input class="form-control datepicker" name="DateFrom" id="DateFrom">
+            <input class="form-control datepicker" name="DateFrom" id="DateFrom" v-model="DateFrom">
         </div>
         <div class="form-group">
             <label for="DateTo">По:</label>
-            <input class="form-control datepicker" name="DateTo" id="DateTo">
+            <input class="form-control datepicker" name="DateTo" id="DateTo" v-model="DateTo">
         </div>
         <div class="custom-control custom-checkbox center-check">
-            <input type="checkbox" class="custom-control-input" id="customCheck1" name="AllTime">
+            <input type="checkbox" class="custom-control-input" id="customCheck1" name="AllTime" v-model="AllTime">
             <label class="custom-control-label" for="customCheck1">За всё время</label>
         </div>
-        <input id="second-input-hidden" type="hidden" name="LastItemId" value="0">
+        <input id="second-input-hidden" type="hidden" name="LastItemId" v-model="LastItemId">
         <div class="form-group">
             <button type="submit" class="btn btn-primary margin">Показать</button>
         </div>
@@ -66,13 +60,50 @@
     <div class="container result">
         <ul>
 
-            <!--<li class="products-in-analytics">
+            <li v-if="productId == 0" class="products-in-analytics">
                 <div class="name-in-analitics">
                     <h4>Общая статистика</h4>
                     <div class="open-order"><i class="fas fa-chevron-circle-down"></i></div>
                 </div>
                 <div class="toggle">
-                    <h5 class="overall">В сумме продано: 10, выручка: 57800</h5>
+                    <h5 class="overall">В сумме продано: {{ genAnalytics.Sales }}, выручка: {{ genAnalytics.Revenue }}</h5>
+                    <ul class="months">
+                        <li v-for="month in genAnalytics.MonthsState">
+                            <h5><span>Январь</span><span>2019</span></h5>
+                            <table>
+                                <tr>
+                                    <th>День</th><th>Продано</th><th>Выручка</th>
+                                </tr>
+                                <tr>
+                                    <td>1</td><td>7</td><td>15000</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td><td>7</td><td>15000</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td><td>7</td><td>15000</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td><td>7</td><td>15000</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td><td>7</td><td>15000</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td><td>7</td><td>15000</td>
+                                </tr>
+                            </table>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li v-for="product in productsAnalytics" class="products-in-analytics">
+                <div class="name-in-analitics">
+                    <h4>{{ product.Product.Name }}</h4>
+                    <div class="open-order"><i class="fas fa-chevron-circle-down"></i></div>
+                </div>
+                <div class="toggle">
+                    <h5 class="overall">В сумме продано: {{ product.Sales }}, выручка: {{ product.Revenue }}</h5>
                     <ul class="months">
                         <li>
                             <h5><span>Январь</span><span>2019</span></h5>
@@ -103,43 +134,6 @@
                     </ul>
                 </div>
             </li>
-            <li class="products-in-analytics">
-                <div class="name-in-analitics">
-                    <h4>Продукт</h4>
-                    <div class="open-order"><i class="fas fa-chevron-circle-down"></i></div>
-                </div>
-                <div class="toggle">
-                    <h5 class="overall">В сумме продано: 10, выручка: 57800</h5>
-                    <ul class="months">
-                        <li>
-                            <h5><span>Январь</span><span>2019</span></h5>
-                            <table>
-                                <tr>
-                                    <th>День</th><th>Продано</th><th>Выручка</th>
-                                </tr>
-                                <tr>
-                                    <td>1</td><td>7</td><td>15000</td>
-                                </tr>
-                                <tr>
-                                    <td>1</td><td>7</td><td>15000</td>
-                                </tr>
-                                <tr>
-                                    <td>1</td><td>7</td><td>15000</td>
-                                </tr>
-                                <tr>
-                                    <td>1</td><td>7</td><td>15000</td>
-                                </tr>
-                                <tr>
-                                    <td>1</td><td>7</td><td>15000</td>
-                                </tr>
-                                <tr>
-                                    <td>1</td><td>7</td><td>15000</td>
-                                </tr>
-                            </table>
-                        </li>
-                    </ul>
-                </div>
-            </li>-->
             
         </ul>
 

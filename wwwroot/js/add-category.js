@@ -15,7 +15,7 @@
         e.preventDefault();
     });
 })*/
-new Vue ({
+new Vue({
     el: '#categories',
     data: {
         categories: [],
@@ -42,14 +42,14 @@ new Vue ({
         },
         deleteCategory: function (event) {
             axios
-            .post('/AdminMenu/Categories/Api/Delete', null, { 
-                params: { 
-                    categoryId: this.categoryId
-                } 
-            })
-            .then(
-                this.categories.Categories.splice(this.index, 1)
-            );
+                .post('/AdminMenu/Categories/Api/Delete', null, {
+                    params: {
+                        categoryId: this.categoryId
+                    }
+                })
+                .then(
+                    this.categories.Categories.splice(this.index, 1)
+                );
             event.preventDefault();
         },
         closeModal: function () {
@@ -57,17 +57,17 @@ new Vue ({
         },
         addCategory: function (event) {
             axios
-            .post('/AdminMenu/Categories/Api/Add', null, { 
-                params: {
-                    sectionId: this.sectionId,
-                    categoryName: this.addCategoryName
-                } 
-            })
-            .then(response => {
-                alert(response.data);
-                this.categories.Categories.push(response.data);
-                this.addCategoryName = '';
-            });
+                .post('/AdminMenu/Categories/Api/Add', null, {
+                    params: {
+                        sectionId: this.sectionId,
+                        categoryName: this.addCategoryName
+                    }
+                })
+                .then(response => {
+                    alert(response.data);
+                    this.categories.Categories.push(response.data);
+                    this.addCategoryName = '';
+                });
             event.preventDefault();
         }
     }
