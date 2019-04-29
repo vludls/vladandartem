@@ -57,6 +57,7 @@ namespace vladandartem.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public async Task<ContentResult> GetPaidProducts(int start)
         {
