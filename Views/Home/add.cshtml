@@ -20,17 +20,17 @@
                 <input type="hidden" name="product.ImgPath" id="add-img-path">
                 <div class="form-group">
                     <label for="name-add">Название товара</label>
-                    <input type="text" class="form-control" id="name-add" name="product.Name" value="@Model.Product.Name">
+                    <input type="text" class="form-control" id="name-add" name="product.Name" value="@Model?.Product?.Name">
                     <span asp-validation-for="Product.Name"></span>
                 </div>
                 <span asp-validation-for="Product.Name"></span>
                 <div class="form-group">
                     <label for="Price-add">Цена</label>
-                    <input type="number" min="1" name="product.price" class="form-control" id="Price-add" value="@Model.Product.Price">
+                    <input type="number" min="1" name="product.price" class="form-control" id="Price-add" value="@Model?.Product?.Price">
                 </div>
                 <div class="form-group">
                     <label for="Manufacturer-add">Производитель</label>
-                    <input type="text" class="form-control" id="Manufacturer-add" name="product.Manufacturer" value="@Model.Product.Manufacturer">
+                    <input type="text" class="form-control" id="Manufacturer-add" name="product.Manufacturer" value="@Model?.Product?.Manufacturer">
                     <span asp-validation-for="Product.Manufacturer"></span>
                 </div>
                 
@@ -44,7 +44,7 @@
                 
                 <div class="form-group">
                     <label for="q-add">Количество на складе</label>
-                    <input type="number" class="form-control" id="q-add" min="0" name="product.count" value="@Model.Product.Count">
+                    <input type="number" class="form-control" id="q-add" min="0" name="product.count" value="@Model?.Product?.Count">
                 </div>
                 
                 <button type="submit" class="btn btn-primary">Добавить</button>

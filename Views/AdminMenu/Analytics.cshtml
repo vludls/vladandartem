@@ -15,7 +15,7 @@
     <div>{{ genAnalytics }}</div>
     <div>{{ productsAnalytics }}</div>
     <!--<div>{{ productsAnalytics }}</div>-->
-    <form v-on:submit="[productId != 0 ? GetAnalytics($event) : GetGeneralAnalytics($event)]" :action="[productId == 0 ? '~/AdminMenu/Analytics/Api/GetAnalytics' : '~/AdminMenu/Analytics/Api/GetGeneralAnalytics']" method="post" id="analytics-form">
+    <form v-on:submit="[productId != 0 ? GetAnalytics($event) : GetGeneralAnalytics($event)]" :action="[productId != 0 ? '/Analytics/Api/GetAnalytics' : '/Analytics/Api/GetGeneralAnalytics']" method="post" id="analytics-form">
         <input id="first-input-hidden" type="hidden" name="TimeZoneOffset" v-model="offset">
         <div class="form-group">
             <label for="select-category">Категория</label>

@@ -151,7 +151,7 @@ new Vue({
                     }
                 })
                 .then(response => {
-                    this.productsAnalytics = response.data
+                    this.productsAnalytics = response.data;
                 });
             event.preventDefault();
         },
@@ -171,10 +171,9 @@ new Vue({
                 })
                 .then(response => {
                     this.genAnalytics = response.data;
+                    this.GetAnalytics(event)
                 })
-                .then(
-                    this.GetAnalytics
-                );
+
             event.preventDefault();
         },
         selectAllTime: function () {

@@ -10,70 +10,59 @@
 
 @Html.Partial("_GetTabs", new vladandartem.ViewModels.AdminMenu.GetTabsViewModel { SectionId = 5 })
 
-<main class="container details">
+<main class="container details" id="detail-fields">
+    <div>{{ fields }}</div>
     <div class="add-and-delete-field">
-        <form asp-action="ProductDetailsFieldAdd" method="post" class="add-field">
+        <form action="~/AdminMenu/DetailField/Api/Add" method="post" class="add-field">
             <div class="form-group">
                 <label for="DetailFieldName">Добавить поле</label>
-                <input type="text" name="DetailFieldName" class="form-control" id="DetailFieldName"/>
+                <input type="text" name="DetailFieldName" class="form-control" id="DetailFieldName" v-model="fieldName"/>
             </div>
-            <button type="submit" class="btn btn-primary">Добавить</button>
+            <button v-on:click="addField" type="button" class="btn btn-primary">Добавить</button>
         </form>
-        <form asp-action="ProductDetailsDefinitionAdd" method="post" class="definition-add">
+        <form action="~/AdminMenu/DetailField/Definition/Api/Add" method="post" class="definition-add">
             <div class="form-group">
                 <label for="DetailFieldId">Выбрать поле</label>
                 <select name="DetailFieldId" class="form-control select add-new-field" id="DetailFieldId">
                     <option value="0">Выберите поле</option>
-                    @foreach (var detailField in Model)
-                    {
-                        <option value="@detailField.Id" id="@("o" + detailField.Id)">@detailField.Name</option>
-                    }
+                    <option v-for="field in fields" :value="field.Id">{{ field.Name }}</option>
                 </select>
                 <label for="DefinitionName">Добавить значение</label>
                 <input type="text" class="form-control" name="DefinitionName" id="DefinitionName"/>
             </div>
             <button type="submit" class="btn btn-primary">Прикрепить</button>
         </form>
-        <form asp-action="ProductDetailsFieldDelete" method="post" class="del-field">
+        <form action="~/AdminMenu/DetailField/Api/Delete" method="post" class="del-field">
             <div class="form-group">
                 <label for="DetailFieldId-del">Удалить поле</label>
                 <select name="DetailFieldId" class="form-control add-new-field-1" id="DetailFieldId-del">
-                <option value="0">Выберите поле</option>
-                @foreach (var field in Model)
-                {
-                    <option value="@field.Id" id="@("odel" + field.Id)">@field.Name</option>
-                }
+                    <option value="0">Выберите поле</option>
+                    <option v-for="field in fields" :value="field.Id">{{ field.Name }}</option>
                 </select>
             </div>
-            <button type="button" class="btn btn-primary" data-toggle="modal">Удалить</button>
+            <button type="submit" class="btn btn-danger" data-toggle="modal">Удалить</button>
         </form>
     </div>
     
     <ul class="list-of-fields">
         <li><p class="field-name">Поле</p><p class="select-value">Значение</p><p class="last-column">Действие</p></li>
-        @foreach (var detailField in Model)
-        {
-        <li id="@("li" + detailField.Id)">
-            <p class="field-name">@detailField.Name</p>
-            <form asp-action="ProductDetailsDefinitionDelete" method="post" class="delete-defininion">
+        <li v-for="field in fields">
+            <p class="field-name">{{ field.Name }}</p>
+            <form action="~/AdminMenu/DetailField/Definition/Api/Delete" method="post" class="delete-defininion">
                 <div class="select-value">
-                    <select name="DefinitionId" class="form-control" id="@("d" + detailField.Id)">
+                    <select name="DefinitionId" class="form-control">
                         <option value="0">Выберите значение</option>
-                        @foreach (var definition in detailField.Definitions)
-                        {
-                            <option value="@definition.Id" id="@("def" + definition.Id)">@definition.Name</option>
-                        }
+                        <option v-for="definition in field.Definitions" :value="definition.Id">{{ definition.Name }}</option>
                     </select>
                 </div>
                 <div class="last-column">
-                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="@("#m" + detailField.Id)" id="@("id" + detailField.Id)">Удалить</button>
+                    <button type="submit" class="btn btn-danger" data-toggle="modal" data-target="">Удалить</button>
                 </div>
             </form>
         </li>
-        }
     </ul>
 
-    <div class="modal fade for-del-field" id="" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    <div class="modal fade for-del-field" id="test" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">

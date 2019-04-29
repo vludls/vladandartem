@@ -1,4 +1,4 @@
-$(document).ready(function () {
+/*$(document).ready(function () {
     $('.add-field').submit(function (e) {
         var form = $(this);
         $.ajax({
@@ -101,4 +101,33 @@ $(document).ready(function () {
             })
         });
     });
+})*/
+
+new Vue({
+    el: '#detail-fields',
+    data: {
+        fields: [],
+        fieldName: ''
+    },
+    mounted: function () {
+        axios
+            .post('/AdminMenu/DetailField/GetAll')
+            .then(response => {
+                this.fields = response.data;
+            });
+    },
+    methods: {
+        addField: function () {
+            axios
+                .post('/AdminMenu/DetailField/Api/Add', null, {
+                    params: {
+                        detailFieldName: this.fieldName
+                    }
+                })
+                .then(response => {
+                    //alert(response.data.DetailFieldId)
+                    this.fields.push(response.data)
+                });
+        }
+    }
 })
