@@ -15,7 +15,7 @@
     <div>{{ genAnalytics }}</div>
     <div>{{ productsAnalytics }}</div>
     <!--<div>{{ productsAnalytics }}</div>-->
-    <form v-on:submit="[productId != 0 ? GetAnalytics($event) : GetGeneralAnalytics($event)]" :action="[productId == 0 ? '~/AdminMenu/Analytics/Api/GetAnalytics' : '~/AdminMenu/Analytics/Api/GetGeneralAnalytics']" method="post" id="analytics-form">
+    <form v-on:submit="[productId != 0 ? GetAnalytics($event) : GetGeneralAnalytics($event)]" :action="[productId != 0 ? '~/AdminMenu/Analytics/Api/GetAnalytics' : '~/AdminMenu/Analytics/Api/GetGeneralAnalytics']" method="post" id="analytics-form">
         <input id="first-input-hidden" type="hidden" name="TimeZoneOffset" v-model="offset">
         <div class="form-group">
             <label for="select-category">Категория</label>
@@ -48,7 +48,7 @@
             <input class="form-control datepicker" name="DateTo" id="DateTo" v-model="DateTo">
         </div>
         <div class="custom-control custom-checkbox center-check">
-            <input type="checkbox" class="custom-control-input" id="customCheck1" name="AllTime" v-model="AllTime" v-on:change="selectAllTime">
+            <input type="checkbox" class="custom-control-input" id="customCheck1" name="AllTime" v-model="AllTime">
             <label class="custom-control-label" for="customCheck1">За всё время</label>
         </div>
         <input id="second-input-hidden" type="hidden" name="LastItemId" v-model="LastItemId">

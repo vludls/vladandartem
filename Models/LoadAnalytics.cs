@@ -12,7 +12,9 @@ namespace vladandartem.ViewModels.AdminMenu
         public int ProductId { get; set; }
         [Required]
         public int UserId { get; set; }
+        [DataType(DataType.Date)]
         public DateTime DateFrom { get; set; }
+        [DataType(DataType.Date)]
         public DateTime DateTo { get; set; }
         public int AllTime { get; set; }
         public int LastItemId { get; set; }

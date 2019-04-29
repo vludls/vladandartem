@@ -687,7 +687,7 @@ namespace vladandartem.Controllers
 
             _context.SaveChanges();
 
-            return Content(JsonConvert.SerializeObject(new { DetailFieldId = detailField.Id }));
+            return Content(JsonConvert.SerializeObject(detailField));
         }
 
         /// <summary>

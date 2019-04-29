@@ -94,10 +94,10 @@ new Vue({
         offset: '',
         DateFrom: '',
         DateTo: '',
-        AllTime: 1,
+        AllTime: 0,
         LastItemId: 0,
         productsAnalytics: [],
-        genAnalytics: [],
+        genAnalytics: null,
         months: {
             '01': 'Январь',
             '02': 'Февраль',
@@ -117,12 +117,12 @@ new Vue({
         this.date = new Date();
         this.offset = -this.date.getTimezoneOffset() / 60;
         axios
-            .post('/AdminMenu/Analytics/Api/GetAnalyticsFields')
-            .then(response => {
-                this.categories = response.data.Categories;
-                this.products = response.data.Products;
-                this.users = response.data.Users
-            });
+        .post('/AdminMenu/Analytics/Api/GetAnalyticsFields')
+        .then(response => {
+            this.categories = response.data.Categories;
+            this.products = response.data.Products;
+            this.users = response.data.Users;
+        });
     },
     methods: {
         showRelevantProducts: function () {
@@ -133,10 +133,10 @@ new Vue({
                     }
                 })
                 .then(response => {
-                    this.products = response.data
+                    this.products = response.data;
                 });
         },
-        GetAnalytics: function (event) {
+        GetAnalytics: function () {
             axios
                 .post('/AdminMenu/Analytics/Api/GetAnalytics', null, {
                     params: {
@@ -151,9 +151,8 @@ new Vue({
                     }
                 })
                 .then(response => {
-                    this.productsAnalytics = response.data
+                    this.productsAnalytics = response.data;
                 });
-            event.preventDefault();
         },
         GetGeneralAnalytics: function (event) {
             axios
@@ -171,14 +170,9 @@ new Vue({
                 })
                 .then(response => {
                     this.genAnalytics = response.data;
-                })
-                .then(
-                    this.GetAnalytics
-                );
+                    this.GetAnalytics();
+                });
             event.preventDefault();
-        },
-        selectAllTime: function () {
-            +!this.AllTime
         }
     }
 })
