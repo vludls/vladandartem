@@ -86,15 +86,15 @@ new Vue({
         categories: [],
         products: [],
         users: [],
-        categoryId: '',
-        productId: '',
-        userId: '',
+        categoryId: 0,
+        productId: 0,
+        userId: 0,
         test: [],
         date: '',
         offset: '',
         DateFrom: '',
         DateTo: '',
-        AllTime: 0,
+        AllTime: 1,
         LastItemId: 0,
         productsAnalytics: [],
         genAnalytics: [],
@@ -171,8 +171,10 @@ new Vue({
                 })
                 .then(response => {
                     this.genAnalytics = response.data;
-                    this.GetAnalytics()
-                });
+                })
+                .then(
+                    this.GetAnalytics
+                );
             event.preventDefault();
         }
     }

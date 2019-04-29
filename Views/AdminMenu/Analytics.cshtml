@@ -48,7 +48,7 @@
             <input class="form-control datepicker" name="DateTo" id="DateTo" v-model="DateTo">
         </div>
         <div class="custom-control custom-checkbox center-check">
-            <input type="checkbox" class="custom-control-input" id="customCheck1" name="AllTime" v-model="AllTime">
+            <input type="checkbox" class="custom-control-input" id="customCheck1" name="AllTime" v-model="AllTime" v-on:click="AllTime = !AllTime">
             <label class="custom-control-label" for="customCheck1">За всё время</label>
         </div>
         <input id="second-input-hidden" type="hidden" name="LastItemId" v-model="LastItemId">
@@ -57,7 +57,7 @@
         </div>
     </form>
 
-    <div class="container result">
+    <div v-if="productsAnalytics.length > 0" class="container result">
         <ul>
 
             <li v-if="productId == 0" class="products-in-analytics">
@@ -69,28 +69,13 @@
                     <h5 class="overall">В сумме продано: {{ genAnalytics.Sales }}, выручка: {{ genAnalytics.Revenue }}</h5>
                     <ul class="months">
                         <li v-for="month in genAnalytics.MonthsState">
-                            <h5><span>Январь</span><span>2019</span></h5>
+                            <h5><span>{{ months[month.Month.substr(5, 2)] }}</span><span> {{ month.Month.substr(0, 4) }} </span></h5>
                             <table>
                                 <tr>
                                     <th>День</th><th>Продано</th><th>Выручка</th>
                                 </tr>
-                                <tr>
-                                    <td>1</td><td>7</td><td>15000</td>
-                                </tr>
-                                <tr>
-                                    <td>1</td><td>7</td><td>15000</td>
-                                </tr>
-                                <tr>
-                                    <td>1</td><td>7</td><td>15000</td>
-                                </tr>
-                                <tr>
-                                    <td>1</td><td>7</td><td>15000</td>
-                                </tr>
-                                <tr>
-                                    <td>1</td><td>7</td><td>15000</td>
-                                </tr>
-                                <tr>
-                                    <td>1</td><td>7</td><td>15000</td>
+                                <tr v-for="day in month.Days">
+                                    <td>{{ day.Day.substr(8, 2) }}</td><td>{{ day.Sales }}</td><td>{{ day.Revenue }}</td>
                                 </tr>
                             </table>
                         </li>
@@ -105,29 +90,14 @@
                 <div class="toggle">
                     <h5 class="overall">В сумме продано: {{ product.Sales }}, выручка: {{ product.Revenue }}</h5>
                     <ul class="months">
-                        <li>
-                            <h5><span>Январь</span><span>2019</span></h5>
+                        <li v-for="month in product.MonthsState">
+                            <h5><span>{{ months[month.Month.substr(5, 2)] }}</span><span> {{ month.Month.substr(0, 4) }} </span></h5>
                             <table>
                                 <tr>
                                     <th>День</th><th>Продано</th><th>Выручка</th>
                                 </tr>
-                                <tr>
-                                    <td>1</td><td>7</td><td>15000</td>
-                                </tr>
-                                <tr>
-                                    <td>1</td><td>7</td><td>15000</td>
-                                </tr>
-                                <tr>
-                                    <td>1</td><td>7</td><td>15000</td>
-                                </tr>
-                                <tr>
-                                    <td>1</td><td>7</td><td>15000</td>
-                                </tr>
-                                <tr>
-                                    <td>1</td><td>7</td><td>15000</td>
-                                </tr>
-                                <tr>
-                                    <td>1</td><td>7</td><td>15000</td>
+                                <tr v-for="day in month.Days">
+                                    <td>{{ day.Day.substr(8, 2) }}</td><td>{{ day.Sales }}</td><td>{{ day.Revenue }}</td>
                                 </tr>
                             </table>
                         </li>
