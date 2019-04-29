@@ -38,7 +38,7 @@ namespace vladandartem.Controllers
         /*******************************************
          * Categories
          *******************************************/
-
+        [ApiExplorerSettings(IgnoreApi = true)]
         [Route("Categories")]
         [HttpGet]
         public ViewResult Main()
@@ -46,6 +46,16 @@ namespace vladandartem.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Получение категорий и их секций
+        /// </summary>
+        /// <response code="200">
+        /// Возвращает JSON:
+        /// {
+        ///     "Sections" = [],
+        ///     "Categories" = []
+        /// }
+        /// </response>
         [Route("Categories/Api/Get")]
         [HttpPost]
         public ContentResult MainGet()
@@ -59,6 +69,12 @@ namespace vladandartem.Controllers
             return Content(JsonConvert.SerializeObject(viewModel));
         }
 
+        /// <summary>
+        /// Добавление новой категории
+        /// </summary>
+        /// <param name="sectionId">Id секции</param>
+        /// <param name="categoryName">Название категории</param>
+        /// <returns></returns>
         [Route("Categories/Api/Add")]
         [HttpPost]
         public IActionResult AddCategory([Required]int sectionId, [Required]string categoryName)
@@ -77,6 +93,11 @@ namespace vladandartem.Controllers
             return Content(JsonConvert.SerializeObject(category));
         }
 
+        /// <summary>
+        /// Удаление категории
+        /// </summary>
+        /// <param name="categoryId">Id категории</param>
+        /// <returns></returns>
         [Route("Categories/Api/Delete")]
         [HttpPost]
         public IActionResult DeleteCategory([Required]int categoryId)
@@ -99,6 +120,7 @@ namespace vladandartem.Controllers
          * Users
          *******************************************/
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         [Route("Users")]
         [HttpGet]
         public IActionResult Users()
@@ -106,6 +128,10 @@ namespace vladandartem.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Получение всех юзеров
+        /// </summary>
+        /// <returns></returns>
         [Route("Users/Api/Get")]
         [HttpPost]
         public IActionResult GetUsers()
@@ -117,6 +143,7 @@ namespace vladandartem.Controllers
          * User
          *******************************************/
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         [Route("User")]
         [HttpGet]
         public IActionResult CreateUser()
@@ -124,6 +151,7 @@ namespace vladandartem.Controllers
             return View();
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         [Route("User/Edit")]
         [HttpGet]
         public async Task<IActionResult> EditUser([Required]int id)
@@ -144,6 +172,11 @@ namespace vladandartem.Controllers
             return View(viewModel);
         }
 
+        /// <summary>
+        /// Создание пользователя
+        /// </summary>
+        /// <param name="cuvm"></param>
+        /// <returns></returns>
         [Route("User/Api/Add")]
         [HttpPost]
         public async Task<IActionResult> AddUser(CreateUserViewModel cuvm)
@@ -175,6 +208,14 @@ namespace vladandartem.Controllers
             return View(cuvm);
         }
 
+        /// <summary>
+        /// Редактирование пользователя
+        /// </summary>
+        /// <param name="id">Id пользователя</param>
+        /// <param name="email">E-mail</param>
+        /// <param name="year">Дата рождения</param>
+        /// <param name="roles">Роли</param>
+        /// <returns></returns>
         [Route("User/Api/Save")]
         [HttpPost]
         public async Task<IActionResult> UserSave([Required]int id, [Required]string email, [Required]string year, List<string> roles)
@@ -217,6 +258,11 @@ namespace vladandartem.Controllers
             return Content("Такого юзера не существует");
         }
 
+        /// <summary>
+        /// Удаление пользователя
+        /// </summary>
+        /// <param name="id">Id пользователя</param>
+        /// <returns></returns>
         [Route("User/Api/Delete")]
         [HttpPost]
         public async Task<IActionResult> DeleteUser(int id)
@@ -247,6 +293,7 @@ namespace vladandartem.Controllers
          * Analytics
          *******************************************/
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         [Route("Analytics")]
         [HttpGet]
         public ViewResult Analytics()
@@ -254,6 +301,10 @@ namespace vladandartem.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Получение данных для полей в аналитике
+        /// </summary>
+        /// <returns></returns>
         [Route("Analytics/Api/GetAnalyticsFields")]
         [HttpPost]
         public ContentResult GetAnalyticsField()
@@ -268,28 +319,36 @@ namespace vladandartem.Controllers
             return Content(JsonConvert.SerializeObject(model));
         }
 
+        /// <summary>
+        /// Получение списка продуктов по категории
+        /// </summary>
+        /// <param name="categoryId">Id категории</param>
+        /// <returns></returns>
         [Route("Analytics/Api/GetCategoryProducts")]
         [HttpPost]
         public IActionResult AnalyticsLoadProductsOfChoosedCategory([Required]int categoryId)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return new EmptyResult();
+
+            if (_context.Categories.Any(n => n.Id == categoryId))
             {
-                if (_context.Categories.Any(n => n.Id == categoryId))
-                {
-                    Category category = _context.Categories.Include(n => n.Products)
-                        .FirstOrDefault(n => n.Id == categoryId);
+                Category category = _context.Categories.Include(n => n.Products)
+                    .FirstOrDefault(n => n.Id == categoryId);
 
-                    return Content(JsonConvert.SerializeObject(category.Products));
-                }
-                else
-                {
-                    return Content(JsonConvert.SerializeObject(_context.Products.ToList()));
-                }
+                return Content(JsonConvert.SerializeObject(category.Products));
             }
-
-            return new EmptyResult();
+            else
+            {
+                return Content(JsonConvert.SerializeObject(_context.Products.ToList()));
+            }
         }
 
+        /// <summary>
+        /// Получение общей аналитики
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [Route("Analytics/Api/GetGeneralAnalytics")]
         [HttpPost]
         public IActionResult LoadGeneralAnalytics(LoadAnalytics model)
@@ -392,6 +451,11 @@ namespace vladandartem.Controllers
             return Content(JsonConvert.SerializeObject(productAnalytics));
         }
 
+        /// <summary>
+        /// Получение аналитики на каждый товар в указанном диапазоне
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [Route("Analytics/Api/GetAnalytics")]
         [HttpPost]
         public IActionResult LoadAnalytics(LoadAnalytics model)
@@ -505,6 +569,7 @@ namespace vladandartem.Controllers
          * Section
          *******************************************/
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         [Route("Section")]
         [HttpGet]
         public ViewResult Section()
@@ -512,6 +577,10 @@ namespace vladandartem.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Получение всех секций
+        /// </summary>
+        /// <returns></returns>
         [Route("Section/Api/GetAll")]
         [HttpPost]
         public ContentResult GetSections()
@@ -519,6 +588,11 @@ namespace vladandartem.Controllers
             return Content(JsonConvert.SerializeObject(_context.Sections.ToList()));
         }
 
+        /// <summary>
+        /// Добавление секции
+        /// </summary>
+        /// <param name="sectionName">Название секции</param>
+        /// <returns></returns>
         [Route("Section/Api/Add")]
         [HttpPost]
         public IActionResult AddSection([Required]string sectionName)
@@ -537,6 +611,11 @@ namespace vladandartem.Controllers
             return new EmptyResult();
         }
 
+        /// <summary>
+        /// Удаление секции
+        /// </summary>
+        /// <param name="sectionId">Id секции</param>
+        /// <returns></returns>
         [Route("Section/Api/Delete")]
         [HttpPost]
         public IActionResult SectionDelete([Required]int sectionId)
@@ -558,6 +637,7 @@ namespace vladandartem.Controllers
         /*******************************************
          * Role
          *******************************************/
+        [ApiExplorerSettings(IgnoreApi = true)]
         [Route("Role")]
         [HttpGet]
         public IActionResult Role()
@@ -568,7 +648,7 @@ namespace vladandartem.Controllers
         /*******************************************
          * DetailField
          *******************************************/
-
+        [ApiExplorerSettings(IgnoreApi = true)]
         [Route("DetailField")]
         [HttpGet]
         public IActionResult DetailField()
@@ -578,6 +658,11 @@ namespace vladandartem.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Добавление детального поля
+        /// </summary>
+        /// <param name="detailFieldName">Название детального поля</param>
+        /// <returns></returns>
         [Route("DetailField/Api/Add")]
         [HttpPost]
         public IActionResult DetailFieldAdd([Required]string detailFieldName)
@@ -596,6 +681,11 @@ namespace vladandartem.Controllers
             return Content(JsonConvert.SerializeObject(new { DetailFieldId = detailField.Id }));
         }
 
+        /// <summary>
+        /// Удаление детального поля
+        /// </summary>
+        /// <param name="detailFieldId">Id детального поля</param>
+        /// <returns></returns>
         [Route("DetailField/Api/Delete")]
         [HttpPost]
         public IActionResult DetailFieldDelete([Required]int detailFieldId)
@@ -614,6 +704,12 @@ namespace vladandartem.Controllers
             return Content(JsonConvert.SerializeObject(new { DetailFieldId = detailFieldId }));
         }
 
+        /// <summary>
+        /// Добавление определения для детального поля
+        /// </summary>
+        /// <param name="detailFieldId">Id детального поля</param>
+        /// <param name="definitionName">Название определения</param>
+        /// <returns></returns>
         [Route("DetailField/Definition/Api/Add")]
         [HttpPost]
         public IActionResult DetailFieldDefinitionAdd([Required]int detailFieldId, [Required]string definitionName)
@@ -637,6 +733,11 @@ namespace vladandartem.Controllers
             return Content(JsonConvert.SerializeObject(new { DetailFieldId = detailFieldId, DefinitionId = definition.Id, DefinitionName = definition.Name }));
         }
 
+        /// <summary>
+        /// Удаление определения у детального поля
+        /// </summary>
+        /// <param name="definitionId">Id определения</param>
+        /// <returns></returns>
         [Route("DetailField/Definition/Api/Delete")]
         [HttpPost]
         public IActionResult DetailFieldDefinitionDelete([Required]int definitionId)
@@ -662,6 +763,11 @@ namespace vladandartem.Controllers
             return Content(JsonConvert.SerializeObject(new { DefinitionId = definitionId }));
         }
 
+        /// <summary>
+        /// Получение списка продуктов с указанным определением
+        /// </summary>
+        /// <param name="definitionId">Id определения</param>
+        /// <returns></returns>
         [Route("DetailField/Definition/Api/GetProducts")]
         [HttpPost]
         public ContentResult ProductsOfDefinition(int definitionId)
