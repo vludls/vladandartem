@@ -60,7 +60,7 @@
                             <h6>Удалить продукт {{ selectProduct }} из корзины?</h6>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary close-modal" data-dismiss="modal">Закрыть</button>
+                            <button ref="closeModal" type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
                             <form v-on:submit="deleteProduct($event)" action="~/Home/RemoveProductCart" method="post">
                                 <input type="hidden" name="cartProductId" :value="productId">
                                 <button type="submit" class="btn btn-danger" v-on:click="closeModal">Удалить</button>

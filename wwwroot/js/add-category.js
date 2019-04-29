@@ -53,7 +53,7 @@ new Vue({
             event.preventDefault();
         },
         closeModal: function () {
-            $('.close-modal').trigger('click');
+            this.$refs.closeModal.click();
         },
         addCategory: function (event) {
             axios
@@ -64,7 +64,6 @@ new Vue({
                     }
                 })
                 .then(response => {
-                    alert(response.data);
                     this.categories.Categories.push(response.data);
                     this.addCategoryName = '';
                 });

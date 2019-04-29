@@ -36,7 +36,7 @@
                     <h6>Удалить раздел {{ sectionName }}?</h6>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary close-modal" data-dismiss="modal">Закрыть</button>
+                    <button ref="closeModal" type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
                     <form v-on:submit="deleteSection($event)" action="~/AdminMenu/SectionDelete" method="post">
                         <input type="hidden" name="SectionId" :value="sectionId">
                         <button v-on:click="closeModal" type="submit" class="btn btn-danger">Удалить</button>

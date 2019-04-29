@@ -1,3 +1,10 @@
+function activModal(Id, Name, index, nameOfsomenting, idOfSomething) {
+    this.modalId = 'id' + Id;
+    this.nameOfsomenting = Name;
+    this.idOfSomething = Id;
+    this.index = index
+};
+
 new Vue({
     el: '#sections',
     data: {
@@ -35,7 +42,7 @@ new Vue({
             event.preventDefault();
         },
         closeModal: function () {
-            $('.close-modal').trigger('click');
+            this.$refs.closeModal.click();
         },
         addSection: function (event) {
             axios

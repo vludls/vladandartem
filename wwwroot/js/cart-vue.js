@@ -57,7 +57,7 @@ new Vue({
 			event.preventDefault();
 		},
 		closeModal: function () {
-			$('.close-modal').trigger('click');
+			this.$refs.closeModal.click();
 		}
 	}
 })
