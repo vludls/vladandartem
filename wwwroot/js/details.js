@@ -110,7 +110,8 @@ new Vue({
         fieldName: '',
         definitionName: '',
         fieldIdForAddDefin: '',
-        fieldIdForDelete: ''
+        fieldIdForDelete: '',
+        index: ''
     },
     mounted: function () {
         axios
@@ -132,6 +133,11 @@ new Vue({
                     this.fields.push(response.data)
                 });
         },
+        setIndex: function (fieldIdForAddDefin) {
+            this.index = this.fields.findIndex(i => i.Id === this.fieldIdForAddDefin);
+            alert(this.index);
+
+        },
         addDefinition: function () {
             axios
                 .post('/AdminMenu/DetailField/Definition/Api/Add', null, {
@@ -141,7 +147,7 @@ new Vue({
                     }
                 })
                 .then(response => {
-                    alert(response.data)
+                    this.fields[this.index].Definitions.push(response.data);
                 });
         }
     }
