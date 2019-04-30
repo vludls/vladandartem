@@ -13,7 +13,7 @@
 <main class="container details" id="detail-fields">
     <div>{{ fields }}</div>
     <div class="add-and-delete-field">
-        <form action="~/AdminMenu/DetailField/Api/Add" method="post" class="add-field">
+        <form method="post" class="add-field">
             <div class="form-group">
                 <label for="DetailFieldName">Добавить поле</label>
                 <input type="text" name="DetailFieldName" class="form-control" id="DetailFieldName" v-model="fieldName"/>
@@ -23,19 +23,19 @@
         <form action="~/AdminMenu/DetailField/Definition/Api/Add" method="post" class="definition-add">
             <div class="form-group">
                 <label for="DetailFieldId">Выбрать поле</label>
-                <select name="DetailFieldId" class="form-control select add-new-field" id="DetailFieldId">
+                <select v-model="fieldIdForAddDefin" name="DetailFieldId" class="form-control select add-new-field" id="DetailFieldId">
                     <option value="0">Выберите поле</option>
                     <option v-for="field in fields" :value="field.Id">{{ field.Name }}</option>
                 </select>
                 <label for="DefinitionName">Добавить значение</label>
-                <input type="text" class="form-control" name="DefinitionName" id="DefinitionName"/>
+                <input v-model="definitionName" type="text" class="form-control" name="DefinitionName" id="DefinitionName"/>
             </div>
-            <button type="submit" class="btn btn-primary">Прикрепить</button>
+            <button v-on:click="addDefinition" type="submit" class="btn btn-primary">Прикрепить</button>
         </form>
         <form action="~/AdminMenu/DetailField/Api/Delete" method="post" class="del-field">
             <div class="form-group">
                 <label for="DetailFieldId-del">Удалить поле</label>
-                <select name="DetailFieldId" class="form-control add-new-field-1" id="DetailFieldId-del">
+                <select v-model="fieldIdForDelete" name="DetailFieldId" class="form-control add-new-field-1" id="DetailFieldId-del">
                     <option value="0">Выберите поле</option>
                     <option v-for="field in fields" :value="field.Id">{{ field.Name }}</option>
                 </select>
