@@ -107,7 +107,10 @@ new Vue({
     el: '#detail-fields',
     data: {
         fields: [],
-        fieldName: ''
+        fieldName: '',
+        definitionName: '',
+        fieldIdForAddDefin: '',
+        fieldIdForDelete: ''
     },
     mounted: function () {
         axios
@@ -127,6 +130,18 @@ new Vue({
                 .then(response => {
                     //alert(response.data.DetailFieldId)
                     this.fields.push(response.data)
+                });
+        },
+        addDefinition: function () {
+            axios
+                .post('/AdminMenu/DetailField/Definition/Api/Add', null, {
+                    params: {
+                        detailFieldId: this.fieldIdForAddDefin,
+                        definitionName: this.definitionName
+                    }
+                })
+                .then(response => {
+                    alert(response.data)
                 });
         }
     }
