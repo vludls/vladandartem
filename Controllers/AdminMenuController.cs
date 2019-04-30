@@ -618,9 +618,41 @@ namespace vladandartem.Controllers
                 products = products.Where(n => n.Order.User.Id == model.UserId);
             }
 
+            //Исправлять здесь
             products = products.OrderBy(n => n.Order.OrderTime);
 
-            //var test = products.GroupBy(cp => cp.Product.Name).OrderBy(cp => cp.Order.OrderTime);
+            var test = products.GroupBy(cp => cp.Order.OrderTime.Month);
+
+            var grr = from month in test
+                      from prod in month
+                      orderby prod.Order.OrderTime.Day
+                      group month by prod.Order.OrderTime.Day;
+
+            var grouppa = from month in grr
+                from day in month
+                from cp in day
+                group month by cp.Product;
+
+            /*var final = from prod in grouppa
+                        from day in prod
+                        from cp in day
+                        group new { Product = cp.Product, Month = cp.Order.OrderTime.Month, Day = day.Key, Sales =  } by cp.Product.Name;*/
+
+            foreach (var prod in grouppa)
+            {
+                ProductAnalytics prodAnalytics = new ProductAnalytics();
+
+                prodAnalytics.Product = prod.Key;
+
+                foreach (var d in prod)
+                {
+                    foreach (var cp in d)
+                    {
+                    }
+                }
+
+                //prodAnalytics.Add
+            }
             /*DateTime datePostBuff = products.First().Order.OrderTime;
 
             // Проходим все отфильтрованные продукты (CartProduct)
@@ -792,7 +824,7 @@ namespace vladandartem.Controllers
             if (_context.DetailFields.Any(n => n.Name == detailFieldName))
                 return new EmptyResult();
 
-            DetailField detailField = new DetailField { Name = detailFieldName };
+            DetailField detailField = new DetailField { Name = detailFieldName, Definitions = new List<Definition>() };
             _context.DetailFields.Add(detailField);
 
             _context.SaveChanges();
