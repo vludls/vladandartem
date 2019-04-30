@@ -456,7 +456,7 @@ namespace vladandartem.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [Route("Analytics/Api/GetAnalytics")]
+        /*[Route("Analytics/Api/GetAnalytics")]
         [HttpPost]
         public IActionResult LoadAnalytics(LoadAnalytics model)
         {
@@ -561,6 +561,116 @@ namespace vladandartem.Controllers
                 lavmItem.Revenue += product.Count * product.Product.Price;
 
             }
+
+            return Content(JsonConvert.SerializeObject(productAnalytics.Skip(model.LastItemId).Take(10)));
+        }*/
+
+        [Route("Analytics/Api/GetAnalytics")]
+        [HttpPost]
+        public IActionResult LoadAnalytics(LoadAnalytics model)
+        {
+            // Получаем все заказы и их поля
+            var orders = _context.Orders.Include(n => n.CartProducts)
+                .ThenInclude(n => n.Product)
+                .ThenInclude(c => c.Category)
+                .Include(n => n.User)
+                .ToList();
+
+            // Каждый элемент содержит характеристику продукта, сумма проданного количества, 
+            // сумма полученой прибыли этого продукта за весь указанный период.
+            // А также проданное количество и полученная прибыль за каждый день этого продукта.
+            List<ProductAnalytics> productAnalytics = new List<ProductAnalytics>();
+
+            // Получаем все CartProduct и сортируем по возрастанию по айди
+            var products = from order in orders
+                           from cartProduct in order.CartProducts
+                           orderby cartProduct.Id
+                           select cartProduct;
+
+            // Если не отображать за все время, то фильтрует по выбранному периоду даты
+            if (model.AllTime != 1)
+            {
+                products = products.Where(cp =>
+                    cp.Order.OrderTime.Day >= model.DateFrom.Day &&
+                    cp.Order.OrderTime.Month >= model.DateFrom.Month &&
+                    cp.Order.OrderTime.Year >= model.DateFrom.Year &&
+                    cp.Order.OrderTime.Day <= model.DateTo.Day &&
+                    cp.Order.OrderTime.Month <= model.DateTo.Month &&
+                    cp.Order.OrderTime.Year <= model.DateTo.Year
+                );
+            }
+
+            // Если выбрана конкретная категория, то фильтруем по ней
+            if (model.CategoryId != 0)
+            {
+                products = products.Where(n => n.Product.CategoryId == model.CategoryId);
+            }
+
+            // Если выбран конкретный продукт, то фильтруем по нему
+            if (model.ProductId != 0)
+            {
+                products = products.Where(n => n.Product.Id == model.ProductId);
+            }
+
+            // Если выбран конкретный пользователь, то фильтруем по нему
+            if (model.UserId != 0)
+            {
+                products = products.Where(n => n.Order.User.Id == model.UserId);
+            }
+
+            products = products.OrderBy(n => n.Order.OrderTime);
+
+            var test = products.GroupBy(cp => cp.Product.Name).GroupBy();
+            /*DateTime datePostBuff = products.First().Order.OrderTime;
+
+            // Проходим все отфильтрованные продукты (CartProduct)
+            foreach (var product in products)
+            {
+                // Ищем в готовой аналитике этот продукт
+                var lavmItem = productAnalytics.FirstOrDefault(item => item.Product.Id == product.Product.Id);
+
+                // Если его там нет, то заносим в аналитику этот продукт
+                if (lavmItem == null)
+                {
+                    lavmItem = new ProductAnalytics { Product = product.Product };
+
+                    lavmItem.MonthsState.Add(new MonthState(product.Order.OrderTime));
+
+                    productAnalytics.Add(lavmItem);
+                }
+
+                // Если прошлый день больше следующего
+                if (datePostBuff.Day > product.Order.OrderTime.Day)
+                {
+                    // Добавляем месяц к продукту в аналитике
+                    lavmItem.MonthsState.Add(new MonthState(datePostBuff));
+                }
+
+                // Прошлая дата
+                datePostBuff = product.Order.OrderTime;
+
+                var month = lavmItem.MonthsState.Last();
+
+                DayState day = month.Days.Find(ds =>
+                    ds.Day.Day == datePostBuff.Day &&
+                    ds.Day.Month == datePostBuff.Month &&
+                    ds.Day.Year == datePostBuff.Year
+                );
+
+                if (day == null)
+                {
+                    day = new DayState(datePostBuff);
+
+                    month.Days.Add(day);
+                }
+
+                day.Sales += product.Count;
+                day.Revenue += product.Count * product.Product.Price;
+
+                lavmItem.Sales += product.Count;
+                lavmItem.Revenue += product.Count * product.Product.Price;
+
+            }*/
 
             return Content(JsonConvert.SerializeObject(productAnalytics.Skip(model.LastItemId).Take(10)));
         }
@@ -739,7 +849,7 @@ namespace vladandartem.Controllers
             _context.Definitions.Add(definition);
             _context.SaveChanges();
 
-            return Content(JsonConvert.SerializeObject(new { DetailFieldId = detailFieldId, DefinitionId = definition.Id, DefinitionName = definition.Name }));
+            return Content(JsonConvert.SerializeObject(new { DetailFieldId = detailFieldId, Id = definition.Id, Name = definition.Name }));
         }
 
         /// <summary>
