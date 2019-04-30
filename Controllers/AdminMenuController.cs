@@ -620,7 +620,7 @@ namespace vladandartem.Controllers
 
             products = products.OrderBy(n => n.Order.OrderTime);
 
-            var test = products.GroupBy(cp => cp.Product.Name).GroupBy();
+            //var test = products.GroupBy(cp => cp.Product.Name).OrderBy(cp => cp.Order.OrderTime);
             /*DateTime datePostBuff = products.First().Order.OrderTime;
 
             // Проходим все отфильтрованные продукты (CartProduct)
