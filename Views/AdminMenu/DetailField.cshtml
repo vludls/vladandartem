@@ -20,12 +20,12 @@
             </div>
             <button v-on:click="addField" type="button" class="btn btn-primary">Добавить</button>
         </form>
-        <form action="~/AdminMenu/DetailField/Definition/Api/Add" method="post" class="definition-add">
+        <form method="post" class="definition-add">
             <div class="form-group">
                 <label for="DetailFieldId">Выбрать поле</label>
                 <select v-on:change="setIndex(fieldIdForAddDefin)" v-model="fieldIdForAddDefin" name="DetailFieldId" class="form-control select add-new-field" id="DetailFieldId">
                     <option value="0">Выберите поле</option>
-                    <option v-for="(field, index) in fields" :value="field.Id">{{ field.Name }}</option>
+                    <option v-for="field in fields" :value="field.Id">{{ field.Name }}</option>
                 </select>
                 <label for="DefinitionName">Добавить значение</label>
                 <input v-model="definitionName" type="text" class="form-control" name="DefinitionName" id="DefinitionName"/>
@@ -37,10 +37,10 @@
                 <label for="DetailFieldId-del">Удалить поле</label>
                 <select v-model="fieldIdForDelete" name="DetailFieldId" class="form-control add-new-field-1" id="DetailFieldId-del">
                     <option value="0">Выберите поле</option>
-                    <option v-for="field in fields" :value="field.Id">{{ field.Name }}</option>
+                    <option v-for="field in fields" :value="field.Id + '+' + field.Name">{{ field.Name }}</option>
                 </select>
             </div>
-            <button type="submit" class="btn btn-danger" data-toggle="modal">Удалить</button>
+            <button v-on:click="activateModal" type="button" class="btn btn-danger" data-toggle="modal" :data-target="'#' + modalId">Удалить</button>
         </form>
     </div>
     
@@ -50,19 +50,19 @@
             <p class="field-name">{{ field.Name }}</p>
             <form action="~/AdminMenu/DetailField/Definition/Api/Delete" method="post" class="delete-defininion">
                 <div class="select-value">
-                    <select name="DefinitionId" class="form-control">
-                        <option value="0">Выберите значение</option>
-                        <option v-for="definition in field.Definitions" :value="definition.Id">{{ definition.Name }}</option>
+                    <select v-model="definitionIdForDelete" name="DefinitionId" class="form-control">
+                        <option value="0" disabled selected>Выберите из списка</option>
+                        <option v-for="definition in field.Definitions" :value="definition.Id + '+' + definition.Name">{{ definition.Name }}</option>
                     </select>
                 </div>
                 <div class="last-column">
-                    <button type="submit" class="btn btn-danger" data-toggle="modal" data-target="">Удалить</button>
+                    <button v-on:click="activateModal1" type="button" class="btn btn-danger" data-toggle="modal" :data-target="'#d' + modalId">Удалить</button>
                 </div>
             </form>
         </li>
     </ul>
 
-    <div class="modal fade for-del-field" id="test" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    <div class="modal fade for-del-field" :id="modalId" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -73,17 +73,17 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <h6 data-text="Удалить поле ">Удалить поле?</h6>
+                    <h6>Удалить поле {{ fieldName }} ?</h6>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                    <button ref="closeModal" type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
                     <button type="button" class="btn btn-danger delete-field">Удалить</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal fade for-del-def" id="" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    <div class="modal fade for-del-def" :id="'d' + modalId" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -94,8 +94,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <!--<a href="~/Edit?id=">Название товара</a>-->
-                    <h6>Удалить значение?</h6>
+                    <h6>Удалить значение {{ definitionName }} ?</h6>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
