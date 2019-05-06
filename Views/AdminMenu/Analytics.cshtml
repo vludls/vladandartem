@@ -12,7 +12,7 @@
 
 </div>
 <div class="container analytics" id="analytics">
-    <div>{{ genAnalytics }}</div>
+    <!--<div>{{ genAnalytics }}</div>-->
     <div>{{ productsAnalytics }}</div>
     <!--<div>{{ productsAnalytics }}</div>-->
     <form v-on:submit="[productId != 0 ? GetAnalytics($event) : GetGeneralAnalytics($event)]" :action="[productId != 0 ? '/Analytics/Api/GetAnalytics' : '/Analytics/Api/GetGeneralAnalytics']" method="post" id="analytics-form">
@@ -56,7 +56,7 @@
             <button type="submit" class="btn btn-primary margin">Показать</button>
         </div>
     </form>
-
+    <!--
     <div v-if="productsAnalytics.length > 0" class="container result">
         <ul>
 
@@ -72,10 +72,14 @@
                             <h5><span>{{ months[month.Month.substr(5, 2)] }}</span><span> {{ month.Month.substr(0, 4) }} </span></h5>
                             <table>
                                 <tr>
-                                    <th>День</th><th>Продано</th><th>Выручка</th>
+                                    <th>День</th>
+                                    <th>Продано</th>
+                                    <th>Выручка</th>
                                 </tr>
                                 <tr v-for="day in month.Days">
-                                    <td>{{ day.Day.substr(8, 2) }}</td><td>{{ day.Sales }}</td><td>{{ day.Revenue }}</td>
+                                    <td>{{ day.Day.substr(8, 2) }}</td>
+                                    <td>{{ day.Sales }}</td>
+                                    <td>{{ day.Revenue }}</td>
                                 </tr>
                             </table>
                         </li>
@@ -94,21 +98,25 @@
                             <h5><span>{{ months[month.Month.substr(5, 2)] }}</span><span> {{ month.Month.substr(0, 4) }} </span></h5>
                             <table>
                                 <tr>
-                                    <th>День</th><th>Продано</th><th>Выручка</th>
+                                    <th>День</th>
+                                    <th>Продано</th>
+                                    <th>Выручка</th>
                                 </tr>
                                 <tr v-for="day in month.Days">
-                                    <td>{{ day.Day.substr(8, 2) }}</td><td>{{ day.Sales }}</td><td>{{ day.Revenue }}</td>
+                                    <td>{{ day.Day.substr(8, 2) }}</td>
+                                    <td>{{ day.Sales }}</td>
+                                    <td>{{ day.Revenue }}</td>
                                 </tr>
                             </table>
                         </li>
                     </ul>
                 </div>
             </li>
-            
+
         </ul>
 
 
 
-    </div>
+    </div>-->
 </div>
 

@@ -17,6 +17,9 @@ namespace vladandartem.ViewModels.AdminMenu
     {
         public DateTime Month { get; set; }
         public List<DayState> Days { get; set; } = new List<DayState>();
+
+        public MonthState() { }
+
         public MonthState(DateTime time)
         {
             Month = time;
