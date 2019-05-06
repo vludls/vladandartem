@@ -109,8 +109,11 @@ new Vue({
         fields: [],
         fieldName: '',
         definitionName: '',
-        fieldIdForAddDefin: '',
-        fieldIdForDelete: ''
+        fieldIdForAddDefin: 0,
+        fieldIdForDelete: 0,
+        definitionIdForDelete: '',
+        index: '',
+        modalId: ''
     },
     mounted: function () {
         axios
@@ -128,9 +131,12 @@ new Vue({
                     }
                 })
                 .then(response => {
-                    //alert(response.data.DetailFieldId)
-                    this.fields.push(response.data)
+                    this.fields.push(response.data);
+                    this.fieldName = ''
                 });
+        },
+        setIndex: function (fieldIdForAddDefin) {
+            this.index = this.fields.findIndex(i => i.Id === fieldIdForAddDefin);
         },
         addDefinition: function () {
             axios
@@ -141,8 +147,33 @@ new Vue({
                     }
                 })
                 .then(response => {
-                    alert(response.data)
+                    this.fields[this.index].Definitions.push(response.data);
+                    this.definitionName = ''
                 });
+        },
+        activateModal: function () {
+            this.modalId = 'id' + this.fieldIdForDelete.split('+')[0];
+            this.fieldName = this.fieldIdForDelete.split('+')[1];
+        },
+        deleteField: function () {
+            axios
+                .post('/AdminMenu/DetailField/Api/Delete', null, {
+                    params: {
+                        detailFieldId: this.fieldIdForDelete.split('+')[0]
+                    }
+                })
+                .then(response => {
+                    //{ "DetailFieldId": 28 }
+                    this.index = this.fields.findIndex(i => i.Id === response.data.DetailFieldId);
+                    this.fields.splice(this.index, 1)
+                });
+            this.$refs.closeModal.click();
+        },
+        //{ "DefinitionId": 8 }
+        activateModal1: function () {
+            this.modalId = 'id' + this.definitionIdForDelete.split('+')[0];
+            this.definitionName = this.definitionIdForDelete.split('+')[1];
         }
+
     }
 })

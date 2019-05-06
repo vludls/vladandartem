@@ -20,8 +20,7 @@ new Vue({
             this.editUser += userId
         },
         activateModal: function (userId, userName, index) {
-            this.modalId = 'id';
-            this.modalId += userId;
+            this.modalId = 'id' + userId;
             this.userName = userName;
             this.userId = userId;
             this.index = index
