@@ -46,17 +46,17 @@
     
     <ul class="list-of-fields">
         <li><p class="field-name">Поле</p><p class="select-value">Значение</p><p class="last-column">Действие</p></li>
-        <li v-for="field in fields">
+        <li v-for="(field, index) in fields">
             <p class="field-name">{{ field.Name }}</p>
             <form action="~/AdminMenu/DetailField/Definition/Api/Delete" method="post" class="delete-defininion">
                 <div class="select-value">
                     <select v-model="definitionIdForDelete" name="DefinitionId" class="form-control">
                         <option value="0" disabled selected>Выберите из списка</option>
-                        <option v-for="definition in field.Definitions" :value="definition.Id + '+' + definition.Name">{{ definition.Name }}</option>
+                        <option v-for="(definition, index) in field.Definitions" :value="definition.Id + '+' + definition.Name + '+' + index">{{ definition.Name }}</option>
                     </select>
                 </div>
                 <div class="last-column">
-                    <button v-on:click="activateModal1" type="button" class="btn btn-danger" data-toggle="modal" :data-target="'#d' + modalId">Удалить</button>
+                    <button v-on:click="activateModal1(index)" type="button" class="btn btn-danger" data-toggle="modal" :data-target="'#d' + modalId">Удалить</button>
                 </div>
             </form>
         </li>
@@ -97,8 +97,8 @@
                     <h6>Удалить значение {{ definitionName }} ?</h6>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                    <button type="button" class="btn btn-danger delete-def">Удалить</button>
+                    <button ref="closeModal" type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                    <button v-on:click="deleteDefinition" type="button" class="btn btn-danger delete-def">Удалить</button>
                 </div>
             </div>
         </div>

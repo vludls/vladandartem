@@ -170,9 +170,22 @@ new Vue({
             this.$refs.closeModal.click();
         },
         //{ "DefinitionId": 8 }
-        activateModal1: function () {
+        activateModal1: function (index) {
             this.modalId = 'id' + this.definitionIdForDelete.split('+')[0];
             this.definitionName = this.definitionIdForDelete.split('+')[1];
+            this.index = index
+        },
+        deleteDefinition: function () {
+            axios
+                .post('/AdminMenu/DetailField/Definition/Api/Delete', null, {
+                    params: {
+                        definitionId: this.definitionIdForDelete.split('+')[0]
+                    }
+                })
+                .then(response => {
+                    this.fields[this.index].Definitions.splice(this.definitionIdForDelete.split('+')[2], 1)
+                });
+            this.$refs.closeModal.click();
         }
 
     }
