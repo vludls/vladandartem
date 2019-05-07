@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
+using vladandartem.Data.Models;
 
 namespace vladandartem.Models.Request.Home
 {

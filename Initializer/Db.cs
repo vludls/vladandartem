@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 using vladandartem.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using vladandartem.ClassHelpers;
+using vladandartem.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace vladandartem.Initializer
 {
     public static class Db
     {
-        public async static void Initialize(ProductContext context, IPasswordHasher<User> passwordHasher)
+        public static void Initialize(ProductContext context, IPasswordHasher<User> passwordHasher)
         {
             // Инициализация ролей
             if (!context.Roles.Any())
@@ -51,15 +51,11 @@ namespace vladandartem.Initializer
 
                 context.UserRoles.Add(new IdentityUserRole<int> { UserId = user.Id, RoleId = 2 });
 
-                //var result = await userManager.CreateAsync(user, "123456aA!");
-
                 Cart cart = new Cart { UserId = user.Id };
 
                 context.Cart.Add(cart);
 
                 context.SaveChanges();
-
-               // await userManager.AddToRoleAsync(user, "admin");
             }
 
             if (!context.Sections.Any())

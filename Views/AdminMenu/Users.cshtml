@@ -1,10 +1,10 @@
-@model IEnumerable<User>
+@model IEnumerable<vladandartem.Data.Models.User>
 
 @section Scripts {
     <script src="~/js/users.js"></script>
 }
 
-@Html.Partial("_GetTabs", new vladandartem.ViewModels.AdminMenu.GetTabsViewModel { SectionId = 2 })
+@Html.Partial("_GetTabs", new vladandartem.Models.ViewModels.AdminMenu.GetTabsViewModel { SectionId = 2 })
 
 <main class="container admin" id="users">
     <ul class="users">

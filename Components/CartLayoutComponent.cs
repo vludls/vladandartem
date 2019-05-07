@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Linq;
 using System;
-using vladandartem.Models;
+using vladandartem.Data.Models;
 
 namespace vladandartem.Components
 {

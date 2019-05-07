@@ -17,6 +17,9 @@ using System.Reflection;
 using System.IO;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Globalization;
+using vladandartem.Data.Models;
+using AutoMapper;
+using vladandartem.Mapping;
 
 namespace vladandartem
 {
@@ -100,8 +103,10 @@ namespace vladandartem
             string connection = Configuration.GetConnectionString("DefaultConnection");
             string usersConnection = Configuration.GetConnectionString("UsersConnection");
 
-            services.AddDbContext<ProductContext>(options => options.UseSqlServer(connection));
+            services.AddDbContext<ProductContext>(options => options.UseSqlServer(connection, b => b.MigrationsAssembly("vladandartem")));
             //services.AddDbContext<UserContext>(options => options.UseSqlServer(usersConnection));
+
+            services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
             services.AddIdentity<User, IdentityRole<int>>()
                 .AddEntityFrameworkStores<ProductContext>()
@@ -114,6 +119,14 @@ namespace vladandartem
             //services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<UserContext>();
 
             //services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
 
             services.AddMvc(options =>
             {

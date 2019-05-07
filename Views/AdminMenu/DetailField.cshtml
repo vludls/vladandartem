@@ -1,4 +1,4 @@
-﻿@model List<vladandartem.Models.DetailField>
+﻿@model List<vladandartem.Data.Models.DetailField>
 
 @{
     ViewData["Title"] = "ProductDetails";
@@ -10,7 +10,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.js"></script>
 }
 
-@Html.Partial("_GetTabs", new vladandartem.ViewModels.AdminMenu.GetTabsViewModel { SectionId = 5 })
+@Html.Partial("_GetTabs", new vladandartem.Models.ViewModels.AdminMenu.GetTabsViewModel { SectionId = 5 })
 
 <main class="container details" id="detail-fields">
     <div>{{ fields }}</div>

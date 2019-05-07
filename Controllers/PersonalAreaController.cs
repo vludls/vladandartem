@@ -13,10 +13,10 @@ using Microsoft.EntityFrameworkCore;
 using System.IO;
 using System.Text.RegularExpressions;
 using vladandartem.Models;
-using vladandartem.ClassHelpers;
-using vladandartem.ViewModels.PersonalArea;
-using Newtonsoft.Json;
+using vladandartem.Data.Models;
+using vladandartem.Models.ViewModels.PersonalArea;
 using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
 
 namespace vladandartem.Controllers
 {
@@ -26,10 +26,14 @@ namespace vladandartem.Controllers
         private readonly ProductContext _context;
         private readonly UserManager<User> _userManager;
 
-        public PersonalAreaController(ProductContext context, UserManager<User> userManager)
+        private readonly IMapper _mapper;
+
+        public PersonalAreaController(ProductContext context, UserManager<User> userManager, IMapper mapper)
         {
             _context = context;
             _userManager = userManager;
+
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -50,7 +54,7 @@ namespace vladandartem.Controllers
 
             _context.SaveChanges();
 
-            return Content(JsonConvert.SerializeObject(new { OrderId = orderId, IsPaid = order.IsPaid }));
+            return new JsonResult(new { OrderId = orderId, IsPaid = order.IsPaid });
         }
         [HttpGet]
         public ViewResult PaidProducts()
@@ -59,7 +63,7 @@ namespace vladandartem.Controllers
         }
 
         [HttpPost]
-        public async Task<ContentResult> GetPaidProducts(int start)
+        public async Task<JsonResult> GetPaidProducts(int start)
         {
             User user = await _userManager.GetUserAsync(HttpContext.User);
 
@@ -68,15 +72,15 @@ namespace vladandartem.Controllers
                 .ThenInclude(u => u.Product)
                 .FirstOrDefault(u => u.Id == user.Id);
 
-            return Content(JsonConvert.SerializeObject(user.Order.OrderByDescending(n => n.Number).Skip(start).Take(20)));
+            return new JsonResult(_mapper.Map<List<Order>>(user.Order.OrderByDescending(n => n.Number).Skip(start).Take(20)));
         }
         [HttpGet]
         public ViewResult Cart()
         {
             return View();
         }
-        [HttpPost]
-        public async Task<ContentResult> CartGetCartProducts()
+        [HttpGet]
+        public async Task<JsonResult> CartGetCartProducts()
         {
             User user = await _userManager.GetUserAsync(HttpContext.User);
 
@@ -86,7 +90,7 @@ namespace vladandartem.Controllers
                 .ThenInclude(u => u.Category)
                 .FirstOrDefault(u => u.Id == user.Id);
             
-            return Content(JsonConvert.SerializeObject(user.Cart.CartProducts));
+            return new JsonResult(_mapper.Map<List<CartProduct>>(user.Cart.CartProducts));
         }
 
         [HttpPost]
@@ -152,7 +156,7 @@ namespace vladandartem.Controllers
 
             _context.SaveChanges();
 
-            return Content(JsonConvert.SerializeObject(new { OrderId = order.Id }));
+            return new JsonResult(new { OrderId = order.Id });
         }
     }
 }
