@@ -17,7 +17,7 @@
     <div class="add-and-delete-field">
         <label for="DetailFieldName">Выбрать поле</label>
         <div class="form-group">
-            <select v-model="fieldIdForDelete" class="form-control select-field" v-selecttwo="fieldIdForDelete">
+            <select v-model="fieldIdForDelete" class="form-control select-field" v-select2>
                 <option v-for="field in fields" :value="field.Id">{{ field.Name }}</option>
             </select>
         </div>
@@ -32,21 +32,19 @@
     <ul class="list-of-fields">
         <li><p class="field-name">Поле</p><p class="select-value">Значение</p><p class="last-column">Действие</p></li>
         <li>
-            <form action="~/AdminMenu/DetailField/Definition/Api/Delete" method="post" class="delete-defininion">
+            <form class="delete-defininion">
                 <div class="select-value">
-                    <select v-model="definitionIdForDelete" name="DefinitionId" class="form-control select-field">
-                        <option value="0" disabled selected>Выберите из списка</option>
-                        <option></option>
+                    <select v-on:change="setIndex(fieldIdForAddDefin)" v-model="fieldIdForAddDefin" name="DefinitionId" class="form-control select-field-for-add-def" v-select2>
+                        <option v-for="field in fields" :value="field.Id">{{ field.Name }}</option>
                     </select>
                 </div>
                 <div class="select-value">
-                    <select v-model="definitionIdForDelete" name="DefinitionId" class="form-control select-field">
-                        <option value="0" disabled selected>Выберите из списка</option>
-                        <option></option>
+                    <select v-model="definitionIdForDelete" class="form-control select-field">
+                        <option v-for="definition in relevantDefinitions" :value="definition.Id">{{ definition.Name }}</option>
                     </select>
                 </div>
                 <div class="last-column">
-                    <button v-on:click="activateModal1(index)" type="button" class="btn btn-primary" data-toggle="modal" :data-target="'#d' + modalId">Добавить</button>
+                    <button v-on:click="addDefinition" type="button" class="btn btn-primary">Добавить</button>
                 </div>
                 <div class="last-column">
                     <button v-on:click="activateModal1(index)" type="button" class="btn btn-danger" data-toggle="modal" :data-target="'#d' + modalId">Удалить</button>
