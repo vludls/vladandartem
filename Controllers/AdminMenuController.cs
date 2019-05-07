@@ -142,7 +142,7 @@ namespace vladandartem.Controllers
         public JsonResult GetUsers()
         {
             // Можно ли пройти каждого юзера через .Select и выбрать нужные данные без mapping'a
-            return new JsonResult(new { Users = _mapper.Map<List<GetUsersViewModel>>(_userManager.Users.ToList()) });
+            return new JsonResult(new { Users = _mapper.Map<List<User>>(_userManager.Users.ToList()) });
         }
 
         /*******************************************
@@ -315,7 +315,7 @@ namespace vladandartem.Controllers
             {
                 Categories = _context.Categories.ToList(),
                 Products = _context.Products.ToList(),
-                Users = _mapper.Map<List<UserAvailableInfoReturn>>(_context.Users.ToList())
+                Users = _mapper.Map<List<User>>(_context.Users.ToList())
             };
 
             return new JsonResult(viewModel);

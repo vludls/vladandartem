@@ -11,6 +11,6 @@ namespace vladandartem.Models.ViewModels.AdminMenu
     {
         public List<Category> Categories { get; set; }
         public List<Product> Products { get; set; }
-        public List<UserAvailableInfoReturn> Users { get; set; }
+        public List<User> Users { get; set; }
     }
 }
