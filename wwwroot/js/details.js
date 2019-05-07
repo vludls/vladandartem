@@ -102,6 +102,25 @@
         });
     });
 })*/
+$(document).ready(function () {
+    $('.select-field').select2({
+        tags: true,
+        placeholder: 'Выберите значение'
+    });
+});
+
+Vue.directive('selecttwo', {
+    twoWay: true,
+    bind: function () {
+        $(this.el).select2()
+            .on("select2:select", function (e) {
+                this.set($(this.el).val());
+            }.bind(this));
+    },
+    update: function (nv, ov) {
+        $(this.el).trigger("change");
+    }
+});
 
 new Vue({
     el: '#detail-fields',
@@ -120,8 +139,10 @@ new Vue({
             .post('/AdminMenu/DetailField/GetAll')
             .then(response => {
                 this.fields = response.data;
+
             });
     },
+
     methods: {
         addField: function () {
             axios
@@ -159,15 +180,17 @@ new Vue({
             axios
                 .post('/AdminMenu/DetailField/Api/Delete', null, {
                     params: {
-                        detailFieldId: this.fieldIdForDelete.split('+')[0]
+                        detailFieldId: this.fieldIdForDelete
                     }
                 })
                 .then(response => {
                     //{ "DetailFieldId": 28 }
-                    this.index = this.fields.findIndex(i => i.Id === response.data.DetailFieldId);
-                    this.fields.splice(this.index, 1)
+                    //this.index = this.fields.findIndex(i => i.Id === response.data.DetailFieldId);
+                    //this.fields.splice(this.index, 1)
+                    //console.log(response.data)
+                    alert(this.fieldIdForDelete)
                 });
-            this.$refs.closeModal.click();
+            //this.$refs.closeModal.click();
         },
         //{ "DefinitionId": 8 }
         activateModal1: function (index) {

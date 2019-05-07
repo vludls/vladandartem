@@ -177,7 +177,7 @@ new Vue({
             event.preventDefault();
         },
         selectAllTime: function () {
-            !this.AllTime
+            //!this.AllTime
         }
     }
 })
