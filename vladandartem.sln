@@ -10,6 +10,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vladandartem", "vladandarte
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "vladandartem.Data", "..\vladandartem.Data\vladandartem.Data.csproj", "{36533403-B64D-44AC-ADAF-D5AFB901BA59}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{02C1721D-A797-45F9-BA42-67C20730472A}"
+	ProjectSection(SolutionItems) = preProject
+		.filenesting.json = .filenesting.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution", "Solution", "{CBFCC679-8F9C-4EDF-82E3-0B09B8980365}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +34,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{177A9669-3B3D-4B1A-8133-4DBCCCD0B14D} = {CBFCC679-8F9C-4EDF-82E3-0B09B8980365}
+		{36533403-B64D-44AC-ADAF-D5AFB901BA59} = {CBFCC679-8F9C-4EDF-82E3-0B09B8980365}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7DAEB06D-0B6F-4D5A-8411-65AE56A40CE2}
