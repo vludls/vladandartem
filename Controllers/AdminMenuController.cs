@@ -593,7 +593,8 @@ namespace vladandartem.Controllers
             return new JsonResult(_context.DetailFields.Include(n => n.Definitions)
                 .Select(f => new
                 {
-                    DetailField = f,
+                    Id = f.Id,
+                    Name = f.Name,
                     Definitions = f.Definitions.Select(d => new
                     {
                         Id = d.Id,
