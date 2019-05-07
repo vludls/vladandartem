@@ -11,12 +11,15 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System.IO;
 using System.Text.RegularExpressions;
 using vladandartem.Models;
-using vladandartem.ViewModels.AdminMenu;
+using vladandartem.Models.ViewModels.AdminMenu;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
+using vladandartem.Models.Request.AdminMenu;
+using vladandartem.Data.Models;
+using AutoMapper;
 
 namespace vladandartem.Controllers
 {
@@ -27,12 +30,15 @@ namespace vladandartem.Controllers
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole<int>> _roleManager;
         private readonly ProductContext _context;
+        private readonly IMapper _mapper;
 
-        public AdminMenuController(UserManager<User> userManager, RoleManager<IdentityRole<int>> roleManager, ProductContext context)
+        public AdminMenuController(UserManager<User> userManager, RoleManager<IdentityRole<int>> roleManager, 
+            ProductContext context, IMapper mapper)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _context = context;
+            _mapper = mapper;
         }
 
         /*******************************************
@@ -58,7 +64,7 @@ namespace vladandartem.Controllers
         /// </response>
         [Route("Categories/Api/Get")]
         [HttpPost]
-        public ContentResult MainGet()
+        public JsonResult MainGet()
         {
             MainViewModel viewModel = new MainViewModel
             {
@@ -66,7 +72,7 @@ namespace vladandartem.Controllers
                 Categories = _context.Categories.ToList()
             };
 
-            return Content(JsonConvert.SerializeObject(viewModel));
+            return new JsonResult(viewModel);
         }
 
         /// <summary>
@@ -90,7 +96,7 @@ namespace vladandartem.Controllers
             _context.Categories.Add(category);
             _context.SaveChanges();
 
-            return Content(JsonConvert.SerializeObject(category));
+            return new JsonResult(category);
         }
 
         /// <summary>
@@ -113,7 +119,7 @@ namespace vladandartem.Controllers
             _context.Categories.Remove(category);
             _context.SaveChanges();
 
-            return Content(JsonConvert.SerializeObject(new { CategoryId = categoryId }));
+            return new JsonResult(new { CategoryId = categoryId });
         }
 
         /*******************************************
@@ -134,9 +140,10 @@ namespace vladandartem.Controllers
         /// <returns></returns>
         [Route("Users/Api/Get")]
         [HttpPost]
-        public IActionResult GetUsers()
+        public JsonResult GetUsers()
         {
-            return Content(JsonConvert.SerializeObject(_userManager.Users.ToList()));
+            // Можно ли пройти каждого юзера через .Select и выбрать нужные данные без mapping'a
+            return new JsonResult(new { Users = _mapper.Map<List<GetUsersViewModel>>(_userManager.Users.ToList()) });
         }
 
         /*******************************************
@@ -181,10 +188,10 @@ namespace vladandartem.Controllers
         [HttpPost]
         public async Task<IActionResult> AddUser(CreateUserViewModel cuvm)
         {
-            User user = new User { Email = cuvm.Email, UserName = cuvm.Email, Year = cuvm.Year, };
-
             if (ModelState.IsValid)
             {
+                User user = _mapper.Map<User>(cuvm);
+
                 var result = await _userManager.CreateAsync(user, cuvm.Password);
 
                 if (result.Succeeded)
@@ -208,49 +215,45 @@ namespace vladandartem.Controllers
             return View(cuvm);
         }
 
-        /// <summary>
-        /// Редактирование пользователя
-        /// </summary>
-        /// <param name="id">Id пользователя</param>
-        /// <param name="email">E-mail</param>
-        /// <param name="year">Дата рождения</param>
-        /// <param name="roles">Роли</param>
-        /// <returns></returns>
         [Route("User/Api/Save")]
         [HttpPost]
-        public async Task<IActionResult> UserSave([Required]int id, [Required]string email, [Required]string year, List<string> roles)
+        public async Task<IActionResult> UserSave(UserSaveModel model)
         {
-            User user = await _userManager.FindByIdAsync(id.ToString());
-
-            if (user != null)
+            if (ModelState.IsValid)
             {
-                user.Email = email;
-                user.UserName = email;
-                user.Year = year;
+                User user = await _userManager.FindByIdAsync(model.Id.ToString());
 
-                // получем список ролей пользователя
-                var userRoles = await _userManager.GetRolesAsync(user);
-
-                // получаем все роли
-                var allRoles = _roleManager.Roles.ToList();
-
-                var addedRoles = roles.Except(userRoles);
-                var removedRoles = userRoles.Except(roles);
-
-                await _userManager.AddToRolesAsync(user, addedRoles);
-                await _userManager.RemoveFromRolesAsync(user, removedRoles);
-
-                var result = await _userManager.UpdateAsync(user);
-
-                if (result.Succeeded)
+                if (user != null)
                 {
-                    return RedirectToAction("Users");
-                }
-                else
-                {
-                    foreach (var error in result.Errors)
+                    Mapper.Map<UserSaveModel, User>(model, user);
+                    //user.Email = model.Email;
+                    //user.UserName = model.Email;
+                    //user.Year = model.Year;
+
+                    // получем список ролей пользователя
+                    var userRoles = await _userManager.GetRolesAsync(user);
+
+                    // получаем все роли
+                    var allRoles = _roleManager.Roles.ToList();
+
+                    var addedRoles = model.Roles.Except(userRoles);
+                    var removedRoles = userRoles.Except(model.Roles);
+
+                    await _userManager.AddToRolesAsync(user, addedRoles);
+                    await _userManager.RemoveFromRolesAsync(user, removedRoles);
+
+                    var result = await _userManager.UpdateAsync(user);
+
+                    if (result.Succeeded)
                     {
-                        ModelState.AddModelError(string.Empty, error.Description);
+                        return RedirectToAction("Users");
+                    }
+                    else
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
                     }
                 }
             }
@@ -265,14 +268,14 @@ namespace vladandartem.Controllers
         /// <returns></returns>
         [Route("User/Api/Delete")]
         [HttpPost]
-        public async Task<IActionResult> DeleteUser(int id)
+        public async Task<JsonResult> DeleteUser(int id)
         {
             User mainUser = await _userManager.GetUserAsync(HttpContext.User);
 
             User findedUser = await _userManager.FindByIdAsync(Convert.ToString(id));
 
             if (findedUser == null || mainUser == findedUser)
-                return Content(JsonConvert.SerializeObject(new { UserId = 0 }));
+                return new JsonResult(new { UserId = 0 });
 
             findedUser = _userManager.Users.Where(u => u.Id == findedUser.Id)
                 .Include(u => u.Cart)
@@ -286,7 +289,7 @@ namespace vladandartem.Controllers
 
             await _userManager.DeleteAsync(findedUser);
 
-            return Content(JsonConvert.SerializeObject(new { UserId = id }));
+            return new JsonResult(new { UserId = id });
         }
 
         /*******************************************
@@ -296,9 +299,16 @@ namespace vladandartem.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         [Route("Analytics")]
         [HttpGet]
-        public ViewResult Analytics()
+        public JsonResult Analytics()
         {
-            return View();
+            AnalyticsViewModel viewModel = new AnalyticsViewModel
+            {
+                Categories = _context.Categories.ToList(),
+                Products = _context.Products.ToList(),
+                Users = _mapper.Map<List<UserAvailableInfoReturn>>(_context.Users.ToList())
+            };
+
+            return new JsonResult(viewModel);
         }
 
         /// <summary>
@@ -307,16 +317,16 @@ namespace vladandartem.Controllers
         /// <returns></returns>
         [Route("Analytics/Api/GetAnalyticsFields")]
         [HttpPost]
-        public ContentResult GetAnalyticsField()
+        public JsonResult GetAnalyticsField()
         {
-            AnalyticsViewModel model = new AnalyticsViewModel
+            AnalyticsViewModel viewModel = new AnalyticsViewModel
             {
                 Categories = _context.Categories.ToList(),
                 Products = _context.Products.ToList(),
-                Users = _context.Users.ToList()
+                Users = _mapper.Map<List<UserAvailableInfoReturn>>(_context.Users.ToList())
             };
 
-            return Content(JsonConvert.SerializeObject(model));
+            return new JsonResult(viewModel);
         }
 
         /// <summary>
@@ -333,14 +343,18 @@ namespace vladandartem.Controllers
 
             if (_context.Categories.Any(n => n.Id == categoryId))
             {
-                Category category = _context.Categories.Include(n => n.Products)
-                    .FirstOrDefault(n => n.Id == categoryId);
-
-                return Content(JsonConvert.SerializeObject(category.Products));
+                return new JsonResult(new
+                {
+                    Products = _mapper.Map<AnalyticsLoadProductsOfChoosedCategoryViewModel>(_context.Products
+                    .Where(p => p.CategoryId == categoryId).ToList())
+                });
             }
             else
             {
-                return Content(JsonConvert.SerializeObject(_context.Products.ToList()));
+                return new JsonResult(new
+                {
+                    Products = _mapper.Map<AnalyticsLoadProductsOfChoosedCategoryViewModel>(_context.Products.ToList())
+                });
             }
         }
 
@@ -399,7 +413,7 @@ namespace vladandartem.Controllers
 
             products = products.OrderBy(n => n.Order.OrderTime);
 
-            var grouping1 = products.GroupBy(cartProduct => cartProduct.Order.OrderTime.Year).OrderBy(yearGroup => yearGroup.Key)
+            var group = products.GroupBy(cartProduct => cartProduct.Order.OrderTime.Year).OrderBy(yearGroup => yearGroup.Key)
                 .Select(r => new
                 {
                     Year = r.Key,
@@ -417,56 +431,7 @@ namespace vladandartem.Controllers
                     })
                 }).ToList();
 
-            /*DateTime datePostBuff = products.First().Order.OrderTime;
-
-            LoadGeneralAnalyticsViewModel productAnalytics = new LoadGeneralAnalyticsViewModel();
-
-            productAnalytics.MonthsState.Add(new MonthState(products.First().Order.OrderTime));
-
-            // Проходим все отфильтрованные продукты (CartProduct)
-            foreach (var product in products)
-            {
-                // Если прошлый день больше следующего
-                if (datePostBuff.Day > product.Order.OrderTime.Day)
-                {
-                    // Добавляем месяц к продукту в аналитике
-                    productAnalytics.MonthsState.Add(new MonthState(datePostBuff));
-                }
-
-                // Прошлая дата
-                datePostBuff = product.Order.OrderTime;
-
-                var month = productAnalytics.MonthsState.Last();
-
-                DayState day = month.Days.Find(ds =>
-                    ds.Day.Day == datePostBuff.Day &&
-                    ds.Day.Month == datePostBuff.Month &&
-                    ds.Day.Year == datePostBuff.Year
-                );
-
-                if (day == null)
-                {
-                    day = new DayState(datePostBuff);
-
-                    day.Sales += product.Count;
-                    day.Revenue += product.Count * product.Product.Price;
-
-                    productAnalytics.Sales += product.Count;
-                    productAnalytics.Revenue += product.Count * product.Product.Price;
-
-                    month.Days.Add(day);
-                }
-                else
-                {
-                    day.Sales += product.Count;
-                    day.Revenue += product.Count * product.Product.Price;
-
-                    productAnalytics.Sales += product.Count;
-                    productAnalytics.Revenue += product.Count * product.Product.Price;
-                }
-            }
-            */
-            return Content(JsonConvert.SerializeObject(grouping1));
+            return new JsonResult(group);
         }
 
         [Route("Analytics/Api/GetAnalytics")]
@@ -511,7 +476,7 @@ namespace vladandartem.Controllers
 
             products = products.OrderBy(n => n.Order.OrderTime);
             
-            var grouping1 = products.GroupBy(n => n.Product)
+            var group = products.GroupBy(n => n.Product)
                 .Select(productGroup => new
                 {
                     Product = productGroup.Key,
@@ -534,7 +499,7 @@ namespace vladandartem.Controllers
                     }).ToList()
                 }).ToList();
 
-            return Content(JsonConvert.SerializeObject(grouping1));
+            return new JsonResult(group);
         }
 
         /*******************************************
@@ -555,9 +520,9 @@ namespace vladandartem.Controllers
         /// <returns></returns>
         [Route("Section/Api/GetAll")]
         [HttpPost]
-        public ContentResult GetSections()
+        public JsonResult GetSections()
         {
-            return Content(JsonConvert.SerializeObject(_context.Sections.ToList()));
+            return new JsonResult(_context.Sections.ToList());
         }
 
         /// <summary>
@@ -569,18 +534,15 @@ namespace vladandartem.Controllers
         [HttpPost]
         public IActionResult AddSection([Required]string sectionName)
         {
-            if (ModelState.IsValid)
-            {
-                Section section = new Section { Name = sectionName };
+            if (!ModelState.IsValid)
+                return new EmptyResult();
 
-                _context.Sections.Add(section);
+            Section section = new Section { Name = sectionName };
 
-                _context.SaveChanges();
+            _context.Sections.Add(section);
+            _context.SaveChanges();
 
-                return Content(JsonConvert.SerializeObject(section));
-            }
-
-            return new EmptyResult();
+            return new JsonResult(section);
         }
 
         /// <summary>
@@ -603,7 +565,7 @@ namespace vladandartem.Controllers
             _context.Sections.Remove(section);
             _context.SaveChanges();
 
-            return Content(JsonConvert.SerializeObject(new { SectionId = sectionId }));
+            return new JsonResult(new { SectionId = sectionId });
         }
 
         /*******************************************
@@ -634,9 +596,18 @@ namespace vladandartem.Controllers
         /// <returns></returns>
         [Route("DetailField/GetAll")]
         [HttpPost]
-        public IActionResult GetDetailFields()
+        public JsonResult GetDetailFields()
         {
-            return Content(JsonConvert.SerializeObject(_context.DetailFields.Include(n => n.Definitions).ToList()));
+            return new JsonResult(_context.DetailFields.Include(n => n.Definitions)
+                .Select(f => new
+                {
+                    DetailField = f,
+                    Definitions = f.Definitions.Select(d => new
+                    {
+                        Id = d.Id,
+                        Name = d.Name
+                    }).ToList()
+                }).ToList());
         }
 
         /// <summary>
@@ -659,7 +630,7 @@ namespace vladandartem.Controllers
 
             _context.SaveChanges();
 
-            return Content(JsonConvert.SerializeObject(detailField));
+            return new JsonResult(detailField);
         }
 
         /// <summary>
@@ -682,7 +653,7 @@ namespace vladandartem.Controllers
             _context.DetailFields.Remove(detailField);
             _context.SaveChanges();
 
-            return Content(JsonConvert.SerializeObject(new { DetailFieldId = detailFieldId }));
+            return new JsonResult(new { DetailFieldId = detailFieldId });
         }
 
         /// <summary>
@@ -711,7 +682,7 @@ namespace vladandartem.Controllers
             _context.Definitions.Add(definition);
             _context.SaveChanges();
 
-            return Content(JsonConvert.SerializeObject(new { DetailFieldId = detailFieldId, Id = definition.Id, Name = definition.Name }));
+            return new JsonResult(new { DetailFieldId = detailFieldId, Id = definition.Id, Name = definition.Name });
         }
 
         /// <summary>
@@ -741,7 +712,7 @@ namespace vladandartem.Controllers
             _context.Definitions.Remove(definition);
             _context.SaveChanges();
 
-            return Content(JsonConvert.SerializeObject(new { DefinitionId = definitionId }));
+            return new JsonResult(new { DefinitionId = definitionId });
         }
 
         /// <summary>
@@ -751,11 +722,11 @@ namespace vladandartem.Controllers
         /// <returns></returns>
         [Route("DetailField/Definition/Api/GetProducts")]
         [HttpPost]
-        public ContentResult ProductsOfDefinition(int definitionId)
+        public JsonResult ProductsOfDefinition(int definitionId)
         {
-            return Content(JsonConvert.SerializeObject(_context.ProductDetailFields.Include(pdf => pdf.Product)
+            return new JsonResult(_context.ProductDetailFields.Include(pdf => pdf.Product)
                 .Where(pdf => pdf.DefinitionId == definitionId)
-                .Select(pdf => new { Id = pdf.Product.Id, Name = pdf.Product.Name })));
+                .Select(pdf => new { Id = pdf.Product.Id, Name = pdf.Product.Name }).ToList());
         }
     }
 }

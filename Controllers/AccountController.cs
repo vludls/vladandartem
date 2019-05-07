@@ -2,7 +2,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 //using Microsoft.Extensions.Identity.Core;
-using vladandartem.ViewModels.Account;
+using vladandartem.Models.ViewModels.Account;
+using vladandartem.Data.Models;
 using vladandartem.Models;
 
 namespace vladandartem.Controllers

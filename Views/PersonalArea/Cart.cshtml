@@ -1,4 +1,4 @@
-@model List<vladandartem.ClassHelpers.CartProduct>
+@model List<vladandartem.Data.Models.CartProduct>
 @{
     ViewData["Title"] = "Shop";
 }
@@ -8,7 +8,7 @@
     <script src="~/js/cart-vue.js"></script>
 }
 
-@Html.Partial("_GetTabs", new vladandartem.ViewModels.PersonalArea.GetTabsViewModel { SectionId = 2 })
+@Html.Partial("_GetTabs", new vladandartem.Models.ViewModels.PersonalArea.GetTabsViewModel { SectionId = 2 })
 
 <main class="container lop" id="cart">
     <template v-if="products.length != 0">

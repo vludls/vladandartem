@@ -1,4 +1,4 @@
-﻿@model IEnumerable<vladandartem.Models.Section>
+﻿@model IEnumerable<vladandartem.Data.Models.Section>
 
 @{
     ViewData["Title"] = "View";
@@ -8,7 +8,7 @@
     <script src="~/js/add-section.js"></script>
 }
 
-@Html.Partial("_GetTabs", new vladandartem.ViewModels.AdminMenu.GetTabsViewModel { SectionId = 3 })
+@Html.Partial("_GetTabs", new vladandartem.Models.ViewModels.AdminMenu.GetTabsViewModel { SectionId = 3 })
 
 <main class="container admin admin-categories" id="sections">
     <ul class="users">

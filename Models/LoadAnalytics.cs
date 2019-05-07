@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace vladandartem.ViewModels.AdminMenu
+namespace vladandartem.Models.ViewModels.AdminMenu
 {
     public class LoadAnalytics
     {

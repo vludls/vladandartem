@@ -7,7 +7,7 @@
     <script src="~/js/paid-products.js"></script>
 }
 
-@Html.Partial("_GetTabs", new vladandartem.ViewModels.PersonalArea.GetTabsViewModel { SectionId = 3 })
+@Html.Partial("_GetTabs", new vladandartem.Models.ViewModels.PersonalArea.GetTabsViewModel { SectionId = 3 })
 
 <main class="container pa" id="paid-products">
     <div class="list-of-orders" v-scroll="scrolling" v-if="orders.length != 0">

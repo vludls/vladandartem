@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using vladandartem.Models;
 using System.Threading.Tasks;
+using vladandartem.Data.Models;
 
 namespace vladandartem.Components
 {

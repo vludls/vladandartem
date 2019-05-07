@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using System.IO;
 using System.Text.RegularExpressions;
 using vladandartem.Models;
-using vladandartem.ClassHelpers;
-using vladandartem.ViewModels.Home;
+using vladandartem.Data.Models;
+using vladandartem.Models.ViewModels.Home;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel.DataAnnotations;
@@ -45,7 +45,7 @@ namespace vladandartem.Controllers
             if (searchArgument != "" && searchArgument != null)
             {
                 products = _context.Products
-                    .Where(n => 
+                    .Where(n =>
                     IsSimilar(searchArgument, n.Name) ||
                     IsSimilar(searchArgument, n.Manufacturer)
                 );
@@ -58,8 +58,7 @@ namespace vladandartem.Controllers
             }
 
             int productCounted = products.Count();
-            products = products.Skip(page * 4);
-            products = products.Take(4);
+            products = products.Skip(page * 4).Take(4);
 
             IndexViewModel ivm = new IndexViewModel
             {
@@ -77,7 +76,7 @@ namespace vladandartem.Controllers
         public async Task<RedirectToActionResult> AddCookie(int id)
         {
             User user = await _userManager.GetUserAsync(HttpContext.User);
-            
+
             user = _userManager.Users.Include(u => u.Cart)
                 .ThenInclude(u => u.CartProducts)
                 .FirstOrDefault(u => u.Id == user.Id);
@@ -306,7 +305,7 @@ namespace vladandartem.Controllers
             return Content(JsonConvert.SerializeObject(cartProduct.Product.Count));
         }
 
-        private bool IsSimilar (string searchArgument, string productName)
+        private bool IsSimilar(string searchArgument, string productName)
         {
             string[] searchArgumentWords = searchArgument.Split(' ');
             string[] productNameWords = productName.Split(' ');
