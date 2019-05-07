@@ -12,7 +12,6 @@ using System.IO;
 using System.Text.RegularExpressions;
 using vladandartem.Models;
 using vladandartem.Models.ViewModels.AdminMenu;
-using Newtonsoft.Json;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
@@ -299,16 +298,9 @@ namespace vladandartem.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         [Route("Analytics")]
         [HttpGet]
-        public JsonResult Analytics()
+        public ViewResult Analytics()
         {
-            AnalyticsViewModel viewModel = new AnalyticsViewModel
-            {
-                Categories = _context.Categories.ToList(),
-                Products = _context.Products.ToList(),
-                Users = _mapper.Map<List<UserAvailableInfoReturn>>(_context.Users.ToList())
-            };
-
-            return new JsonResult(viewModel);
+            return View();
         }
 
         /// <summary>

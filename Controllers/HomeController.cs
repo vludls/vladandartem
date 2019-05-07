@@ -17,8 +17,8 @@ using vladandartem.Models.ViewModels.Home;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel.DataAnnotations;
-using Newtonsoft.Json;
 using vladandartem.Models.Request.Home;
+using AutoMapper;
 
 namespace vladandartem.Controllers
 {
@@ -28,12 +28,14 @@ namespace vladandartem.Controllers
         private readonly UserManager<User> _userManager;
 
         private readonly IHostingEnvironment _hostEnv;
+        private readonly IMapper _mapper;
 
-        public HomeController(ProductContext context, UserManager<User> userManager, IHostingEnvironment hostEnv)
+        public HomeController(ProductContext context, UserManager<User> userManager, IHostingEnvironment hostEnv, IMapper mapper)
         {
             _context = context;
             _userManager = userManager;
             _hostEnv = hostEnv;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -91,7 +93,7 @@ namespace vladandartem.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ContentResult> RemoveProductCart(int cartProductId)
+        public async Task<JsonResult> RemoveProductCart(int cartProductId)
         {
             User user = await _userManager.GetUserAsync(HttpContext.User);
 
@@ -102,13 +104,13 @@ namespace vladandartem.Controllers
             CartProduct cartProduct = user.Cart.CartProducts.FirstOrDefault(n => n.Id == cartProductId);
 
             if (cartProduct == null)
-                return Content(JsonConvert.SerializeObject(new { CartProductId = 0 }));
+                return new JsonResult(new { CartProductId = 0 });
 
             user.Cart.CartProducts.Remove(cartProduct);
 
             await _userManager.UpdateAsync(user);
 
-            return Content(JsonConvert.SerializeObject(new { CartProductId = cartProductId }));
+            return new JsonResult(new { CartProductId = cartProductId });
         }
 
         [Authorize(Roles = "admin")]
@@ -128,33 +130,33 @@ namespace vladandartem.Controllers
         [HttpPost]
         public IActionResult EditAddDetailField([Required]int ProductId, [Required]int DetailFieldId)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return new EmptyResult();
+
+            if (_context.Products.FirstOrDefault(n => n.Id == ProductId) != null &&
+            _context.DetailFields.FirstOrDefault(n => n.Id == DetailFieldId) != null)
             {
-                if (_context.Products.FirstOrDefault(n => n.Id == ProductId) != null &&
-                _context.DetailFields.FirstOrDefault(n => n.Id == DetailFieldId) != null)
-                {
-                    _context.ProductDetailFields.Add(new ProductDetailField { ProductId = ProductId, DetailFieldId = DetailFieldId });
-                    _context.SaveChanges();
-                }
+                _context.ProductDetailFields.Add(new ProductDetailField { ProductId = ProductId, DetailFieldId = DetailFieldId });
+                _context.SaveChanges();
             }
 
-            return new EmptyResult();
+            return new OkResult();
         }
         [HttpPost]
-        public EmptyResult EditDeleteDetailField([Required]int ProductDetailFieldId)
+        public IActionResult EditDeleteDetailField([Required]int ProductDetailFieldId)
         {
-            if (ModelState.IsValid)
-            {
-                ProductDetailField productDetailField = _context.ProductDetailFields.FirstOrDefault(n => n.Id == ProductDetailFieldId);
+            if (!ModelState.IsValid)
+                return new EmptyResult();
 
-                if (productDetailField != null)
-                {
-                    _context.ProductDetailFields.Remove(productDetailField);
-                    _context.SaveChanges();
-                }
-            }
+            ProductDetailField productDetailField = _context.ProductDetailFields.FirstOrDefault(n => n.Id == ProductDetailFieldId);
 
-            return new EmptyResult();
+            if (productDetailField == null)
+                return new EmptyResult();
+
+            _context.ProductDetailFields.Remove(productDetailField);
+            _context.SaveChanges();
+
+            return new OkResult();
         }
 
         /*[HttpPost]
@@ -177,8 +179,11 @@ namespace vladandartem.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult ProductGetInfo(int productId)
+        public IActionResult ProductGetInfo([Required]int productId)
         {
+            if (ModelState.IsValid)
+                return new EmptyResult();
+
             Product product = _context.Products.Include(n => n.ProductDetailFields)
                 .ThenInclude(n => n.DetailField)
                 .ThenInclude(n => n.Definitions)
@@ -188,7 +193,7 @@ namespace vladandartem.Controllers
             if (product == null)
                 return new EmptyResult();
 
-            return Content(JsonConvert.SerializeObject(product));
+            return new JsonResult(_mapper.Map<Product>(product));
         }
 
         [Authorize(Roles = "admin")]
@@ -266,17 +271,17 @@ namespace vladandartem.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public EmptyResult RemoveProduct(int id)
+        public IActionResult RemoveProduct(int id)
         {
             Product product = _context.Products.FirstOrDefault(p => p.Id == id);
 
-            if (product != null)
-            {
-                _context.Products.Remove(product);
-                _context.SaveChanges();
-            }
+            if (product == null)
+                return new EmptyResult();
 
-            return new EmptyResult();
+            _context.Products.Remove(product);
+            _context.SaveChanges();
+
+            return new OkResult();
         }
 
         [HttpGet]
@@ -287,7 +292,7 @@ namespace vladandartem.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> CartChangeProductNum(int id, int count)
+        public async Task<JsonResult> CartChangeProductNum(int id, int count)
         {
             User user = await _userManager.GetUserAsync(HttpContext.User);
 
@@ -302,7 +307,7 @@ namespace vladandartem.Controllers
 
             await _userManager.UpdateAsync(user);
 
-            return Content(JsonConvert.SerializeObject(cartProduct.Product.Count));
+            return new JsonResult(new { Count = cartProduct.Product.Count });
         }
 
         private bool IsSimilar(string searchArgument, string productName)
@@ -321,54 +326,6 @@ namespace vladandartem.Controllers
 
             return true;
         }
-        /*private double CompareTwoString(string strFirst, string strSecond)
-        {
-            string[] strFirstWordsArray = strFirst.Split(' ');
-            string[] strSecondWordsArray = strSecond.Split(' ');
-
-            int firstArrayWordsCount = strFirstWordsArray.Count();
-            int secondsArrayWordsCount = strSecondWordsArray.Count();
-
-            string[] MaxWordsArray;
-            string[] MinWordsArray;
-
-            if (firstArrayWordsCount > secondsArrayWordsCount)
-            {
-                MaxWordsArray = strFirstWordsArray;
-                MinWordsArray = strSecondWordsArray;
-            }
-            else
-            {
-                MaxWordsArray = strSecondWordsArray;
-                MinWordsArray = strFirstWordsArray;
-            }
-
-            int maxWordsCount = MaxWordsArray.Count();
-            int minWordsCount = MinWordsArray.Count();
-
-            int similar = 0;
-
-            bool[] minWordsArrayChecked = new bool[minWordsCount];
-
-            for (int i = 0; i < maxWordsCount; i++)
-            {
-                for (int j = 0; j < minWordsCount; j++)
-                {
-                    if (minWordsArrayChecked[j]) continue;
-
-                    if (String.Equals(MaxWordsArray[i].ToLower(), MinWordsArray[j].ToLower()))
-                    {
-                        minWordsArrayChecked[j] = true;
-                        similar++;
-                        break;
-                    }
-                }
-            }
-
-            double percent = (double)(similar) / maxWordsCount * 100.0;
-
-            return percent;
-        }*/
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
