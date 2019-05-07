@@ -1,18 +1,41 @@
 .details {
-    justify-content: space-between;
+    flex-direction: column;
     padding: 30px 0;
 }
+    .details > div {
+        width: 786px;
+    }
+    .details button {
+        margin-left: 20px;
+    }
 .add-and-delete-field {
-    padding: 30px;
-    border: 2px solid #e1e1d1;
-    border-radius: 4px;
+    display: flex;
+    padding: 5px 20px 3px;
+    border: 3px solid #F3F3F3;
+    background: #F3F3F3;
 }
+    .add-and-delete-field > .form-group {
+        margin: 0;
+    }
 
     .add-and-delete-field > form:not(:last-child) {
         margin-bottom: 20px;
     }
         .add-and-delete-field input, .add-and-delete-field select {
-            width: 270px;
+            width: 250px;
+            margin-left: 20px;
+        }
+        .add-and-delete-field label {
+            width: 250px;
+            line-height: 40px;
+            margin-right: 20px;
+        }
+        .list-of-fields {
+            width: 786px;
+            margin-top: 30px;
+        }
+        .list-of-fields > li:nth-child(2n) {
+            border: 3px solid #F3F3F3;
         }
         .list-of-fields > li:nth-child(2n-1) {
             background: #F3F3F3;
@@ -20,24 +43,37 @@
         .list-of-fields > li, .list-of-fields form{
             display: flex;
         }
+        .list-of-fields > li > form, .list-of-fields > li > div {
+            padding-bottom: 3px;
+        }
         .list-of-fields p, .list-of-fields div {
             height: 50px;
             line-height: 50px;
         }
         .field-name {
             width: 300px;
-            padding-left: 20px; 
+            padding-left: 23px; 
         }
-        .select-value {
+        p.select-value {
+            margin: 0 auto;
+        }
+        div.select-value {
             width: 250px;
+            margin-left: 20px;
         }
             .select-value > select {
-                margin-top: 6px;
+                margin-top: 8px;
             }
         .last-column {
-            width: 150px;
-            text-align: center;
+            margin: 0 auto;
         }
-            .last-column > button {
-                margin-bottom: 5px;
-            }
+.select2-container .select2-selection--single {
+    height: 40px;
+    padding: 5px;
+    
+}
+.select2-selection__arrow {
+    margin-top: 5px;
+}
+        
+            

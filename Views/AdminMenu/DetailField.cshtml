@@ -6,6 +6,8 @@
 
 @section Scripts {
     <script src="~/js/details.js"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.js"></script>
 }
 
 @Html.Partial("_GetTabs", new vladandartem.Models.ViewModels.AdminMenu.GetTabsViewModel { SectionId = 5 })
@@ -13,56 +15,46 @@
 <main class="container details" id="detail-fields">
     <div>{{ fields }}</div>
     <div class="add-and-delete-field">
-        <form method="post" class="add-field">
-            <div class="form-group">
-                <label for="DetailFieldName">Добавить поле</label>
-                <input type="text" name="DetailFieldName" class="form-control" id="DetailFieldName" v-model="fieldName"/>
-            </div>
+        <label for="DetailFieldName">Выбрать поле</label>
+        <div class="form-group">
+            <select v-model="fieldIdForDelete" class="form-control select-field" v-select2>
+                <option v-for="field in fields" :value="field.Id">{{ field.Name }}</option>
+            </select>
+        </div>
+        <div class="form-group">
             <button v-on:click="addField" type="button" class="btn btn-primary">Добавить</button>
-        </form>
-        <form method="post" class="definition-add">
-            <div class="form-group">
-                <label for="DetailFieldId">Выбрать поле</label>
-                <select v-on:change="setIndex(fieldIdForAddDefin)" v-model="fieldIdForAddDefin" name="DetailFieldId" class="form-control select add-new-field" id="DetailFieldId">
-                    <option value="0">Выберите поле</option>
-                    <option v-for="field in fields" :value="field.Id">{{ field.Name }}</option>
-                </select>
-                <label for="DefinitionName">Добавить значение</label>
-                <input v-model="definitionName" type="text" class="form-control" name="DefinitionName" id="DefinitionName"/>
-            </div>
-            <button v-on:click="addDefinition" type="button" class="btn btn-primary">Прикрепить</button>
-        </form>
-        <form action="~/AdminMenu/DetailField/Api/Delete" method="post" class="del-field">
-            <div class="form-group">
-                <label for="DetailFieldId-del">Удалить поле</label>
-                <select v-model="fieldIdForDelete" name="DetailFieldId" class="form-control add-new-field-1" id="DetailFieldId-del">
-                    <option value="0">Выберите поле</option>
-                    <option v-for="field in fields" :value="field.Id + '+' + field.Name">{{ field.Name }}</option>
-                </select>
-            </div>
-            <button v-on:click="activateModal" type="button" class="btn btn-danger" data-toggle="modal" :data-target="'#' + modalId">Удалить</button>
-        </form>
+        </div>
+        <div class="form-group">
+            <button v-on:click="deleteField" type="button" class="btn btn-danger">Удалить</button>
+        </div>
     </div>
     
     <ul class="list-of-fields">
         <li><p class="field-name">Поле</p><p class="select-value">Значение</p><p class="last-column">Действие</p></li>
-        <li v-for="(field, index) in fields">
-            <p class="field-name">{{ field.Name }}</p>
-            <form action="~/AdminMenu/DetailField/Definition/Api/Delete" method="post" class="delete-defininion">
+        <li>
+            <form class="delete-defininion">
                 <div class="select-value">
-                    <select v-model="definitionIdForDelete" name="DefinitionId" class="form-control">
-                        <option value="0" disabled selected>Выберите из списка</option>
-                        <option v-for="(definition, index) in field.Definitions" :value="definition.Id + '+' + definition.Name + '+' + index">{{ definition.Name }}</option>
+                    <select v-on:change="setIndex(fieldIdForAddDefin)" v-model="fieldIdForAddDefin" name="DefinitionId" class="form-control select-field-for-add-def" v-select2>
+                        <option v-for="field in fields" :value="field.Id">{{ field.Name }}</option>
                     </select>
+                </div>
+                <div class="select-value">
+                    <select v-model="definitionIdForDelete" class="form-control select-field">
+                        <option v-for="definition in relevantDefinitions" :value="definition.Id">{{ definition.Name }}</option>
+                    </select>
+                </div>
+                <div class="last-column">
+                    <button v-on:click="addDefinition" type="button" class="btn btn-primary">Добавить</button>
                 </div>
                 <div class="last-column">
                     <button v-on:click="activateModal1(index)" type="button" class="btn btn-danger" data-toggle="modal" :data-target="'#d' + modalId">Удалить</button>
                 </div>
             </form>
         </li>
-    </ul>
+    </ul>    
+</main>
 
-    <div class="modal fade for-del-field" :id="modalId" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+<div class="modal fade for-del-field" :id="modalId" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -103,4 +95,3 @@
             </div>
         </div>
     </div>
-</main>

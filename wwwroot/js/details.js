@@ -102,6 +102,29 @@
         });
     });
 })*/
+$(document).ready(function () {
+    $('.select-field').select2({
+        tags: true,
+        placeholder: 'Выберите значение'
+    });
+    $('.select-field-for-add-def').select2({
+        placeholder: 'Выберите значение'
+    });
+});
+
+Vue.directive('select2', {
+    inserted(el) {
+        $(el).on('select2:select', () => {
+            const event = new Event('change', { bubbles: true, cancelable: true });
+            el.dispatchEvent(event);
+        });
+
+        $(el).on('select2:unselect', () => {
+            const event = new Event('change', { bubbles: true, cancelable: true })
+            el.dispatchEvent(event)
+        })
+    },
+});
 
 new Vue({
     el: '#detail-fields',
@@ -113,42 +136,49 @@ new Vue({
         fieldIdForDelete: 0,
         definitionIdForDelete: '',
         index: '',
-        modalId: ''
+        modalId: '',
+        relevantDefinitions: []
     },
     mounted: function () {
         axios
             .post('/AdminMenu/DetailField/GetAll')
             .then(response => {
                 this.fields = response.data;
+
             });
     },
+
     methods: {
         addField: function () {
-            axios
-                .post('/AdminMenu/DetailField/Api/Add', null, {
-                    params: {
-                        detailFieldName: this.fieldName
-                    }
-                })
-                .then(response => {
-                    this.fields.push(response.data);
-                    this.fieldName = ''
-                });
+            if (this.fieldIdForDelete != 0) {
+                axios
+                    .post('/AdminMenu/DetailField/Api/Add', null, {
+                        params: {
+                            detailFieldName: this.fieldIdForDelete
+                        }
+                    })
+                    .then(response => {
+                        this.fields.push(response.data);
+                        this.fieldName = ''
+                    });
+            }
         },
         setIndex: function (fieldIdForAddDefin) {
             this.index = this.fields.findIndex(i => i.Id === fieldIdForAddDefin);
+            //alert(this.index);
+            this.relevantDefinitions = this.fields[this.index].Definitions;
         },
         addDefinition: function () {
             axios
                 .post('/AdminMenu/DetailField/Definition/Api/Add', null, {
                     params: {
                         detailFieldId: this.fieldIdForAddDefin,
-                        definitionName: this.definitionName
+                        definitionName: this.definitionIdForDelete
                     }
                 })
                 .then(response => {
                     this.fields[this.index].Definitions.push(response.data);
-                    this.definitionName = ''
+                    //this.definitionName = ''
                 });
         },
         activateModal: function () {
@@ -159,7 +189,7 @@ new Vue({
             axios
                 .post('/AdminMenu/DetailField/Api/Delete', null, {
                     params: {
-                        detailFieldId: this.fieldIdForDelete.split('+')[0]
+                        detailFieldId: this.fieldIdForDelete
                     }
                 })
                 .then(response => {
@@ -167,7 +197,7 @@ new Vue({
                     this.index = this.fields.findIndex(i => i.Id === response.data.DetailFieldId);
                     this.fields.splice(this.index, 1)
                 });
-            this.$refs.closeModal.click();
+            //this.$refs.closeModal.click();
         },
         //{ "DefinitionId": 8 }
         activateModal1: function (index) {
@@ -186,7 +216,9 @@ new Vue({
                     this.fields[this.index].Definitions.splice(this.definitionIdForDelete.split('+')[2], 1)
                 });
             this.$refs.closeModal.click();
+        },
+        test: function () {
+            alert('!')
         }
-
     }
 })
