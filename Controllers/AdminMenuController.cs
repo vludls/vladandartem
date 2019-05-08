@@ -623,7 +623,7 @@ namespace vladandartem.Controllers
             _context.DetailFields.Add(detailField);
             _context.SaveChanges();
 
-            return new JsonResult(detailField);
+            return new JsonResult(new { DetailFieldId = detailField.Id, detailField.Name, detailField.Definitions });
         }
 
         /// <summary>
