@@ -164,20 +164,19 @@ new Vue({
             }
         },
         setIndex: function (fieldIdForAddDefin) {
-            this.index = this.fields.findIndex(i => i.Id === fieldIdForAddDefin);
-            //alert(this.index);
-            this.relevantDefinitions = this.fields[this.index].Definitions;
+            this.index = this.fields.findIndex(i => i.id === fieldIdForAddDefin);
+            this.relevantDefinitions = this.fields[this.index].definitions;
         },
         addDefinition: function () {
             axios
                 .post('/AdminMenu/DetailField/Definition/Api/Add', null, {
                     params: {
                         detailFieldId: this.fieldIdForAddDefin,
-                        definitionName: this.definitionIdForDelete
+                        definitionName: this.definitionIdForDelete.split('+')[1]
                     }
                 })
                 .then(response => {
-                    this.fields[this.index].Definitions.push(response.data);
+                    this.fields[this.index].definitions.push(response.data);
                     //this.definitionName = ''
                 });
         },
@@ -209,13 +208,13 @@ new Vue({
             axios
                 .post('/AdminMenu/DetailField/Definition/Api/Delete', null, {
                     params: {
-                        definitionId: this.definitionIdForDelete.split('+')[0]
+                        definitionId: this.definitionIdForDelete
                     }
                 })
                 .then(response => {
-                    this.fields[this.index].Definitions.splice(this.definitionIdForDelete.split('+')[2], 1)
+                    this.fields[this.index].definitions.splice(this.definitionIdForDelete.split('+')[1], 1)
                 });
-            this.$refs.closeModal.click();
+            //this.$refs.closeModal.click();
         },
         test: function () {
             alert('!')
