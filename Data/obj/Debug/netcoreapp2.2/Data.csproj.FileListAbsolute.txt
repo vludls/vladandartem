@@ -1,0 +1,9 @@
+C:\Users\Владислав\Documents\vladandartem\Data\bin\Debug\netcoreapp2.2\Data.deps.json
+C:\Users\Владислав\Documents\vladandartem\Data\bin\Debug\netcoreapp2.2\Data.dll
+C:\Users\Владислав\Documents\vladandartem\Data\bin\Debug\netcoreapp2.2\Data.pdb
+C:\Users\Владислав\Documents\vladandartem\Data\obj\Debug\netcoreapp2.2\Data.csprojAssemblyReference.cache
+C:\Users\Владислав\Documents\vladandartem\Data\obj\Debug\netcoreapp2.2\Data.csproj.CoreCompileInputs.cache
+C:\Users\Владислав\Documents\vladandartem\Data\obj\Debug\netcoreapp2.2\Data.AssemblyInfoInputs.cache
+C:\Users\Владислав\Documents\vladandartem\Data\obj\Debug\netcoreapp2.2\Data.AssemblyInfo.cs
+C:\Users\Владислав\Documents\vladandartem\Data\obj\Debug\netcoreapp2.2\Data.dll
+C:\Users\Владислав\Documents\vladandartem\Data\obj\Debug\netcoreapp2.2\Data.pdb

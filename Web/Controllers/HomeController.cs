@@ -184,9 +184,10 @@ namespace vladandartem.Controllers
             if (ModelState.IsValid)
                 return new EmptyResult();
 
-            Product product = _context.Products.Include(n => n.ProductDetailFields)
-                .ThenInclude(n => n.DetailField)
-                .ThenInclude(n => n.Definitions)
+            Product product = _context.Products
+                .Include(n => n.ProductDetailFields)
+                    .ThenInclude(n => n.DetailField)
+                    .ThenInclude(n => n.Definitions)
                 .Include(n => n.Category)
                 .FirstOrDefault(n => n.Id == productId);
 

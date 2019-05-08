@@ -31,7 +31,7 @@ namespace vladandartem.Controllers
         private readonly ProductContext _context;
         private readonly IMapper _mapper;
 
-        public AdminMenuController(UserManager<User> userManager, RoleManager<IdentityRole<int>> roleManager, 
+        public AdminMenuController(UserManager<User> userManager, RoleManager<IdentityRole<int>> roleManager,
             ProductContext context, IMapper mapper)
         {
             _userManager = userManager;
@@ -224,7 +224,7 @@ namespace vladandartem.Controllers
 
                 if (user != null)
                 {
-                    Mapper.Map<UserSaveModel, User>(model, user);
+                    Mapper.Map(model, user);
                     //user.Email = model.Email;
                     //user.UserName = model.Email;
                     //user.Year = model.Year;
@@ -271,7 +271,7 @@ namespace vladandartem.Controllers
         {
             User mainUser = await _userManager.GetUserAsync(HttpContext.User);
 
-            User findedUser = await _userManager.FindByIdAsync(Convert.ToString(id));
+            User findedUser = await _userManager.FindByIdAsync(id.ToString());
 
             if (findedUser == null || mainUser == findedUser)
                 return new JsonResult(new { UserId = 0 });
@@ -333,21 +333,15 @@ namespace vladandartem.Controllers
             if (!ModelState.IsValid)
                 return new EmptyResult();
 
-            if (_context.Categories.Any(n => n.Id == categoryId))
+            IQueryable<Product> products = _context.Products;
+
+            if (categoryId > 0)
+                products = products.Where(x => x.CategoryId == categoryId);
+
+            return new JsonResult(new
             {
-                return new JsonResult(new
-                {
-                    Products = _mapper.Map<AnalyticsLoadProductsOfChoosedCategoryViewModel>(_context.Products
-                    .Where(p => p.CategoryId == categoryId).ToList())
-                });
-            }
-            else
-            {
-                return new JsonResult(new
-                {
-                    Products = _mapper.Map<AnalyticsLoadProductsOfChoosedCategoryViewModel>(_context.Products.ToList())
-                });
-            }
+                Products = _mapper.Map<AnalyticsLoadProductsOfChoosedCategoryViewModel>(products.ToList())
+            });
         }
 
         /// <summary>
@@ -467,7 +461,7 @@ namespace vladandartem.Controllers
                 products = products.Where(n => n.Order.User.Id == model.UserId);
 
             products = products.OrderBy(n => n.Order.OrderTime);
-            
+
             var group = products.GroupBy(n => n.Product)
                 .Select(productGroup => new
                 {
@@ -662,7 +656,7 @@ namespace vladandartem.Controllers
             if (!ModelState.IsValid)
                 return new EmptyResult();
 
-                DetailField detailField = _context.DetailFields.Include(n => n.Definitions).FirstOrDefault(n => n.Id == detailFieldId);
+            DetailField detailField = _context.DetailFields.Include(n => n.Definitions).FirstOrDefault(n => n.Id == detailFieldId);
 
             if (detailField == null)
                 return new EmptyResult();
