@@ -18,7 +18,7 @@
         <label for="DetailFieldName">Выбрать поле</label>
         <div class="form-group">
             <select v-model="fieldIdForDelete" class="form-control select-field" v-select2>
-                <option v-for="field in fields" :value="field.id">{{ field.name }}</option>
+                <option v-for="field in fields" :value="field.detailFieldId">{{ field.name }}</option>
             </select>
         </div>
         <div class="form-group">
