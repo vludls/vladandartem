@@ -65,14 +65,14 @@ namespace vladandartem.Controllers
 
         [HttpPost]
         public async Task<JsonResult> GetPaidProducts(int start)
-        { 
-            User user = await _userManager.GetUserAsync(HttpContext.User);
-            var userId = User.GetUserId();
-            user = _userManager.Users
+        {
+            var userId = Convert.ToInt32(HttpContext.User.GetUserId());
+
+            User user = _userManager.Users
                 .Include(u => u.Orders)
                     .ThenInclude(u => u.CartProducts)
                     .ThenInclude(u => u.Product)
-                .FirstOrDefault(u => u.Id == user.Id);
+                .FirstOrDefault(u => u.Id == userId);
 
             return new JsonResult(_mapper.Map<List<Order>>(user.Orders.OrderByDescending(n => n.Number).Skip(start).Take(20)));
         }
@@ -84,26 +84,28 @@ namespace vladandartem.Controllers
         [HttpGet]
         public async Task<JsonResult> CartGetCartProducts()
         {
-            User user = await _userManager.GetUserAsync(HttpContext.User);
+            var userId = Convert.ToInt32(HttpContext.User.GetUserId());
 
-            user = _userManager.Users.Include(u => u.Cart)
-                .ThenInclude(u => u.CartProducts)
-                .ThenInclude(g => g.Product)
-                .ThenInclude(u => u.Category)
-                .FirstOrDefault(u => u.Id == user.Id);
+            User user = _userManager.Users
+                .Include(u => u.Cart)
+                    .ThenInclude(u => u.CartProducts)
+                    .ThenInclude(g => g.Product)
+                    .ThenInclude(u => u.Category)
+                .FirstOrDefault(u => u.Id == userId);
             
             return new JsonResult(_mapper.Map<List<CartProduct>>(user.Cart.CartProducts));
         }
 
         [HttpPost]
-        public async Task<IActionResult> CartOrder()
+        public IActionResult CartOrder()
         {
-            User user = await _userManager.GetUserAsync(HttpContext.User);
+            var userId = Convert.ToInt32(HttpContext.User.GetUserId());
 
-            user = _userManager.Users.Include(u => u.Cart)
-                .ThenInclude(u => u.CartProducts)
-                .ThenInclude(u => u.Product)
-                .FirstOrDefault(u => u.Id == user.Id);
+            User user = _userManager.Users
+                .Include(u => u.Cart)
+                    .ThenInclude(u => u.CartProducts)
+                    .ThenInclude(u => u.Product)
+                .FirstOrDefault(u => u.Id == userId);
 
             foreach (var cartProduct in user.Cart.CartProducts)
             {
@@ -125,8 +127,7 @@ namespace vladandartem.Controllers
 
             _context.Orders.Add(order);
 
-            _context.SaveChanges();
-
+            // Перетаскиваем продукты из корзины в неоплаченный заказ
             foreach (var cp in user.Cart.CartProducts)
             {
                 cp.Product.Count -= cp.Count;
@@ -134,7 +135,7 @@ namespace vladandartem.Controllers
                 cp.OrderId = order.Id;
             }
 
-            await _userManager.UpdateAsync(user);
+            _context.SaveChanges();
 
             return RedirectToAction("PaidProducts", "PersonalArea");
         }
@@ -142,8 +143,9 @@ namespace vladandartem.Controllers
         [HttpPost]
         public IActionResult RejectOrder(int orderId)
         {
-            Order order = _context.Orders.Include(o => o.CartProducts)
-                .ThenInclude(cp => cp.Product)
+            Order order = _context.Orders
+                .Include(o => o.CartProducts)
+                    .ThenInclude(cp => cp.Product)
                 .FirstOrDefault(o => o.Id == orderId);
 
             if (order == null || order.IsPaid)
@@ -155,7 +157,6 @@ namespace vladandartem.Controllers
             }
 
             _context.Orders.Remove(order);
-
             _context.SaveChanges();
 
             return new JsonResult(new { OrderId = order.Id });

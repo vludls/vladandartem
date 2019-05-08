@@ -181,7 +181,7 @@ namespace vladandartem.Controllers
         [HttpPost]
         public IActionResult ProductGetInfo([Required]int productId)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return new EmptyResult();
 
             Product product = _context.Products

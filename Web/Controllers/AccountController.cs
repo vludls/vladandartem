@@ -27,7 +27,7 @@ namespace vladandartem.Controllers
         [HttpGet]
         public IActionResult Register()
         {
-            return Content("123");
+            return View();
         }
 
         [Route("Register")]
@@ -50,11 +50,9 @@ namespace vladandartem.Controllers
                     Cart cart = new Cart { UserId = user.Id };
 
                     _context.Cart.Add(cart);
-
                     _context.SaveChanges();
 
                     await _userManager.AddToRoleAsync(user, "user");
-
                     await _signInManager.SignInAsync(user, false);
 
                     return Redirect("~/PersonalArea/Main");
@@ -65,7 +63,7 @@ namespace vladandartem.Controllers
                     foreach (var error in result.Errors)
                     {
                         err += $"{error.Description}\n";
-                        return Content(err);
+                        //return Content(err);
                     }
                 }
             }
