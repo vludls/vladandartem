@@ -164,7 +164,8 @@ new Vue({
             }
         },
         setIndex: function (fieldIdForAddDefin) {
-            this.index = this.fields.findIndex(i => i.id === fieldIdForAddDefin);
+            this.index = this.fields.findIndex(i => i.detailFieldId === fieldIdForAddDefin);
+            //alert(this.index);
             this.relevantDefinitions = this.fields[this.index].definitions;
         },
         addDefinition: function () {
@@ -172,7 +173,7 @@ new Vue({
                 .post('/AdminMenu/DetailField/Definition/Api/Add', null, {
                     params: {
                         detailFieldId: this.fieldIdForAddDefin,
-                        definitionName: this.definitionIdForDelete.split('+')[1]
+                        definitionName: this.definitionIdForDelete
                     }
                 })
                 .then(response => {
