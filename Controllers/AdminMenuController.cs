@@ -593,11 +593,11 @@ namespace vladandartem.Controllers
             return new JsonResult(_context.DetailFields.Include(n => n.Definitions)
                 .Select(f => new
                 {
-                    Id = f.Id,
+                    DetailFieldId = f.Id,
                     Name = f.Name,
                     Definitions = f.Definitions.Select(d => new
                     {
-                        Id = d.Id,
+                        DefinitionId = d.Id,
                         Name = d.Name
                     }).ToList()
                 }).ToList());
@@ -619,8 +619,8 @@ namespace vladandartem.Controllers
                 return new EmptyResult();
 
             DetailField detailField = new DetailField { Name = detailFieldName, Definitions = new List<Definition>() };
-            _context.DetailFields.Add(detailField);
 
+            _context.DetailFields.Add(detailField);
             _context.SaveChanges();
 
             return new JsonResult(detailField);
@@ -656,7 +656,7 @@ namespace vladandartem.Controllers
         /// <param name="definitionName">Название определения</param>
         /// <returns></returns>
         [Route("DetailField/Definition/Api/Add")]
-        [HttpPost]
+        [HttpGet]
         public IActionResult DetailFieldDefinitionAdd([Required]int detailFieldId, [Required]string definitionName)
         {
             if (!ModelState.IsValid)
