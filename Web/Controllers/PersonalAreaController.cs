@@ -17,6 +17,7 @@ using vladandartem.Data.Models;
 using vladandartem.Models.ViewModels.PersonalArea;
 using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
+using Web.Infrastructure;
 
 namespace vladandartem.Controllers
 {
@@ -64,15 +65,16 @@ namespace vladandartem.Controllers
 
         [HttpPost]
         public async Task<JsonResult> GetPaidProducts(int start)
-        {
+        { 
             User user = await _userManager.GetUserAsync(HttpContext.User);
-
-            user = _userManager.Users.Include(u => u.Order)
-                .ThenInclude(u => u.CartProducts)
-                .ThenInclude(u => u.Product)
+            var userId = User.GetUserId();
+            user = _userManager.Users
+                .Include(u => u.Orders)
+                    .ThenInclude(u => u.CartProducts)
+                    .ThenInclude(u => u.Product)
                 .FirstOrDefault(u => u.Id == user.Id);
 
-            return new JsonResult(_mapper.Map<List<Order>>(user.Order.OrderByDescending(n => n.Number).Skip(start).Take(20)));
+            return new JsonResult(_mapper.Map<List<Order>>(user.Orders.OrderByDescending(n => n.Number).Skip(start).Take(20)));
         }
         [HttpGet]
         public ViewResult Cart()

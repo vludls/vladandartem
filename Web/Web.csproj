@@ -17,13 +17,13 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\vladandartem.Data\vladandartem.Data.csproj" />
+    <Folder Include="Models\Request\Account\" />
+    <Folder Include="Models\Request\PersonalArea\" />
   </ItemGroup>
 
 
   <ItemGroup>
-    <Folder Include="Models\Request\Account\" />
-    <Folder Include="Models\Request\PersonalArea\" />
+    <ProjectReference Include="..\Data\Data.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
